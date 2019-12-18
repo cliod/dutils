@@ -1,4 +1,4 @@
-package com.wobangkj.util;
+package com.wobangkj.utils;
 
 import org.jetbrains.annotations.NotNull;
 

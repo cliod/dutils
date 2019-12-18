@@ -1,8 +1,8 @@
 package com.wobangkj;
 
-import com.wobangkj.util.EncryptUtils;
-import com.wobangkj.util.KeyUtils;
-import com.wobangkj.util.Md5Utils;
+import com.wobangkj.utils.EncryptUtils;
+import com.wobangkj.utils.KeyUtils;
+import com.wobangkj.utils.Md5Utils;
 
 /**
  * Hello world!

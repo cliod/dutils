@@ -1,4 +1,4 @@
-package com.wobangkj.util;
+package com.wobangkj.utils;
 
 /**
  * Base64加密解密
@@ -64,7 +64,7 @@ public final class Base64 {
     }
 
     private static boolean isData(char octect) {
-        return (octect < BASELENGTH && BASE64_ALPHABET[octect] != -1);
+        return (octect >= BASELENGTH || BASE64_ALPHABET[octect] == -1);
     }
 
     /**
@@ -200,10 +200,10 @@ public final class Base64 {
 
         for (; i < numberQuadruple - 1; i++) {
 
-            if (!isData((d1 = base64Data[dataIndex++]))
-                    || !isData((d2 = base64Data[dataIndex++]))
-                    || !isData((d3 = base64Data[dataIndex++]))
-                    || !isData((d4 = base64Data[dataIndex++]))) {
+            if (isData((d1 = base64Data[dataIndex++]))
+                    || isData((d2 = base64Data[dataIndex++]))
+                    || isData((d3 = base64Data[dataIndex++]))
+                    || isData((d4 = base64Data[dataIndex++]))) {
                 return null;
             }// if found "no data" just return null
 
@@ -217,8 +217,8 @@ public final class Base64 {
             decodedData[encodedIndex++] = (byte) (b3 << 6 | b4);
         }
 
-        if (!isData((d1 = base64Data[dataIndex++]))
-                || !isData((d2 = base64Data[dataIndex++]))) {
+        if (isData((d1 = base64Data[dataIndex++]))
+                || isData((d2 = base64Data[dataIndex++]))) {
             return null;// if found "no data" just return null
         }
 
@@ -227,7 +227,7 @@ public final class Base64 {
 
         d3 = base64Data[dataIndex++];
         d4 = base64Data[dataIndex++];
-        if (!isData((d3)) || !isData((d4))) {// Check if they are PAD characters
+        if (isData((d3)) || isData((d4))) {// Check if they are PAD characters
             if (isPad(d3) && isPad(d4)) {
                 if ((b2 & 0xf) != 0)// last 4 bits should be zero
                 {

@@ -1,4 +1,4 @@
-package com.wobangkj.util;
+package com.wobangkj.utils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -62,7 +62,7 @@ public class QrCodeUtils {
      */
     @NotNull
     public static BufferedImage createImage(String content, String logoPath, boolean needCompress) throws Exception {
-        Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
+        Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
         hints.put(EncodeHintType.MARGIN, 1);

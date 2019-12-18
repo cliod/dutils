@@ -1,6 +1,5 @@
-package com.wobangkj.util;
+package com.wobangkj.utils;
 
-import com.wobangkj.utils.BeanUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -189,7 +188,7 @@ public class KeyUtils {
     }
 
     /**
-     * 函数功能说明 ： 截取字符串拼接in查询参数. 修改者名字： 修改日期： 修改内容：
+     * 函数功能说明 ： 截取字符串拼接in查询参数.
      *
      * @param param 参数
      * @return String
@@ -205,5 +204,4 @@ public class KeyUtils {
         }
         return list;
     }
-
 }
