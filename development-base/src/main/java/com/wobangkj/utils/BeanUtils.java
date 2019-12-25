@@ -65,18 +65,18 @@ public class BeanUtils {
     public static <T, R extends Enum<R>> T requireNonNull(T obj) {
         return requireNonNull(obj, new BaseEnum<R>() {
             @Override
+            public R[] list() {
+                return null;
+            }
+
+            @Override
             public Integer getCode() {
-                return 500;
+                return 0;
             }
 
             @Override
             public String getMsg() {
-                return "未知异常";
-            }
-
-            @Override
-            public String toString() {
-                return this.toJson();
+                return "null";
             }
         });
     }

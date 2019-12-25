@@ -124,7 +124,7 @@ public class ValidCodeUtils {
     /**
      * 生成一个指定字符串大小同时指定长宽及自定义字符范围的验证码
      */
-    public static String generateValidCode(int stringLength, int width, int height, String randString, Color bgColor, String fontFamily, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public static String generateValidCode(int stringLength, int width, int height, String randString, Color bgColor, String fontFamily, HttpServletRequest request, HttpServletResponse response) {
         /*
          * 1-参数接收
          */

@@ -102,7 +102,7 @@ public class Response {
      */
     @NotNull
     public static <V> Result<Map<String, Object>> ok(String valueName, V value) {
-        return ok(new HashMap<>(16) {{
+        return ok(new HashMap<>(4) {{
             put(valueName, value);
         }});
     }
@@ -113,9 +113,9 @@ public class Response {
     @SafeVarargs
     @NotNull
     public static <V> Result<Map<String, Object>> ok(@NotNull String[] valueNames, @NotNull V... values) {
-        int len = valueNames.length;
+        int len = Math.min(valueNames.length, values.length);
         if (len == 0) {
-            return ok(new HashMap<>(4));
+            return ok(new HashMap<>(0));
         } else {
             Map<String, Object> map = new HashMap<>(len * 4 / 3 + 1);
             for (int i = 0; i < len; i++) {

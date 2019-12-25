@@ -49,6 +49,22 @@ public enum GenderType implements BaseType<GenderType> {
         return this.toJson();
     }
 
+    @Override
+    public GenderType[] list() {
+        return values();
+    }
+
+    @Override
+    public GenderType get(int code) {
+        GenderType[] values = values();
+        for (GenderType value : values) {
+            if (value.code.equals(code)) {
+                return value;
+            }
+        }
+        return values[0];
+    }
+
     @Data
     public static class Entry implements Serializable {
 

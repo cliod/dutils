@@ -98,7 +98,7 @@ public class EncryptUtils {
 
     @NotNull
     private static String encode(@NotNull String str, String method) throws NoSuchAlgorithmException {
-        MessageDigest mdInst = null;
+        MessageDigest mdInst;
         // 把密文转换成十六进制的字符串形式
         // 单线程用StringBuilder，速度快 多线程用stringbuffer，安全
         StringBuilder dstr = new StringBuilder();

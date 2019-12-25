@@ -62,6 +62,12 @@ public enum ResultEnum implements BaseEnum<ResultEnum> {
         this.msg = msg;
     }
 
+
+    @Override
+    public ResultEnum[] list() {
+        return values();
+    }
+
     @Override
     public Integer getCode() {
         return code;
@@ -116,4 +122,5 @@ public enum ResultEnum implements BaseEnum<ResultEnum> {
             return JSON.toJSONString(this);
         }
     }
+
 }

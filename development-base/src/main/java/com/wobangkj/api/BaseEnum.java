@@ -9,6 +9,12 @@ import java.util.Map;
  * @desc enum
  */
 public interface BaseEnum<T extends Enum<T>> extends Session {
+    /**
+     * 获取所有
+     *
+     * @return 数组
+     */
+    T[] list();
 
     /**
      * 获取code
