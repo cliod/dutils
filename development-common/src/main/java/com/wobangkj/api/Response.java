@@ -4,8 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.wobangkj.bean.Page;
 import com.wobangkj.bean.Result;
 import com.wobangkj.enums.ResultEnum;
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,5 +202,53 @@ public class Response {
             put("code", code);
             put("errMsg", msg);
         }}, null);
+    }
+
+    @NotNull
+    public static Builder build(String title, Object data) {
+        return new Builder() {{
+            setData(new HashMap<>(16) {{
+                put(title, data);
+            }});
+        }};
+    }
+
+    @NotNull
+    public static Builder build() {
+        return new Builder() {{
+            setData(new HashMap<>(16));
+        }};
+    }
+
+    @Data
+    public static class Builder {
+        private Map<String, Object> data;
+
+        @NotNull
+        public Builder put(String title, Object data) {
+            this.data.put(title, data);
+            return this;
+        }
+
+        @NotNull
+        public Builder put(String title, Date data) {
+            return this.put(title, data, "yyyy-MM-dd HH:mm:ss");
+        }
+
+        @NotNull
+        public Builder put(String title, @NotNull Date data, String pattern) {
+            this.data.put(title, DateTimeFormatter.ofPattern(pattern)
+                    .format(data.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+            return this;
+        }
+
+        @NotNull
+        public Result<?> ok() {
+            return Response.ok(this.data);
+        }
+
+        void setData(Map<String, Object> data) {
+            this.data = data;
+        }
     }
 }
