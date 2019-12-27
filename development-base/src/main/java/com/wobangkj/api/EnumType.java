@@ -3,11 +3,13 @@ package com.wobangkj.api;
 import java.util.HashMap;
 
 /**
+ * 枚举类型
+ *
  * @author cliod
- * @date 19-6-22
- * @desc base type
+ * @date 2019/12/27
+ * package : com.wobangkj.api
  */
-public interface BaseType<E extends Enum<E>> extends Session {
+public interface EnumType extends Session {
 
     /**
      * 获取code
@@ -24,45 +26,19 @@ public interface BaseType<E extends Enum<E>> extends Session {
     String getDesc();
 
     /**
+     * 枚举名字
+     *
+     * @return 枚举
+     */
+    String name();
+
+    /**
      * 序列化,转成字符串
      *
      * @return Json
      */
     @Override
     String toString();
-
-    /**
-     * 获取所有枚举
-     *
-     * @return 数组
-     */
-    E[] list();
-
-    /**
-     * 获取一个
-     *
-     * @param code code
-     * @return 一个
-     */
-    default E get(int code) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * 获取一个
-     *
-     * @param name 名字
-     * @return 一个
-     */
-    default E get(String name) {
-        E[] values = list();
-        for (E value : values) {
-            if (value.name().equals(name)) {
-                return value;
-            }
-        }
-        return values[0];
-    }
 
     /**
      * 转化为对象(默认Map)

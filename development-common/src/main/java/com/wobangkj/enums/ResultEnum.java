@@ -2,6 +2,7 @@ package com.wobangkj.enums;
 
 import com.alibaba.fastjson.JSON;
 import com.wobangkj.api.BaseEnum;
+import com.wobangkj.api.EnumMsg;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * @desc result enum
  */
 @Getter
-public enum ResultEnum implements BaseEnum<ResultEnum> {
+public enum ResultEnum implements BaseEnum<ResultEnum>, EnumMsg {
     /**
      * HTTP 状态码
      * #1000～1999 区间表示参数错误
