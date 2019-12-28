@@ -115,6 +115,7 @@ public class Response {
      * 多自定义字段, value 返回
      */
     @SafeVarargs
+    @Deprecated
     @NotNull
     public static <V> Result<Map<String, Object>> ok(@NotNull String[] valueNames, @NotNull V... values) {
         int len = Math.min(valueNames.length, values.length);
@@ -129,11 +130,17 @@ public class Response {
         }
     }
 
+    @SafeVarargs
+    @NotNull
+    public static <V> Result<Map<String, Object>> ok(@NotNull String titles, V... values) {
+        return ok(titles.split(","), values);
+    }
+
     /**
      * 非默认返回信息返回
      */
     @NotNull
-    public static <T> Result<T> ok(@NotNull ResultEnum re, T o) {
+    public static <T> Result<T> ok(@NotNull BaseEnum<?> re, T o) {
         return ok(re.getCode(), re.getMsg(), o);
     }
 
