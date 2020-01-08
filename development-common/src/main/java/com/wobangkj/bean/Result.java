@@ -29,7 +29,7 @@ public final class Result<T> implements Session {
      * @param msg       msg
      * @param err       异常详细信息
      * @param data      T
-     * @param <T>
+     * @param <T>       类型
      * @return result
      */
     @NotNull
@@ -52,7 +52,7 @@ public final class Result<T> implements Session {
      * @param msg   msg
      * @param err   异常详细信息
      * @param data  T
-     * @param <T>
+     * @param <T>   类型
      * @return result
      */
     @NotNull
@@ -66,7 +66,7 @@ public final class Result<T> implements Session {
      * @param code  code
      * @param state state
      * @param msg   msg
-     * @param data  T
+     * @param o     T
      * @return result
      */
     @NotNull

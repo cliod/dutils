@@ -207,7 +207,7 @@ public class Response {
     public static Result<Object> fail(@NotNull ResultEnum re, int code, String msg) {
         return of(re.getCode(), false, re.getMsg(), new HashMap<String, Object>(16) {{
             put("code", code);
-            put("errMsg", msg);
+            put("msg", msg);
         }}, null);
     }
 
