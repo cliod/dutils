@@ -9,12 +9,12 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>development-common</module>
-        <module>development-jwt</module>
-        <module>development-json</module>
-        <module>development-datetime</module>
-        <module>development-pinyin</module>
         <module>development-base</module>
+        <module>development-common</module>
+        <module>development-datetime</module>
+        <module>development-json</module>
+        <module>development-jwt</module>
+        <module>development-pinyin</module>
         <module>development-qrcode</module>
     </modules>
 
@@ -39,6 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <version>1.2.3-SNAPSHOT</version>
     </properties>
 
     <dependencies>
@@ -59,6 +60,41 @@
                 <optional>true</optional>
             </dependency>
 
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>development-base</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>development-common</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>development-datetime</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>development-json</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>development-jwt</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>development-pintin</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>development-qrcode</artifactId>
+                <version>${version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
