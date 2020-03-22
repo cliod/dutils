@@ -19,7 +19,16 @@ import java.util.List;
 class Test {
 
     private static final String[] VALUES = {
-            "13.231.170.111 26119 aes-256-cfb E3nbTDcxCHP3 09:07:07 JP \n",
+            "29.215.104.181 54927 rc4-md5 Wj5K7S 10:27:18 RU \n",
+            "183.212.130.162 43616 chacha20 7rCLuH6fU 10:27:06 RU \n",
+            "135.86.88.94 65329 aes-256-cfb BwxuJXc 10:27:11 JP \n",
+            "11.243.199.245 61259 chacha20 6sCemS9rjP 10:27:24 US \n",
+            "193.82.92.86 43857 aes-256-cfb S0HbCTPxtz 10:27:24 RU \n",
+            "29.93.168.124 41328 rc4-md5 BrHneDukic 10:27:18 RU \n",
+            "147.86.250.91 24990 aes-256-cfb y53f04 10:27:07 SG \n",
+            "24.53.215.150 2408 rc4-md5 BQ8Kq5auNqgx 10:27:04 SG \n",
+            "208.66.176.5 48810 chacha20 sfJAV43 10:27:12 JP \n",
+            "158.69.13.142 39413 aes-256-cfb AlsKu8qg 10:27:14 US",
     };
 
     @NotNull
@@ -38,12 +47,12 @@ class Test {
             list.add(bean);
         }
         return new Gson().toJson(list);
-//        return JSON.toJSONString(list);
-//        try {
-//            return new ObjectMapper().writeValueAsString(list);
-//        } catch (JsonProcessingException e) {
-//            return bean.toString();
-//        }
+//    return JSON.toJSONString(list);
+//    try {
+//      return new ObjectMapper().writeValueAsString(list);
+//    } catch (JsonProcessingException e) {
+//      return bean.toString();
+//    }
     }
 
     @Data

@@ -1,6 +1,7 @@
 package com.wobangkj.enums.type;
 
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wobangkj.api.BaseType;
 import com.wobangkj.api.EnumType;
 import lombok.Data;
@@ -8,9 +9,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author cliod
@@ -18,6 +16,7 @@ import java.util.Optional;
  * @desc 性别枚举
  */
 @Getter
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum GenderType implements BaseType<GenderType>, EnumType {
     /**
      * 性别
@@ -29,13 +28,6 @@ public enum GenderType implements BaseType<GenderType>, EnumType {
 
     private Integer code;
     private String desc;
-    private Map<Object, GenderType> map = new HashMap<>(16) {{
-        for (GenderType value : values()) {
-            put(value.code, value);
-            put(value.desc, value);
-            put(value.name().toLowerCase(), value);
-        }
-    }};
 
     GenderType(Integer code, String desc) {
         this.code = code;
@@ -75,14 +67,25 @@ public enum GenderType implements BaseType<GenderType>, EnumType {
 
     @Override
     public GenderType get(int code) {
-        Optional<GenderType> value = Optional.of(map.get(code));
-        return value.orElse(this);
+        for (GenderType value : values()) {
+            if (value.code.equals(code)) {
+                return value;
+            }
+        }
+        return this;
     }
 
     @Override
     public GenderType get(String name) {
-        Optional<GenderType> value = Optional.of(map.get(name));
-        return value.orElse(this);
+        for (GenderType value : values()) {
+            if (value.name().toLowerCase().equals(name.toLowerCase())) {
+                return value;
+            }
+            if (value.desc.equals(name)) {
+                return value;
+            }
+        }
+        return this;
     }
 
     @Data
