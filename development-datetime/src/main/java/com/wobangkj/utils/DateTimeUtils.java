@@ -197,18 +197,9 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      * @author Administrator
      */
     public static long getDaySub(String dateStr1, String dateStr2) {
-        long day;
-        SimpleDateFormat format = DATA_FORMAT.get(FORMAT_DATE_DEFAULT);
-        Date date1;
-        Date date2;
-        try {
-            date1 = format.parse(dateStr1);
-            date2 = format.parse(dateStr2);
-            day = Math.abs(date1.getTime() - date2.getTime() / (DAY_MILLI));
-        } catch (Exception e) {
-            return -1;
-        }
-        return day;
+        LocalDate date1 = LocalDate.parse(dateStr1, DateTimeFormatter.ofPattern(FORMAT_DATETIME_DEFAULT.getPatten()));
+        LocalDate date2 = LocalDate.parse(dateStr2, DateTimeFormatter.ofPattern(FORMAT_DATETIME_DEFAULT.getPatten()));
+        return date1.toEpochDay() - date2.toEpochDay();
     }
 
     /**
