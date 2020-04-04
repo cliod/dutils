@@ -1,7 +1,6 @@
 package com.wobangkj.enums;
 
 import com.alibaba.fastjson.JSON;
-import com.wobangkj.api.BaseEnum;
 import com.wobangkj.api.EnumMsg;
 import lombok.Data;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import java.io.Serializable;
  * @desc result enum
  */
 @Getter
-public enum ResultEnum implements BaseEnum<ResultEnum>, EnumMsg {
+public enum ResultEnum implements EnumMsg {
     /**
      * HTTP 状态码
      * #1000～1999 区间表示参数错误
@@ -52,21 +51,15 @@ public enum ResultEnum implements BaseEnum<ResultEnum>, EnumMsg {
     /**
      * 状态码
      */
-    private Integer code;
+    private final Integer code;
     /**
      * 消息
      */
-    private String msg;
+    private final String msg;
 
     ResultEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
-    }
-
-
-    @Override
-    public ResultEnum[] list() {
-        return values();
     }
 
     @Override
@@ -111,7 +104,7 @@ public enum ResultEnum implements BaseEnum<ResultEnum>, EnumMsg {
         private String msg;
 
         @NotNull
-        static <T extends Enum<T>> ResultEnum.Entry convert(@NotNull BaseEnum<T> e) {
+        static <T extends Enum<T>> ResultEnum.Entry convert(@NotNull EnumMsg e) {
             Entry entry = new Entry();
             entry.setCode(e.getCode());
             entry.setMsg(e.getMsg());

@@ -7,7 +7,8 @@ import java.util.HashMap;
  * @date 19-6-22
  * @desc base type
  */
-public interface BaseType<E extends Enum<E>> extends Session {
+@Deprecated
+public interface BaseType extends Session {
 
     /**
      * 获取code
@@ -36,7 +37,7 @@ public interface BaseType<E extends Enum<E>> extends Session {
      *
      * @return 数组
      */
-    E[] list();
+    BaseType[] list();
 
     /**
      * 获取一个
@@ -44,7 +45,7 @@ public interface BaseType<E extends Enum<E>> extends Session {
      * @param code code
      * @return 一个
      */
-    default E get(int code) {
+    default BaseType get(int code) {
         throw new UnsupportedOperationException();
     }
 
@@ -54,10 +55,10 @@ public interface BaseType<E extends Enum<E>> extends Session {
      * @param name 名字
      * @return 一个
      */
-    default E get(String name) {
-        E[] values = list();
-        for (E value : values) {
-            if (value.name().equals(name)) {
+    default BaseType get(String name) {
+        BaseType[] values = list();
+        for (BaseType value : values) {
+            if (value.getDesc().equals(name)) {
                 return value;
             }
         }

@@ -8,13 +8,14 @@ import java.util.Map;
  * @date 19-7-4
  * @desc enum
  */
-public interface BaseEnum<T extends Enum<T>> extends Session {
+@Deprecated
+public interface BaseEnum extends Session {
     /**
      * 获取所有
      *
      * @return 数组
      */
-    T[] list();
+    BaseEnum[] list();
 
     /**
      * 获取code

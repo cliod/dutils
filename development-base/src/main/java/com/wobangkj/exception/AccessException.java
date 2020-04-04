@@ -1,6 +1,6 @@
 package com.wobangkj.exception;
 
-import com.wobangkj.api.BaseEnum;
+import com.wobangkj.api.EnumMsg;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public class AccessException extends AppException {
 
     private Object access;
 
-    public AccessException(@NotNull BaseEnum<? extends Enum<?>> re) {
+    public AccessException(@NotNull EnumMsg re) {
         super(re);
     }
 
@@ -24,7 +24,7 @@ public class AccessException extends AppException {
         super(code, s);
     }
 
-    public AccessException(@NotNull BaseEnum<? extends Enum<?>> re, Object access) {
+    public AccessException(@NotNull EnumMsg re, Object access) {
         super(re);
         this.access = access;
     }

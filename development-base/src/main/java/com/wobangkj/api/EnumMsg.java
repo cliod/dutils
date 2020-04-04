@@ -13,13 +13,6 @@ import java.util.Map;
 public interface EnumMsg extends Session {
 
     /**
-     * 枚举名字
-     *
-     * @return 枚举
-     */
-    String name();
-
-    /**
      * 获取code
      *
      * @return code
