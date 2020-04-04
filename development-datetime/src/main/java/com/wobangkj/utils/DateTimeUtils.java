@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.wobangkj.api.Format.*;
@@ -114,7 +116,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      * @return 天数
      */
     public static long getPassedDayFrom(String datetime) {
-        return getDaySub(datetime, getDefaultDateTimeStr());
+        return getDaySub(datetime, getNow(FORMAT_DATETIME_DEFAULT.getPatten()));
     }
 
     ;
@@ -172,7 +174,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     public static boolean isDatetimeInThisMonth(@NotNull String datetime) {
         long len = datetime.length();
         String date;
-        String now = getDateStr();
+        String now = getNow(FORMAT_DATE_DEFAULT.getPatten());
         if (len == FORMAT_DATETIME_DEFAULT.getPatten().length() || len == FORMAT_DATE_DEFAULT.getPatten().length()) {
             date = datetime.substring(0, 7);
         } else {
@@ -215,96 +217,34 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      * @return 当天的00:00,昨天的24:00
      */
     public static long getMidnight() {
-        String start = getDefaultDateStr() + " 00:00:00";
+        String start = getNow(FORMAT_DATE_DEFAULT.getPatten()) + " 00:00:00";
         return convertToTimestampLong(start);
     }
 
-    /**
-     * 获取时间戳
-     *
-     * @return 时间戳字符串
-     */
     @NotNull
-    public static String getTimestampStr() {
-        return Long.toString(getTimestampLong());
-    }
-
-    /**
-     * 获取时间戳
-     *
-     * @return 时间戳
-     */
-    public static long getTimestampLong() {
-        return System.currentTimeMillis();
-    }
-
-    /**
-     * 获取时间
-     * 格式:yyyyMMdd
-     *
-     * @return 时间字符串
-     */
-    @NotNull
-    public static String getDateTimeStr() {
-        SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_DATETIME);
-        return sdf.format(new Date(System.currentTimeMillis()));
-    }
-
-    /**
-     * 获取时间
-     * 格式:yyyyMMdd
-     *
-     * @return 时间字符串
-     */
-    @NotNull
-    public static String getDefaultDateTimeStr() {
-        SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_DATETIME_DEFAULT);
-        return sdf.format(new Date(System.currentTimeMillis()));
-    }
-
-    /**
-     * 获取时间
-     * 格式:yyyyMMdd
-     *
-     * @return 时间
-     */
-    @NotNull
-    public static Long getDateTimeLong() {
-        return Long.parseLong(getDateTimeStr());
+    public static String getNow(String pattern) {
+        return getNow(pattern, LocalDateTime.now());
     }
 
     @NotNull
-    public static String getDateStr() {
-        SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_DATE);
-        return sdf.format(new Date(System.currentTimeMillis()));
+    public static String getNow(String pattern, LocalDate localDate) {
+        return DateTimeFormatter.ofPattern(pattern).format(localDate);
     }
 
     @NotNull
-    public static String getDefaultDateStr() {
-        SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_DATE_DEFAULT);
-        return sdf.format(new Date(System.currentTimeMillis()));
+    public static String getNow(String pattern, LocalDateTime localDateTime) {
+        return DateTimeFormatter.ofPattern(pattern).format(localDateTime);
     }
 
     @NotNull
-    public static Long getDateLong() {
-        return Long.parseLong(getDateStr());
-    }
-
-    @NotNull
-    public static String getTimeStr() {
-        SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_TIME);
-        return sdf.format(new Date(System.currentTimeMillis()));
+    public static String getNow(String pattern, LocalTime localTime) {
+        return DateTimeFormatter.ofPattern(pattern).format(localTime);
     }
 
     @NotNull
     public static String getDefaultTimeStr() {
         SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_TIME_DEFAULT);
         return sdf.format(new Date(System.currentTimeMillis()));
-    }
-
-    @NotNull
-    public static Long getTimeLong() {
-        return Long.parseLong(getTimeStr());
     }
 
     /**
@@ -314,7 +254,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      * @return 时间
      */
     @NotNull
-    public static Date getDate(String timestamp) {
+    public static Date convertTimestampToDate(String timestamp) {
         return new Date(Long.parseLong(timestamp));
     }
 
@@ -337,7 +277,10 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      */
     @NotNull
     public static String convertToDefaultDateTimeStr(@NotNull Date date) {
-        return convertToDefaultDateTimeStr(date.getTime());
+        return date
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofPattern(FORMAT_DATETIME_DEFAULT.getPatten()));
     }
 
     /**
@@ -348,8 +291,9 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      */
     @NotNull
     public static String convertToDefaultDateTimeStr(long timestamp) {
-        SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_DATETIME_DEFAULT);
-        return sdf.format(new Date(timestamp));
+        return Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofPattern(FORMAT_DATETIME_DEFAULT.getPatten()));
     }
 
     /**

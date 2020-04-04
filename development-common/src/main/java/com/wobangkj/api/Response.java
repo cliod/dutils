@@ -238,11 +238,13 @@ public class Response {
         }
 
         @NotNull
+        @Deprecated
         public Builder put(String title, Date data) {
             return this.put(title, data, "yyyy-MM-dd HH:mm:ss");
         }
 
         @NotNull
+        @Deprecated
         public Builder put(String title, @NotNull Date data, String pattern) {
             this.data.put(title, DateTimeFormatter.ofPattern(pattern)
                     .format(data.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
