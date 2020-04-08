@@ -1,6 +1,6 @@
 package com.wobangkj.bean;
 
-import com.wobangkj.api.TwoDimension;
+import com.wobangkj.api.Dimension;
 
 /**
  * 一维收缩
@@ -10,38 +10,16 @@ import com.wobangkj.api.TwoDimension;
  * @see java.io.Serializable
  * @since 2020-04-07
  */
-public abstract class Among<T extends Number> extends Number implements TwoDimension<T, T> {
+public abstract class Among<T extends Number> implements Dimension {
 
     protected T floor;
     protected T ceiling;
 
-    @Override
-    public T getX() {
+    public T getFloor() {
         return floor;
     }
 
-    @Override
-    public T getY() {
+    public T getCeiling() {
         return ceiling;
-    }
-
-    @Override
-    public int intValue() {
-        return ceiling.intValue() ^ floor.intValue();
-    }
-
-    @Override
-    public long longValue() {
-        return ceiling.longValue() ^ floor.longValue();
-    }
-
-    @Override
-    public float floatValue() {
-        return ceiling.longValue() ^ floor.longValue();
-    }
-
-    @Override
-    public double doubleValue() {
-        return ceiling.longValue() ^ floor.longValue();
     }
 }

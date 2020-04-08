@@ -1,9 +1,13 @@
 package com.wobangkj.api;
 
 /**
+ * 点
  *
+ * @author @cliod
+ * @since 4/8/20 9:17 AM
+ * package: com.wobangkj.api
  */
-public interface TwoDimension<X, Y> {
+public interface Point<X, Y> extends Dimension {
 
     /**
      * 获取x的值
