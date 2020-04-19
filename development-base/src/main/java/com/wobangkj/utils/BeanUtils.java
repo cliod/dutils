@@ -19,8 +19,8 @@ import static java.lang.reflect.Modifier.*;
  * Bean工具类
  *
  * @author cliod
- * @date 19-7-18
  * @desc util
+ * @since 19-7-18
  */
 public class BeanUtils {
     private BeanUtils() {

@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 会话
  *
  * @author cliod
- * @date 2019/11/9
+ * @since 2019/11/9
  * package : com.wobangkj.api
  */
 public interface Session extends Serializable {

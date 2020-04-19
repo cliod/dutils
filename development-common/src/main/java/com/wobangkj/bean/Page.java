@@ -4,21 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.wobangkj.api.Session;
 import com.wobangkj.utils.BeanUtils;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * 分页封装
  *
  * @author cliod
- * @date 19-6-9
- * @desc page
+ * @since 19-6-9
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Page<T> implements Session {
+public final class Page<T> extends HashMap<String, Object> implements Map<String, Object>, Session {
     private static final long serialVersionUID = 7562274153136856700L;
     /**
      * 总数量
@@ -42,8 +41,7 @@ public class Page<T> implements Session {
      * @param <T>     类型
      * @return 结果
      */
-    @NotNull
-    public static <T> Page<T> of(long length, int size, Collection<T> objects) {
+    public static <T> @NotNull Page<T> of(long length, int size, Collection<T> objects) {
         Page<T> page = new Page<>();
         page.count = length;
         page.size = size;

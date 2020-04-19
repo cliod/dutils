@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * 中文首字母排序
  *
  * @author cliod
- * @date 2019/7/27
+ * @since 2019/7/27
  * package : com.wobangkj.git.magicked.util
  */
 public class PinyinUtils {

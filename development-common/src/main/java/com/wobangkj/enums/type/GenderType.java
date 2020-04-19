@@ -11,8 +11,8 @@ import java.io.Serializable;
 
 /**
  * @author cliod
- * @date 19-5-25
  * @desc 性别枚举
+ * @since 19-5-25
  */
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)

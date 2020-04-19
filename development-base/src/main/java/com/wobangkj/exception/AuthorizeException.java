@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
  * 认证异常处理
  *
  * @author Cliod
- * @date 2019/7/16
  * @desc exception
+ * @since 2019/7/16
  */
 @Getter
 public class AuthorizeException extends AppException {

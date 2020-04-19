@@ -7,7 +7,7 @@ import java.util.Map;
  * 枚举类型
  *
  * @author cliod
- * @date 2019/12/27
+ * @since 2019/12/27
  * package : com.wobangkj.api
  */
 public interface EnumMsg extends Session {

@@ -17,7 +17,7 @@ import static com.wobangkj.api.Format.*;
  * 日期工具
  *
  * @author cliod
- * @date 19-7-19
+ * @since 19-7-19
  * com.wobangkj.git.magicked.util
  */
 public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {

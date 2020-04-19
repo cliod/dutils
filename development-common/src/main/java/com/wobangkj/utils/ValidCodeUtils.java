@@ -14,7 +14,7 @@ import java.util.Random;
  * 验证码工具类
  *
  * @author cliod
- * @date 2019/10/20
+ * @since 2019/10/20
  * package : com.wobangkj.git.cliod.util
  */
 public class ValidCodeUtils {

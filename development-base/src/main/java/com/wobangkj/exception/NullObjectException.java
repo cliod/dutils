@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
  * 空异常处理
  *
  * @author cliod
- * @date 19-7-18
  * @desc exception
+ * @since 19-7-18
  */
 @Getter
 public class NullObjectException extends AppException {

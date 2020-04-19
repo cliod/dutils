@@ -20,7 +20,7 @@ import static com.wobangkj.bean.Result.of;
  * 接口数据响应包装
  *
  * @author cliod
- * @date 2019/9/14
+ * @since 2019/9/14
  * package : com.wobangkj.bean
  */
 public class Response {

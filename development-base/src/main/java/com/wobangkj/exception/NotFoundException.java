@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
  * 资源丢失
  *
  * @author cliod
- * @date 19-7-16
  * @desc exception
+ * @since 19-7-16
  */
 @Getter
 public class NotFoundException extends AccessException {

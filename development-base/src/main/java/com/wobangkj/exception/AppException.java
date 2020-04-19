@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
  * 统一异常类
  *
  * @author cliod
- * @date 19-7-16
  * @desc exception
+ * @since 19-7-16
  */
 @Getter
 public class AppException extends RuntimeException {

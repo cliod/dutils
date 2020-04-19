@@ -6,7 +6,7 @@ import lombok.Getter;
  * 时间工具
  *
  * @author cliod
- * @date 2019/11/15
+ * @since 2019/11/15
  * package : com.wobangkj.api
  */
 @Getter

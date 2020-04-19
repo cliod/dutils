@@ -18,7 +18,7 @@ import java.util.List;
  * 价格,金额
  *
  * @author cliod
- * @date 2019/9/23
+ * @since 2019/9/23
  * package : com.wobangkj.git.cliod.api.as
  */
 @EqualsAndHashCode(callSuper = true)

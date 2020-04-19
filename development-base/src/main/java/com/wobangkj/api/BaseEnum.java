@@ -5,8 +5,8 @@ import java.util.Map;
 
 /**
  * @author cliod
- * @date 19-7-4
  * @desc enum
+ * @since 19-7-4
  */
 @Deprecated
 public interface BaseEnum extends Session {

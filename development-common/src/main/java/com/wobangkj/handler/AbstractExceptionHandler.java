@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
  * 接口统一异常捕获
  *
  * @author cliod
- * @date 19-7-16
  * @desc 处理器
+ * @since 19-7-16
  */
 public abstract class AbstractExceptionHandler {
 

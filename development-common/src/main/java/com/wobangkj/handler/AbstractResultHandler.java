@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
  * 结果处理
  *
  * @author cliod
- * @date 2019/10/20
+ * @since 2019/10/20
  * package : com.wobangkj.handler
  */
 public abstract class AbstractResultHandler {

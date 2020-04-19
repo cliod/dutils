@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 /**
  * @author cliod
- * @date 19-6-9
  * @desc result enum
+ * @since 19-6-9
  */
 @Getter
 public enum ResultEnum implements EnumMsg {

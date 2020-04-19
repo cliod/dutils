@@ -10,7 +10,7 @@ import java.util.Map;
  * 列表转化为Map,通过id和对象映射
  *
  * @author cliod
- * @date 2019/7/26
+ * @since 2019/7/26
  * package : com.wobangkj.util
  */
 public class List2MapUtils {

@@ -22,7 +22,7 @@ import java.util.Random;
  * 二维码生成器
  *
  * @author cliod
- * @date 19-7-24
+ * @since 19-7-24
  * package : com.wobangkj.git.magicked.util
  */
 public class QrCodeUtils {

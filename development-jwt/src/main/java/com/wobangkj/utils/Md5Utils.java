@@ -9,7 +9,7 @@ import java.security.MessageDigest;
  * MD5签名工具类
  *
  * @author cliod
- * @date 2019/12/5
+ * @since 2019/12/5
  * package : com.wobangkj.util
  */
 public class Md5Utils {

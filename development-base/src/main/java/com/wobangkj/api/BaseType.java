@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 /**
  * @author cliod
- * @date 19-6-22
  * @desc base type
+ * @since 19-6-22
  */
 @Deprecated
 public interface BaseType extends Session {

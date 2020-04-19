@@ -3,14 +3,19 @@ package com.wobangkj.bean;
 import com.alibaba.fastjson.JSON;
 import com.wobangkj.api.Session;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author cliod
- * @date 2019/5/20 13:20
+ * @since 2019/5/20 13:20
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public final class Result<T> implements Session {
+public final class Result<T> extends HashMap<String, Object> implements Map<String, Object>, Session {
 
     private static final long serialVersionUID = -1884640212713045469L;
     private Integer code;
@@ -49,8 +54,7 @@ public final class Result<T> implements Session {
      * @param o     T
      * @return result
      */
-    @NotNull
-    public static <T> Result<T> of(int code, boolean state, String msg, T o) {
+    public static <T> @NotNull Result<T> of(int code, boolean state, String msg, T o) {
         return of(code, state, msg, null, o);
     }
 
@@ -59,9 +63,8 @@ public final class Result<T> implements Session {
      *
      * @return 字符串
      */
-    @NotNull
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.toJson();
     }
 
@@ -70,14 +73,12 @@ public final class Result<T> implements Session {
      *
      * @return Json
      */
-    @NotNull
     @Override
-    public String toJson() {
+    public @NotNull String toJson() {
         return JSON.toJSONString(this);
     }
 
-    @NotNull
-    public Object readResolve() throws Exception {
+    public @NotNull Object readResolve() throws Exception {
         return this.getClass().getConstructor().newInstance();
     }
 }

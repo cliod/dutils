@@ -3,17 +3,21 @@ package com.wobangkj.bean;
 import com.alibaba.fastjson.JSON;
 import com.wobangkj.api.Session;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
+import lombok.EqualsAndHashCode;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 请求
  *
  * @author cliod
- * @date 2019/11/9
+ * @since 2019/11/9
  * package : com.wobangkj.bean
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Require<T> implements Session {
+public class Require<T> extends HashMap<String, Object> implements Map<String, Object>, Session {
 
     private static final long serialVersionUID = 1618155628290794827L;
     /**
@@ -24,10 +28,6 @@ public class Require<T> implements Session {
      * jwt
      */
     private String token;
-    /**
-     * 时间戳
-     */
-    private Long timestamp;
     /**
      * 参数
      */
@@ -53,7 +53,6 @@ public class Require<T> implements Session {
         return JSON.toJSONString(this);
     }
 
-    @NotNull
     public Object readResolve() throws Exception {
         return this.getClass().getConstructor().newInstance();
     }

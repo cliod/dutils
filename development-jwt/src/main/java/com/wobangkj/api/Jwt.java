@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * jwt加密
  *
  * @author cliod
- * @date 2019/11/9
+ * @since 2019/11/9
  * package : com.wobangkj.util
  */
 public class Jwt {
