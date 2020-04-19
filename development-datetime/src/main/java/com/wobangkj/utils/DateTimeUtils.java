@@ -51,7 +51,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     static final String EMPTY = "";
 
     static {
-        DATA_FORMAT = new HashMap<>(16) {{
+        DATA_FORMAT = new HashMap<Format, SimpleDateFormat>(16) {{
             for (Format value : Format.values()) {
                 put(value, new SimpleDateFormat(value.getPatten()));
             }
