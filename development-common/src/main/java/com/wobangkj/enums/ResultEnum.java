@@ -9,8 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 /**
+ * return msg
+ *
  * @author cliod
- * @desc result enum
  * @since 19-6-9
  */
 @Getter

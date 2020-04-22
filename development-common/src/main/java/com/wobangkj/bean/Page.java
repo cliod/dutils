@@ -1,13 +1,16 @@
 package com.wobangkj.bean;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.wobangkj.api.Session;
 import com.wobangkj.utils.BeanUtils;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * 分页封装
@@ -15,9 +18,8 @@ import java.util.*;
  * @author cliod
  * @since 19-6-9
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public final class Page<T> extends HashMap<String, Object> implements Map<String, Object>, Session {
+public final class Page<T> implements Session {
     private static final long serialVersionUID = 7562274153136856700L;
     /**
      * 总数量
@@ -83,7 +85,7 @@ public final class Page<T> extends HashMap<String, Object> implements Map<String
      * @return 字符串
      */
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.toJson();
     }
 
@@ -93,7 +95,18 @@ public final class Page<T> extends HashMap<String, Object> implements Map<String
      * @return Json
      */
     @Override
-    public String toJson() {
+    public @NotNull String toJson() {
         return JSON.toJSONString(this);
+    }
+
+    /**
+     * 转成Map对象
+     *
+     * @return java.util.Map
+     * @see java.util.Map
+     */
+    @Override
+    public Map<String, Object> toObject() {
+        return JSONObject.parseObject(this.toJson());
     }
 }

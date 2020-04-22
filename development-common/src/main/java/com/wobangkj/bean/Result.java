@@ -1,21 +1,19 @@
 package com.wobangkj.bean;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.wobangkj.api.Session;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author cliod
  * @since 2019/5/20 13:20
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public final class Result<T> extends HashMap<String, Object> implements Map<String, Object>, Session {
+public final class Result<T> implements Session {
 
     private static final long serialVersionUID = -1884640212713045469L;
     private Integer code;
@@ -80,5 +78,16 @@ public final class Result<T> extends HashMap<String, Object> implements Map<Stri
 
     public @NotNull Object readResolve() throws Exception {
         return this.getClass().getConstructor().newInstance();
+    }
+
+    /**
+     * 转成Map对象
+     *
+     * @return java.util.Map
+     * @see java.util.Map
+     */
+    @Override
+    public Map<String, Object> toObject() {
+        return JSONObject.parseObject(this.toJson());
     }
 }

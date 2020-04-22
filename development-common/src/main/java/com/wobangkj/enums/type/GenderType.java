@@ -10,8 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 /**
+ * 性别枚举
+ *
  * @author cliod
- * @desc 性别枚举
  * @since 19-5-25
  */
 @Getter

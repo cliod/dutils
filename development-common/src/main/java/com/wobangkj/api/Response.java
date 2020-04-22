@@ -1,15 +1,11 @@
 package com.wobangkj.api;
 
-import com.alibaba.fastjson.JSON;
 import com.wobangkj.bean.Page;
 import com.wobangkj.bean.Result;
 import com.wobangkj.enums.ResultEnum;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,52 +25,6 @@ public class Response {
      */
     public Response() {
         throw new UnsupportedOperationException();
-    }
-
-    /**
-     * 获data字段的值
-     *
-     * @param json  Json
-     * @param clazz 返回值的对象
-     * @param <T>   类型:{@code} java.lang.Class
-     * @return 结果
-     */
-    public static <T> T getData(@NotNull String json, @NotNull Class<T> clazz) {
-        return getField(json, "data", clazz);
-    }
-
-    /**
-     * 获data字段的值
-     *
-     * @param json Json
-     * @return 结果
-     */
-    public static Object getData(@NotNull String json) {
-        return getField(json, "data");
-    }
-
-    /**
-     * 获其中一个字段的值
-     *
-     * @param json  Json
-     * @param key   字段
-     * @param clazz 返回值的对象
-     * @param <T>   类型:{@code} java.lang.Class
-     * @return 结果
-     */
-    public static <T> T getField(@NotNull String json, @NotNull String key, @NotNull Class<T> clazz) {
-        return JSON.parseObject(json).getObject(key, clazz);
-    }
-
-    /**
-     * 获其中一个字段的值
-     *
-     * @param json Json
-     * @param key  字段
-     * @return 结果
-     */
-    public static Object getField(@NotNull String json, @NotNull String key) {
-        return JSON.parseObject(json).getJSONObject(key);
     }
 
     /**
@@ -131,6 +81,7 @@ public class Response {
     }
 
     @SafeVarargs
+    @Deprecated
     @NotNull
     public static <V> Result<Map<String, Object>> ok(@NotNull String titles, V... values) {
         return ok(titles.split(","), values);
@@ -180,8 +131,8 @@ public class Response {
      * 失败返回,携带系统错误信息
      */
     @NotNull
-    public static Result<Object> fail(@NotNull ResultEnum re, Throwable err) {
-        return of(re.getCode(), false, re.getMsg(), err, null);
+    public static Result<Object> fail(@NotNull ResultEnum re, @NotNull Throwable err) {
+        return of(re.getCode(), false, re.getMsg(), err.getMessage(), null);
     }
 
     /**
@@ -213,23 +164,26 @@ public class Response {
 
     @NotNull
     public static Builder build(String title, Object data) {
-        return new Builder() {{
-            setData(new HashMap<String, Object>(16) {{
-                put(title, data);
-            }});
-        }};
+        Builder builder = Builder.build();
+        builder.put(title, data);
+        return builder;
     }
 
     @NotNull
     public static Builder build() {
-        return new Builder() {{
-            setData(new HashMap<>(16));
-        }};
+        return Builder.build();
     }
 
+    /**
+     * build模式
+     */
     @Data
     public static class Builder {
         private Map<String, Object> data;
+
+        Builder() {
+            this.data = new HashMap<>(16);
+        }
 
         @NotNull
         public Builder put(String title, Object data) {
@@ -237,17 +191,13 @@ public class Response {
             return this;
         }
 
-        @NotNull
-        @Deprecated
-        public Builder put(String title, Date data) {
-            return this.put(title, data, "yyyy-MM-dd HH:mm:ss");
+        static @NotNull Builder build() {
+            return new Builder();
         }
 
         @NotNull
-        @Deprecated
-        public Builder put(String title, @NotNull Date data, String pattern) {
-            this.data.put(title, DateTimeFormatter.ofPattern(pattern)
-                    .format(data.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+        public Builder add(String title, Object data) {
+            this.data.put(title, data);
             return this;
         }
 
@@ -256,7 +206,7 @@ public class Response {
             return Response.ok(this.data);
         }
 
-        void setData(Map<String, Object> data) {
+        public void set(Map<String, Object> data) {
             this.data = data;
         }
     }
