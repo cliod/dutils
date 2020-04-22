@@ -1186,17 +1186,6 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     }
 
     /**
-     * 字符串转date
-     *
-     * @param dateString 时间字符串
-     * @return 时间
-     */
-    public static Date StringToDate(String dateString) throws ParseException {
-        SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_SLASH_DATE);
-        return sdf.parse(dateString);
-    }
-
-    /**
      * 判断输入日期是一个星期中的第几天(星期天为一个星期第一天)
      *
      * @param date 时间
@@ -1317,7 +1306,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
             return "";
         }
         SimpleDateFormat dateFormat = DATA_FORMAT.get(FORMAT_DATETIME_DEFAULT);
-        return dateFormat.format(date);
+        return formatDate(date, FORMAT_DATETIME_DEFAULT.getPatten());
     }
 
     /**
@@ -1326,7 +1315,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      * @return String
      */
     @NotNull
-    public static String today() {
+    public static String nowDate() {
         return formatDate(new Date(), FORMAT_DATE_DEFAULT.getPatten());
     }
 
@@ -1336,7 +1325,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      * @return String
      */
     @NotNull
-    public static String currentTime() {
+    public static String nowTime() {
         return formatDate(new Date(), FORMAT_DATETIME.getPatten());
     }
 
@@ -1359,9 +1348,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
      */
     @NotNull
     public static String getYesterday() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -1);
-        return formatDate(calendar.getTime(), FORMAT_DATE_DEFAULT.getPatten());
+        return formatDate(getDate(-1), FORMAT_DATE_DEFAULT.getPatten());
     }
 
     /**
@@ -1405,7 +1392,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     }
 
     /**
-     * 根据传入的数字，输出相比现在days天的数据
+     * 获取days天之后的时间
      *
      * @param days 天数
      * @return D时间
@@ -1418,7 +1405,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     }
 
     /**
-     * 日期最大时间
+     * 日期最大时间：获取当天23:59:59点
      *
      * @param dt 日期
      * @return 最大时间
@@ -1439,7 +1426,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     }
 
     /**
-     * 日期最小时间
+     * 日期最小时间：获取当天0点
      *
      * @param dt 日期
      * @return 最小时间
@@ -1451,7 +1438,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     }
 
     /**
-     * 月的最后一天
+     * 这个月的最后一天
      *
      * @param date 日期
      * @return 时间
@@ -1466,7 +1453,7 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     }
 
     /**
-     * 月的第一天
+     * 这个月的第一天
      *
      * @param date 日期
      * @return 第一天
@@ -1581,19 +1568,6 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
     }
 
     /**
-     * getStrFormTime: <br/>
-     *
-     * @param form 格式时间
-     * @param date 时间
-     * @return 指定格式的
-     */
-    @NotNull
-    public static String getStrFormTime(String form, Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat(form);
-        return sdf.format(date);
-    }
-
-    /**
      * 获取几天内日期 return 2014-5-4、2014-5-3
      */
     @NotNull
@@ -1603,26 +1577,6 @@ public class DateTimeUtils extends org.apache.commons.lang.time.DateUtils {
             listDate.add(DateTimeUtils.getReqDateTight(DateTimeUtils.getDate(-i)));
         }
         return listDate;
-    }
-
-    /**
-     * 对时间进行格式化
-     *
-     * @param date 日期
-     * @return 格式化
-     */
-    public static Date dateFormat(Date date) {
-        SimpleDateFormat sdf = DATA_FORMAT.get(FORMAT_DATE_DEFAULT);
-        Date value = new Date();
-
-        try {
-            value = sdf.parse(sdf.format(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return value;
-
     }
 
     public static boolean isSameDayWithToday(Date date) {
