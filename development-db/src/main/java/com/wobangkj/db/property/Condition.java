@@ -13,7 +13,15 @@ public class Condition {
         return this;
     }
 
-    public Condition where() {
+    public Condition orderBy() {
+        return this;
+    }
+
+    public Condition groupBy() {
+        return this;
+    }
+
+    public Condition limit() {
         return this;
     }
 }

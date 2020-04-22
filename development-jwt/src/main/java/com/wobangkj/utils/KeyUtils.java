@@ -153,7 +153,7 @@ public class KeyUtils {
      * @return uuid.
      * @author WuShuicheng.
      */
-    public static String get36uuid() {
+    public static @NotNull String get36uuid() {
         return UUID.randomUUID().toString();
     }
 
