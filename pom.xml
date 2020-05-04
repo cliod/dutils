@@ -17,6 +17,7 @@
         <module>development-pinyin</module>
         <module>development-qrcode</module>
         <module>development-db</module>
+        <module>development-exception</module>
     </modules>
 
     <name>development</name>

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * 认证异常处理
  *
  * @author Cliod
- * @desc exception
+ * @see AppException
  * @since 2019/7/16
  */
 @Getter
@@ -32,5 +32,10 @@ public class AuthorizeException extends AppException {
     public AuthorizeException(Integer code, String s, @NotNull Object detail) {
         super(code, s);
         this.auth = detail.toString();
+    }
+
+    public AuthorizeException(@NotNull EnumMsg re, Throwable cause, String auth) {
+        super(re, cause);
+        this.auth = auth;
     }
 }

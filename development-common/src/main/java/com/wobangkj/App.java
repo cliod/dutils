@@ -21,5 +21,6 @@ public class App {
 
         System.out.println(GenderType.valueOf("FEMALE").toObject());
         System.out.println(GenderType.valueOf("FEMALE").name());
+
     }
 }

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * 统一异常类
  *
  * @author cliod
- * @desc exception
+ * @see java.lang.RuntimeException
  * @since 19-7-16
  */
 @Getter
@@ -31,5 +31,10 @@ public class AppException extends RuntimeException {
     public AppException(Throwable cause, Integer code) {
         super(cause);
         this.code = code;
+    }
+
+    public AppException(@NotNull EnumMsg re, Throwable cause) {
+        super(re.getMsg(), cause);
+        this.code = re.getCode();
     }
 }

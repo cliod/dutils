@@ -5,7 +5,6 @@ import java.util.Map;
 
 /**
  * @author cliod
- * @desc enum
  * @since 19-7-4
  */
 @Deprecated
