@@ -15,8 +15,7 @@ import java.util.Map;
  */
 public class List2MapUtils {
 
-    @NotNull
-    public static <T> Map<String, T> convert(@NotNull List<T> list, @NotNull String key) throws NoSuchFieldException, IllegalAccessException {
+    public static <T> @NotNull Map<String, T> convert(@NotNull List<T> list, @NotNull String key) throws NoSuchFieldException, IllegalAccessException {
         return new HashMap<String, T>(list.size() * 4 / 3 + 1) {{
             Object obj;
             for (T t : list) {
@@ -29,13 +28,11 @@ public class List2MapUtils {
         }};
     }
 
-    @NotNull
-    public static <T> Map<String, T> convert(@NotNull List<T> list) throws NoSuchFieldException, IllegalAccessException {
+    public static <T> @NotNull Map<String, T> convert(@NotNull List<T> list) throws NoSuchFieldException, IllegalAccessException {
         return convert(list, "id");
     }
 
-    @NotNull
-    public static <T> Map<String, Object> convert(@NotNull List<T> list, @NotNull String keyName, String valueName) throws NoSuchFieldException, IllegalAccessException {
+    public static <T> @NotNull Map<String, Object> convert(@NotNull List<T> list, @NotNull String keyName, String valueName) throws NoSuchFieldException, IllegalAccessException {
         return new HashMap<String, Object>() {{
             Object obj;
             for (T t : list) {
@@ -48,8 +45,7 @@ public class List2MapUtils {
         }};
     }
 
-    @NotNull
-    public static Map<String, Long> statistics(@NotNull List<?> list, String key) throws NoSuchFieldException, IllegalAccessException {
+    public static @NotNull Map<String, Long> statistics(@NotNull List<?> list, String key) throws NoSuchFieldException, IllegalAccessException {
         return new HashMap<String, Long>() {{
             Object obj;
             Long temp;

@@ -27,6 +27,11 @@ public class Response {
         throw new UnsupportedOperationException();
     }
 
+    public static Result<Object> SUCCESS = ok();
+    public static Result<Object> UPDATE = ok(ResultEnum.SUCCESS_EDIT, null);
+    public static Result<Object> INSERT = ok(ResultEnum.SUCCESS_ADD, null);
+    public static Result<Object> DELETE = ok(ResultEnum.SUCCESS_DELETE, null);
+
     /**
      * 无返回
      */

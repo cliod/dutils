@@ -18,8 +18,7 @@ public class IpUtils {
     private static final String IS255 = "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
     private static final Pattern PATTERN = Pattern.compile("^(?:" + IS255 + "\\.){3}" + IS255 + "$");
 
-    @NotNull
-    public static String longToIpV4(long longIp) {
+    public static @NotNull String longToIpV4(long longIp) {
         int octet3 = (int) ((longIp >> 24) % 256);
         int octet2 = (int) ((longIp >> 16) % 256);
         int octet1 = (int) ((longIp >> 8) % 256);

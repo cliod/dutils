@@ -247,8 +247,7 @@ public class ValidCodeUtils {
     /**
      * 绘制字符串
      */
-    @NotNull
-    private static String drowString(@NotNull Graphics2D graphics, String randomString, int stringLength, int i, int width, int height, @NotNull String randString, String fontFamily) {
+    private static @NotNull String drowString(@NotNull Graphics2D graphics, String randomString, int stringLength, int i, int width, int height, @NotNull String randString, String fontFamily) {
         graphics.setFont(new Font(fontFamily, Font.BOLD, height - 4));
         graphics.setColor(new Color(RANDOM.nextInt(101), RANDOM.nextInt(111), RANDOM.nextInt(121)));
         String rand = String.valueOf(randString.charAt(RANDOM.nextInt(randString.length())));
@@ -303,5 +302,4 @@ public class ValidCodeUtils {
             g.drawLine(i, (int) d + height, i, height);
         }
     }
-
 }

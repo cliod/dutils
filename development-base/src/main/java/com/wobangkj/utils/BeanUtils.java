@@ -2,15 +2,14 @@ package com.wobangkj.utils;
 
 import com.wobangkj.api.EnumMsg;
 import com.wobangkj.exception.NullObjectException;
+import lombok.SneakyThrows;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.temporal.Temporal;
 import java.util.*;
 
 import static java.lang.reflect.Modifier.*;
@@ -19,7 +18,6 @@ import static java.lang.reflect.Modifier.*;
  * Bean工具类
  *
  * @author cliod
- * @desc util
  * @since 19-7-18
  */
 public class BeanUtils {
@@ -94,7 +92,8 @@ public class BeanUtils {
      * @param obj 对象
      * @return 是否为空
      */
-    public static boolean isEmpty(Object obj) throws IllegalAccessException {
+    @SneakyThrows
+    public static boolean isEmpty(Object obj) {
         if (isNull(obj)) {
             //为空
             return true;
@@ -107,15 +106,11 @@ public class BeanUtils {
             //不为null的Number--> not empty
             return false;
         }
-        if (obj instanceof CharSequence) {
-            //字符串,看长度
-            return ((CharSequence) obj).length() == 0;
-        }
         if (obj instanceof Enum) {
             //不为null的枚举--> not empty
             return false;
         }
-        if (obj instanceof Date || obj instanceof LocalDateTime || obj instanceof LocalTime || obj instanceof LocalDate) {
+        if (obj instanceof Date || obj instanceof Temporal) {
             //时间不为空
             return false;
         }
@@ -123,6 +118,10 @@ public class BeanUtils {
         if (clazz.isArray()) {
             //数组,看长度
             return Array.getLength(obj) == 0;
+        }
+        if (obj instanceof CharSequence) {
+            //字符串,看长度
+            return ((CharSequence) obj).length() == 0;
         }
         if (obj instanceof Collection<?>) {
             //集合,看长度
