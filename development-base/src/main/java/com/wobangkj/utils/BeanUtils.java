@@ -260,6 +260,22 @@ public class BeanUtils {
     }
 
     /**
+     * 获取对象字段值
+     *
+     * @param obj 对象
+     * @return 值
+     */
+    public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj) throws IllegalAccessException {
+        Map<String, Object> map = new HashMap<>();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(obj));
+        }
+        return map;
+    }
+
+    /**
      * 给对象的属性值赋值
      * 注: 暂无反射删除方法
      *
