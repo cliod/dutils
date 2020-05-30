@@ -1,7 +1,5 @@
 package com.wobangkj;
 
-import com.wobangkj.db.DataBase;
-
 /**
  * Hello world!
  */

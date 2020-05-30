@@ -1,12 +1,13 @@
 package com.wobangkj.db.property;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.wobangkj.api.Parser;
+import com.wobangkj.utils.BeanUtils;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * sql colnum mapper
@@ -15,89 +16,44 @@ import java.util.Set;
  * @since 4/11/20 4:12 PM
  * package: com.wobangkj.db
  */
-public class Column extends HashMap<String, String> implements Map<String, String> {
+@Getter
+public class Column implements Parser {
 
-    private String key;
-    private String value;
+    private final String prefix;
+    private final StringBuilder builder;
+    protected Map<String, Class<?>> columns;
+    private List<String> ignores;
+    private String cache;
 
-    public Column(String key, String value) {
-        super(16);
-        this.key = key;
-        this.value = value;
+    public Column(String prefix, Object obj) {
+        this.prefix = prefix;
+        this.columns = BeanUtils.getFieldNameAndType(obj);
+        this.builder = new StringBuilder();
     }
 
-    public Column(int initialCapacity, String key, String value) {
-        super(initialCapacity);
-        this.key = key;
-        this.value = value;
-        this.put(key, value);
-    }
-
-    @Override
-    public int size() {
-        return super.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return super.isEmpty();
+    public Column(String prefix, Object obj, String... ignore) {
+        this.prefix = prefix;
+        this.columns = BeanUtils.getFieldNameAndType(obj);
+        this.ignores = Arrays.asList(ignore);
+        this.builder = new StringBuilder();
     }
 
     @Override
-    public boolean containsKey(Object key) {
-        return super.containsKey(key);
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        return super.containsValue(value);
-    }
-
-    @Override
-    public String get(Object key) {
-        return super.get(key);
-    }
-
-    @Nullable
-    @Override
-    public String put(String key, String value) {
-        super.put(value, key);
-        return super.put(key, value);
-    }
-
-    @Override
-    public String remove(Object key) {
-        return super.remove(key);
-    }
-
-    @Override
-    public void putAll(@NotNull Map<? extends String, ? extends String> m) {
-        for (Entry<? extends String, ? extends String> entry : m.entrySet()) {
-            this.put(entry.getValue(), entry.getKey());
+    public String parse() {
+        if (StringUtils.isNotBlank(cache)) {
+            return cache;
         }
-        super.putAll(m);
+        for (Map.Entry<String, Class<?>> entry : columns.entrySet()) {
+            if (StringUtils.isNotBlank(prefix))
+                builder.append("`").append(prefix).append("`").append(".");
+            builder.append("`").append(entry.getKey()).append("`");
+        }
+        cache = builder.toString();
+        return cache;
     }
 
     @Override
-    public void clear() {
-        super.clear();
-    }
-
-    @NotNull
-    @Override
-    public Set<String> keySet() {
-        return super.keySet();
-    }
-
-    @NotNull
-    @Override
-    public Collection<String> values() {
-        return super.values();
-    }
-
-    @NotNull
-    @Override
-    public Set<Entry<String, String>> entrySet() {
-        return super.entrySet();
+    public String toString() {
+        return parse();
     }
 }

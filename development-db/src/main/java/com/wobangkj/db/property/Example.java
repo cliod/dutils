@@ -1,5 +1,7 @@
 package com.wobangkj.db.property;
 
+import com.wobangkj.api.Parser;
+
 /**
  * sql condition
  *
@@ -7,7 +9,7 @@ package com.wobangkj.db.property;
  * @since 4/11/20 4:08 PM
  * package: com.wobangkj.db
  */
-public class Example {
+public class Example implements Parser {
 
     public Example and() {
         return null;
@@ -22,6 +24,15 @@ public class Example {
     }
 
     public Example smaller() {
+        return null;
+    }
+
+    public Example equal() {
+        return this;
+    }
+
+    @Override
+    public String parse() {
         return null;
     }
 }

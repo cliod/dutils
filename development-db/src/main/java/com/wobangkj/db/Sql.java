@@ -9,9 +9,7 @@ import com.wobangkj.api.Parser;
  * @since 4/11/20 4:30 PM
  * package: com.wobangkj.db
  */
-public class Sql implements Parser {
-    @Override
-    public String parse() {
-        return null;
-    }
+public abstract class Sql implements Parser {
+
+
 }

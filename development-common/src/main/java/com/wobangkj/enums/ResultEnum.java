@@ -47,6 +47,8 @@ public enum ResultEnum implements EnumMsg {
     BLANK_PARAM(451, "参数为空"),
 
     ERROR(500, "未知异常"),
+
+    USER_TEXT(271, ""),
     ;
 
     /**

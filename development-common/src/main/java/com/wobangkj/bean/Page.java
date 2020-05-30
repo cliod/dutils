@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +32,7 @@ public final class Page<T> implements Session {
     /**
      * 列表
      */
-    private Collection<T> list;
+    private List<T> list;
 
     /**
      * 静态of函数代替构造函数
@@ -43,7 +43,7 @@ public final class Page<T> implements Session {
      * @param <T>     类型
      * @return 结果
      */
-    public static <T> @NotNull Page<T> of(long length, int size, Collection<T> objects) {
+    public static <T> @NotNull Page<T> of(long length, int size, List<T> objects) {
         Page<T> page = new Page<>();
         page.count = length;
         page.size = size;
@@ -59,7 +59,7 @@ public final class Page<T> implements Session {
      * @param <T>    类型
      * @return 结果
      */
-    public static @NotNull <T> Page<T> of(long length, Collection<T> list) {
+    public static @NotNull <T> Page<T> of(long length, List<T> list) {
         return Page.of(length, list.size(), list);
     }
 
