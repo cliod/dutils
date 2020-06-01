@@ -13,5 +13,13 @@ public interface Crud {
 
     Object findById(Object id);
 
+    Object findOne(Object obj);
+
     List<?> findAll(Object condition, Pageable pageable);
+
+    Object insert(Object obj);
+
+    Object update(Object obj);
+
+    int deleteById(Object id);
 }

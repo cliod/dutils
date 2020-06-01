@@ -1,6 +1,7 @@
 package com.wobangkj;
 
 import com.wobangkj.api.Crud;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * database operation
@@ -11,7 +12,7 @@ import com.wobangkj.api.Crud;
  */
 public class DataBase {
 
-    public static Crud crud(Class<?> type) {
-        return new CrudImpl();
+    public static @NotNull Crud crud(Class<?> type) {
+        return new CrudImpl(type);
     }
 }
