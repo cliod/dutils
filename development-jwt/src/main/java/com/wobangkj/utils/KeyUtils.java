@@ -8,10 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Cliod
@@ -25,8 +22,7 @@ public class KeyUtils {
      * @param len 长度
      * @return 随机数
      */
-    @NotNull
-    public static String randNum(int len) {
+    public static @NotNull String randNum(int len) {
         return Integer.toString((int) ((Math.random() * 9 + 1) * Math.pow(10, len - 1)));
     }
 
@@ -36,12 +32,51 @@ public class KeyUtils {
      * @param value 待解密字符
      * @return 解密字符
      */
-    @NotNull
-    public static String decode(String value) {
+
+    public static @NotNull String decode(String value) {
         if (BeanUtils.isEmpty(value)) {
             return "";
         }
-        return new String(Base64.decodeBase64(value.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+        return new String(Base64.decodeBase64(value), StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 解密 utf8
+     *
+     * @param value 待解密字符
+     * @return 解密字符
+     */
+    public static @NotNull String decode(byte[] value) {
+        if (Objects.isNull(value) || value.length == 0) {
+            return "";
+        }
+        return new String(Base64.decodeBase64(value), StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 加密 utf8
+     *
+     * @param value 待加密字符
+     * @return 加密字符
+     */
+    public static @NotNull String encode(String value) {
+        if (BeanUtils.isEmpty(value)) {
+            return "";
+        }
+        return new String(Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 加密 utf8
+     *
+     * @param value 待加密字符
+     * @return 加密字符
+     */
+    public static @NotNull String encode(byte[] value) {
+        if (BeanUtils.isEmpty(value)) {
+            return "";
+        }
+        return new String(Base64.encodeBase64(value), StandardCharsets.UTF_8);
     }
 
     /**
@@ -51,8 +86,7 @@ public class KeyUtils {
      * @param value 字符串
      * @return 加密结果
      */
-    @NotNull
-    public static String encrypt(String value) {
+    public static @NotNull String encrypt(String value) {
         String encodeStr = "";
         if (BeanUtils.isEmpty(value)) {
             return encodeStr;
@@ -75,8 +109,7 @@ public class KeyUtils {
      * @param value 字符串
      * @return MD5值
      */
-    @NotNull
-    public static String md5(@NotNull String value) {
+    public static @NotNull String md5(@NotNull String value) {
         return DigestUtils.md5Hex(value.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -86,8 +119,7 @@ public class KeyUtils {
      * @param bytes 字符byte
      * @return 加密字符串
      */
-    @NotNull
-    private static String byte2Hex(@NotNull byte[] bytes) {
+    private static @NotNull String byte2Hex(@NotNull byte[] bytes) {
         StringBuilder stringBuffer = new StringBuilder();
         String temp;
         for (byte b : bytes) {
@@ -99,20 +131,6 @@ public class KeyUtils {
             stringBuffer.append(temp);
         }
         return stringBuffer.toString();
-    }
-
-    /**
-     * 加密 utf8
-     *
-     * @param value 待加密字符
-     * @return 加密字符
-     */
-    @NotNull
-    public static String encode(String value) {
-        if (BeanUtils.isEmpty(value)) {
-            return "";
-        }
-        return new String(Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
     }
 
     /**
@@ -193,8 +211,7 @@ public class KeyUtils {
      * @param param 参数
      * @return String
      */
-    @NotNull
-    public static List<String> getInParam(@NotNull String param) {
+    public static @NotNull List<String> getInParam(@NotNull String param) {
         boolean flag = param.contains(",");
         List<String> list = new ArrayList<>();
         if (flag) {
