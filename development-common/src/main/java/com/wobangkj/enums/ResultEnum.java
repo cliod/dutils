@@ -1,6 +1,6 @@
 package com.wobangkj.enums;
 
-import com.alibaba.fastjson.JSON;
+import com.wobangkj.JsonUtils;
 import com.wobangkj.api.EnumMsg;
 import lombok.Data;
 import lombok.Getter;
@@ -90,9 +90,12 @@ public enum ResultEnum implements EnumMsg {
     @NotNull
     @Override
     public String toJson() {
-        return JSON.toJSONString(this);
+        return JsonUtils.toJson(this);
     }
 
+    /**
+     * 内置类,进行json序列化使用
+     */
     @Data
     public static class Entry implements Serializable {
 
@@ -116,7 +119,7 @@ public enum ResultEnum implements EnumMsg {
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JsonUtils.toJson(this);
         }
     }
 

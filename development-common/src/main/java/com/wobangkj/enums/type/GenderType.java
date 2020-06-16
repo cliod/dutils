@@ -1,7 +1,7 @@
 package com.wobangkj.enums.type;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wobangkj.JsonUtils;
 import com.wobangkj.api.EnumType;
 import lombok.Data;
 import lombok.Getter;
@@ -41,7 +41,7 @@ public enum GenderType implements EnumType {
 
     @Override
     public @NotNull String toJson() {
-        return JSON.toJSONString(this);
+        return JsonUtils.toJson(this);
     }
 
     @Override
@@ -104,7 +104,7 @@ public enum GenderType implements EnumType {
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JsonUtils.toJson(this);
         }
     }
 }

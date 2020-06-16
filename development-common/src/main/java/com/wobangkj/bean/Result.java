@@ -1,11 +1,11 @@
 package com.wobangkj.bean;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.wobangkj.JsonUtils;
 import com.wobangkj.api.Session;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -73,7 +73,7 @@ public final class Result<T> implements Session {
      */
     @Override
     public @NotNull String toJson() {
-        return JSON.toJSONString(this);
+        return JsonUtils.toJson(this);
     }
 
     public @NotNull Object readResolve() throws Exception {
@@ -87,7 +87,13 @@ public final class Result<T> implements Session {
      * @see java.util.Map
      */
     @Override
-    public Map<String, Object> toObject() {
-        return JSONObject.parseObject(this.toJson());
+    public @NotNull Map<String, Object> toObject() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", getCode());
+        map.put("state", getState());
+        map.put("msg", getMsg());
+        map.put("data", getData());
+        map.put("err", getErr());
+        return map;
     }
 }

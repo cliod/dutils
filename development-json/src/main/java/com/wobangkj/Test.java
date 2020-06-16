@@ -1,6 +1,5 @@
 package com.wobangkj;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
@@ -55,6 +54,9 @@ class Test {
 //    }
     }
 
+    /**
+     * 测试
+     */
     @Data
     public static class Bean {
 
@@ -73,7 +75,6 @@ class Test {
         //gson 序列化和反序列化公用(别名)
         @SerializedName("server_port")
         //com.alibaba.fastjson 序列化和反序列化公用(别名)
-        @JSONField(name = "server_port")
         //jackson 反序列化用(别名)
         @JsonAlias("server_port")
         //jackson 序列化用(别名)
@@ -81,6 +82,9 @@ class Test {
         private int serverPort;
     }
 
+    /**
+     * 测试
+     */
     @Data
     public static class Entity {
         private int week;
