@@ -27,40 +27,39 @@ public class Response {
         throw new UnsupportedOperationException();
     }
 
+    public static Result<Object> OK = ok();
     public static Result<Object> SUCCESS = ok();
     public static Result<Object> UPDATE = ok(ResultEnum.SUCCESS_EDIT, null);
     public static Result<Object> INSERT = ok(ResultEnum.SUCCESS_ADD, null);
     public static Result<Object> DELETE = ok(ResultEnum.SUCCESS_DELETE, null);
 
+    public static Page<Object> PAGE_NULL = Page.of();
+
     /**
      * 无返回
      */
-    @NotNull
-    public static Result<Object> ok() {
+    public static @NotNull Result<Object> ok() {
         return ok(null);
     }
 
     /**
      * 对象返回
      */
-    @NotNull
-    public static <T> Result<T> ok(T o) {
+    public static @NotNull <T> Result<T> ok(T o) {
         return ok(ResultEnum.SUCCESS, o);
     }
 
     /**
      * 分页返回
      */
-    @NotNull
-    public static <T> Result<Page<T>> ok(long length, List<T> list) {
+    public static @NotNull <T> Result<Page<T>> ok(long length, List<T> list) {
         return of(200, true, "successful", Page.of(length, list));
     }
 
     /**
      * 自定义字段, value 返回
      */
-    @NotNull
-    public static <V> Result<Map<String, Object>> ok(String valueName, V value) {
+    public static @NotNull <V> Result<Map<String, Object>> ok(String valueName, V value) {
         return ok(new HashMap<String, Object>(4) {{
             put(valueName, value);
         }});
@@ -190,8 +189,7 @@ public class Response {
             this.data = new HashMap<>(16);
         }
 
-        @NotNull
-        public Builder put(String title, Object data) {
+        public @NotNull Builder put(String title, Object data) {
             this.data.put(title, data);
             return this;
         }
@@ -200,8 +198,7 @@ public class Response {
             return new Builder();
         }
 
-        @NotNull
-        public Builder add(String title, Object data) {
+        public @NotNull Builder add(String title, Object data) {
             this.data.put(title, data);
             return this;
         }

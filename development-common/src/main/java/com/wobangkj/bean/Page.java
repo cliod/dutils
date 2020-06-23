@@ -75,6 +75,10 @@ public final class Page<T> implements Session {
         return Page.of(length, list.length, Arrays.asList(list));
     }
 
+    public static <T> @NotNull Page<T> of() {
+        return Page.of(0);
+    }
+
     /**
      * 转成字符串
      *
