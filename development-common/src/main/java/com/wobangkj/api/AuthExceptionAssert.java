@@ -13,6 +13,7 @@ import java.text.MessageFormat;
  * package: com.wobangkj.api
  */
 public interface AuthExceptionAssert extends EnumMsg, Assert {
+
     @Override
     default AppException newException(Object... args) {
         String msg = MessageFormat.format(this.getMsg(), args);
@@ -23,5 +24,10 @@ public interface AuthExceptionAssert extends EnumMsg, Assert {
     default AppException newException(Throwable t, Object... args) {
         String msg = MessageFormat.format(this.getMsg(), args);
         return new AuthorizeException(this, t, msg);
+    }
+
+    @Override
+    default Integer getCode() {
+        return 271;
     }
 }

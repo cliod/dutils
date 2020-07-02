@@ -10,16 +10,17 @@ import com.wobangkj.exception.AppException;
  * package: com.wobangkj.api
  */
 public interface Assert {
+
     /**
-     * 创建异常
+     * 创建可视异常
      *
-     * @param args 参数
+     * @param args message占位符对应的参数列表
      * @return 结果
      */
     AppException newException(Object... args);
 
     /**
-     * 创建异常
+     * 创建其他异常
      *
      * @param t    可抛出的异常
      * @param args 参数
@@ -28,13 +29,25 @@ public interface Assert {
     AppException newException(Throwable t, Object... args);
 
     /**
+     * 创建可视异常
+     *
+     * @param code 参数(271)
+     * @param msg  参数显示文字
+     * @return 结果
+     */
+    default AppException newException(int code, String msg) {
+        return new AppException(code, msg);
+    }
+
+    /**
      * <p>断言对象<code>obj</code>非空。如果对象<code>obj</code>为空，则抛出异常
      *
      * @param obj 待判断对象
+     * @param msg 消息
      */
-    default void assertNotNull(Object obj) {
+    default void assertNotNull(Object obj, String msg) {
         if (obj == null) {
-            throw newException(obj);
+            throw newException(271, msg);
         }
     }
 
@@ -43,11 +56,12 @@ public interface Assert {
      * <p>异常信息<code>message</code>支持传递参数方式，避免在判断之前进行字符串拼接操作
      *
      * @param obj  待判断对象
+     * @param msg  消息
      * @param args message占位符对应的参数列表
      */
-    default void assertNotNull(Object obj, Object... args) {
+    default void assertNotNull(Object obj, String msg, Object... args) {
         if (obj == null) {
-            throw newException(new RuntimeException(), args);
+            throw newException(271, String.format(msg, args));
         }
     }
 }

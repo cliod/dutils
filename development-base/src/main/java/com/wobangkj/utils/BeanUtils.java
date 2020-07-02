@@ -32,7 +32,7 @@ public class BeanUtils {
      * @param e   为空时抛出的异常
      * @param <T> 对象类型
      */
-    public static <T> void verifyNonNull(T obj, @NotNull EnumMsg e) throws IllegalAccessException {
+    public static <T> void verifyNonNull(T obj, @NotNull EnumMsg e) {
         if (isNull(obj) || isEmpty(obj)) {
             throw new NullObjectException(e);
         }

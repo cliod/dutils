@@ -7,7 +7,6 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.wobangkj.bean.Result.of;
@@ -27,42 +26,105 @@ public class Response {
         throw new UnsupportedOperationException();
     }
 
-    public static Result<Object> OK = ok();
-    public static Result<Object> SUCCESS = ok();
-    public static Result<Object> UPDATE = ok(ResultEnum.SUCCESS_EDIT, null);
-    public static Result<Object> INSERT = ok(ResultEnum.SUCCESS_ADD, null);
-    public static Result<Object> DELETE = ok(ResultEnum.SUCCESS_DELETE, null);
+    public static Map<String, Object> OK = ok();
+    public static Map<String, Object> ERR = err("未知异常");
+    public static Map<String, Object> DELETE = resp(200, ResultEnum.SUCCESS_DELETE.getMsg());
+    public static Maps<String, Object> UPDATE = resp(200, ResultEnum.SUCCESS_EDIT.getMsg());
+    public static Maps<String, Object> INSERT = resp(200, ResultEnum.SUCCESS_ADD.getMsg());
 
     public static Page<Object> PAGE_NULL = Page.of();
 
     /**
-     * 无返回
+     * 接口封装响应
+     *
+     * @param code 状态码
+     * @param msg  响应消息
+     * @return 结果
      */
-    public static @NotNull Result<Object> ok() {
-        return ok(null);
+    public static @NotNull Maps<String, Object> resp(int code, String msg) {
+        return Maps.of("status", (Object) code).add("msg", msg);
+    }
+
+    /**
+     * 无返回(请求成功)
+     */
+    public static @NotNull Maps<String, Object> ok() {
+        return resp(200, "请求成功");
     }
 
     /**
      * 对象返回
+     *
+     * @param value 对象
      */
-    public static @NotNull <T> Result<T> ok(T o) {
-        return ok(ResultEnum.SUCCESS, o);
+    public static @NotNull Maps<String, Object> ok(Object value) {
+        return ok().add("data", value);
+    }
+
+    /**
+     * 键值对返回
+     *
+     * @param key   键
+     * @param value 值
+     * @return 结果
+     */
+    public static @NotNull Maps<String, Object> ok(String key, Object value) {
+        return ok().add("data", Maps.of(key, value));
     }
 
     /**
      * 分页返回
+     *
+     * @param pager 分页结果
+     * @param <T>   类型
+     * @return 结果
      */
-    public static @NotNull <T> Result<Page<T>> ok(long length, List<T> list) {
-        return of(200, true, "successful", Page.of(length, list));
+    public static @NotNull <T> Maps<String, Object> ok(@NotNull Page<T> pager) {
+        return ok()
+                .add("data", pager.getList())
+                .add("pager", Maps
+                        .of("client_page", (Object) pager.getPage())
+                        .set("every_page", pager.getSize())
+                        .set("total_num", pager.getCount()));
     }
 
     /**
-     * 自定义字段, value 返回
+     * 失败271返回
+     *
+     * @param msg 消息
+     * @return 结果
      */
-    public static @NotNull <V> Result<Map<String, Object>> ok(String valueName, V value) {
-        return ok(new HashMap<String, Object>(4) {{
-            put(valueName, value);
-        }});
+    public static @NotNull Maps<String, Object> fail(String msg) {
+        return resp(271, msg);
+    }
+
+    /**
+     * 报错返回
+     *
+     * @param msg 500消息
+     * @return 结果
+     */
+    public static @NotNull Maps<String, Object> err(String msg) {
+        return resp(500, msg);
+    }
+
+    /**
+     * 未知异常
+     *
+     * @return 结果
+     */
+    public static @NotNull Result<Object> error() {
+        return of(500, "未知异常");
+    }
+
+    /**
+     * 未知异常,携带信息
+     *
+     * @param msg 异常
+     * @return 结果
+     */
+    public static @NotNull Result<Object> error(Throwable msg) {
+        return of(500, "系统异常", msg);
     }
 
     /**
@@ -71,7 +133,7 @@ public class Response {
     @SafeVarargs
     @Deprecated
     @NotNull
-    public static <V> Result<Map<String, Object>> ok(@NotNull String[] valueNames, @NotNull V... values) {
+    public static <V> Maps<String, Object> ok(@NotNull String[] valueNames, @NotNull V... values) {
         int len = Math.min(valueNames.length, values.length);
         if (len == 0) {
             return ok(new HashMap<>(0));
@@ -87,7 +149,7 @@ public class Response {
     @SafeVarargs
     @Deprecated
     @NotNull
-    public static <V> Result<Map<String, Object>> ok(@NotNull String titles, V... values) {
+    public static <V> Maps<String, Object> ok(@NotNull String titles, V... values) {
         return ok(titles.split(","), values);
     }
 
@@ -95,6 +157,7 @@ public class Response {
      * 非默认返回信息返回
      */
     @NotNull
+    @Deprecated
     public static <T> Result<T> ok(@NotNull EnumMsg re, T o) {
         return ok(re.getCode(), re.getMsg(), o);
     }
@@ -103,70 +166,61 @@ public class Response {
      * 其他信息返回
      */
     @NotNull
+    @Deprecated
     public static <T> Result<T> ok(int code, String msg, T o) {
-        return of(code, true, msg, o);
-    }
-
-    /**
-     * 未知异常
-     */
-    @NotNull
-    public static Result<Object> error() {
-        return of(500, false, "系统错误", null);
+        return of(code, msg, o);
     }
 
     /**
      * 位置异常,携带信息
      */
     @NotNull
+    @Deprecated
     public static Result<Object> error(@NotNull EnumMsg err) {
-        return of(500, false, "未知错误", err.toObject(), null);
-    }
-
-    /**
-     * 未知异常,携带信息
-     */
-    @NotNull
-    public static Result<Object> error(Throwable msg) {
-        return of(500, false, "未知错误", msg, null);
+        return of(500, "未知错误", err.toObject());
     }
 
     /**
      * 失败返回,携带系统错误信息
      */
     @NotNull
+    @Deprecated
     public static Result<Object> fail(@NotNull ResultEnum re, @NotNull Throwable err) {
-        return of(re.getCode(), false, re.getMsg(), err.getMessage(), null);
+        return of(re.getCode(), re.getMsg(), err.getMessage());
     }
 
     /**
      * 失败返回
      */
     @NotNull
+    @Deprecated
     public static Result<Object> fail(@NotNull ResultEnum re) {
-        return of(re.getCode(), false, re.getMsg(), re.toObject(), null);
+        return of(re.getCode(), re.getMsg(), re.toObject());
     }
 
     /**
      * 已处理失败返回
      */
     @NotNull
+    @Deprecated
     public static Result<Object> fail(@NotNull ResultEnum re, @NotNull EnumMsg err) {
-        return of(re.getCode(), false, re.getMsg(), err.toObject(), null);
+        return of(re.getCode(), re.getMsg(), err.toObject());
     }
 
     /**
      * 已处理失败返回
      */
     @NotNull
-    public static Result<Object> fail(@NotNull ResultEnum re, int code, String msg) {
-        return of(re.getCode(), false, re.getMsg(), new HashMap<String, Object>(16) {{
-            put("code", code);
-            put("msg", msg);
-        }}, null);
+    @Deprecated
+    public static Result<Object> fail(String msg, @NotNull ResultEnum re) {
+        return of(271, msg, new HashMap<String, Object>(16) {{
+            put("code", re.getCode());
+            put("msg", re.getMsg());
+        }});
     }
 
     @NotNull
+    @Deprecated
     public static Builder build(String title, Object data) {
         Builder builder = Builder.build();
         builder.put(title, data);
@@ -174,6 +228,7 @@ public class Response {
     }
 
     @NotNull
+    @Deprecated
     public static Builder build() {
         return Builder.build();
     }
@@ -182,6 +237,7 @@ public class Response {
      * build模式
      */
     @Data
+    @Deprecated
     public static class Builder {
         private Map<String, Object> data;
 
@@ -189,25 +245,30 @@ public class Response {
             this.data = new HashMap<>(16);
         }
 
+        @Deprecated
+        static @NotNull Builder build() {
+            return new Builder();
+        }
+
+        @Deprecated
         public @NotNull Builder put(String title, Object data) {
             this.data.put(title, data);
             return this;
         }
 
-        static @NotNull Builder build() {
-            return new Builder();
-        }
-
+        @Deprecated
         public @NotNull Builder add(String title, Object data) {
             this.data.put(title, data);
             return this;
         }
 
         @NotNull
-        public Result<?> ok() {
+        @Deprecated
+        public Maps<String, Object> ok() {
             return Response.ok(this.data);
         }
 
+        @Deprecated
         public void set(Map<String, Object> data) {
             this.data = data;
         }

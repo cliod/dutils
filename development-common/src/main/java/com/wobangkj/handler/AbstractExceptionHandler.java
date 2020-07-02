@@ -3,6 +3,7 @@ package com.wobangkj.handler;
 import com.wobangkj.bean.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 接口统一异常捕获
@@ -10,14 +11,16 @@ import javax.servlet.http.HttpServletRequest;
  * @author cliod
  * @since 19-7-16
  */
-public abstract class AbstractExceptionHandler {
+public interface AbstractExceptionHandler {
 
     /**
      * 系统异常处理，比如：404,500
      *
-     * @param req 请求处理
-     * @param e   异常
-     * @return json
+     * @param request  请求
+     * @param response 响应
+     * @param handler  请求方法(处理器)
+     * @param e        异常
+     * @return 统一结果
      */
-    public abstract Result<?> handler(HttpServletRequest req, Throwable e);
+    Result<Object> handler(HttpServletRequest request, HttpServletResponse response, Object handler, Throwable e);
 }

@@ -22,6 +22,10 @@ public final class Page<T> implements Session {
      */
     private Long count;
     /**
+     * 当前页
+     */
+    private Integer page;
+    /**
      * 当前数量
      */
     private Integer size;
@@ -39,12 +43,13 @@ public final class Page<T> implements Session {
      * @param <T>     类型
      * @return 结果
      */
-    public static <T> @NotNull Page<T> of(long length, int size, List<T> objects) {
-        Page<T> page = new Page<>();
-        page.count = length;
-        page.size = size;
-        page.list = objects;
-        return page;
+    public static <T> @NotNull Page<T> of(long length, int page, int size, List<T> objects) {
+        Page<T> pager = new Page<>();
+        pager.count = length;
+        pager.size = size;
+        pager.list = objects;
+        pager.page = page;
+        return pager;
     }
 
     /**
@@ -55,8 +60,26 @@ public final class Page<T> implements Session {
      * @param <T>    类型
      * @return 结果
      */
-    public static @NotNull <T> Page<T> of(long length, List<T> list) {
-        return Page.of(length, list.size(), list);
+    public static @NotNull <T> Page<T> of(long length, int page, List<T> list) {
+        return Page.of(length, page, list.size(), list);
+    }
+
+    /**
+     * 静态of函数代替构造函数
+     *
+     * @param length   总数目
+     * @param pageable 分页
+     * @param objects  列表
+     * @param <T>      类型
+     * @return 结果
+     */
+    public static <T> @NotNull Page<T> of(long length, @NotNull Pageable pageable, List<T> objects) {
+        Page<T> pager = new Page<>();
+        pager.count = length;
+        pager.size = pageable.getSize();
+        pager.page = pageable.getPage();
+        pager.list = objects;
+        return pager;
     }
 
     /**
@@ -68,15 +91,16 @@ public final class Page<T> implements Session {
      * @return 结果
      */
     @SafeVarargs
+    @Deprecated
     public static @NotNull <T> Page<T> of(long length, final T... list) {
         if (BeanUtils.isNull(list)) {
-            return Page.of(length, 0, new ArrayList<>());
+            return Page.of(length, 1, 0, new ArrayList<>());
         }
-        return Page.of(length, list.length, Arrays.asList(list));
+        return Page.of(length, 1, list.length, Arrays.asList(list));
     }
 
     public static <T> @NotNull Page<T> of() {
-        return Page.of(0);
+        return Page.of(0, 1, 0, Collections.emptyList());
     }
 
     /**
@@ -111,6 +135,7 @@ public final class Page<T> implements Session {
         map.put("count", getCount());
         map.put("size", getSize());
         map.put("list", getList());
+        map.put("page", getPage());
         return map;
     }
 }
