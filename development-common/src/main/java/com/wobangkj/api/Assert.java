@@ -1,6 +1,9 @@
 package com.wobangkj.api;
 
 import com.wobangkj.exception.AppException;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 /**
  * assert
@@ -42,6 +45,16 @@ public interface Assert {
     /**
      * <p>断言对象<code>obj</code>非空。如果对象<code>obj</code>为空，则抛出异常
      *
+     * @param obj             待判断对象
+     * @param messageSupplier 消息
+     */
+    default void assertNotNull(Object obj, Supplier<String> messageSupplier) {
+        assertNotNull(obj, nullSafeGet(messageSupplier));
+    }
+
+    /**
+     * <p>断言对象<code>obj</code>非空。如果对象<code>obj</code>为空，则抛出异常
+     *
      * @param obj 待判断对象
      * @param msg 消息
      */
@@ -63,5 +76,9 @@ public interface Assert {
         if (obj == null) {
             throw newException(271, String.format(msg, args));
         }
+    }
+
+    default String nullSafeGet(@Nullable Supplier<String> messageSupplier) {
+        return (messageSupplier != null ? messageSupplier.get() : null);
     }
 }
