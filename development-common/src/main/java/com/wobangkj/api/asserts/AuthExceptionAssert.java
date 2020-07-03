@@ -1,5 +1,6 @@
-package com.wobangkj.api;
+package com.wobangkj.api.asserts;
 
+import com.wobangkj.api.EnumMsg;
 import com.wobangkj.exception.AppException;
 import com.wobangkj.exception.AuthorizeException;
 

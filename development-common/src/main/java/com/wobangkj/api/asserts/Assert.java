@@ -1,4 +1,4 @@
-package com.wobangkj.api;
+package com.wobangkj.api.asserts;
 
 import com.wobangkj.exception.AppException;
 import org.jetbrains.annotations.Nullable;

@@ -13,7 +13,7 @@ import java.util.Map;
  * @author cliod
  * @since 2019/5/20 13:20
  */
-public final class Result<T> extends Maps<String, Object> implements Session {
+public class Result<T> extends Maps<String, Object> implements Session {
 
     private static final long serialVersionUID = -1884640212713045469L;
 
@@ -30,7 +30,7 @@ public final class Result<T> extends Maps<String, Object> implements Session {
     }
 
     public static @NotNull Result<Object> of(String k, Object v) {
-        Result<Object> map = new Result<>(16);
+        Result<Object> map = new Result<>();
         map.put(k, v);
         return map;
     }
@@ -38,12 +38,26 @@ public final class Result<T> extends Maps<String, Object> implements Session {
     /**
      * 代替构造方法
      *
-     * @param code code
-     * @param msg  msg
-     * @param o    T
+     * @param code 状态码
+     * @param msg  响应消息
      * @return result
      */
-    public static <T> @NotNull Result<T> of(int code, String msg, T o) {
+    public static @NotNull Result<Object> of(int code, String msg) {
+        Result<Object> result = new Result<>();
+        result.setCode(code);
+        result.setMsg(msg);
+        return result;
+    }
+
+    /**
+     * 代替构造方法
+     *
+     * @param code 状态码
+     * @param msg  响应消息
+     * @param o    响应对象
+     * @return result
+     */
+    public static @NotNull <T> Result<T> of(int code, String msg, Object o) {
         Result<T> result = new Result<>();
         result.setCode(code);
         result.setMsg(msg);
@@ -54,30 +68,16 @@ public final class Result<T> extends Maps<String, Object> implements Session {
     /**
      * 代替构造方法
      *
-     * @param code code
-     * @param msg  msg
-     * @param o    T
+     * @param code 状态码
+     * @param msg  响应消息
+     * @param o    响应异常
      * @return result
      */
-    public static <T> @NotNull Result<T> of(int code, String msg, @NotNull Throwable o) {
-        Result<T> result = new Result<>();
+    public static @NotNull Result<Object> of(int code, String msg, @NotNull Throwable o) {
+        Result<Object> result = new Result<>();
         result.setCode(code);
         result.setMsg(msg);
         result.setErr(o.getMessage());
-        return result;
-    }
-
-    /**
-     * 代替构造方法
-     *
-     * @param code code
-     * @param msg  msg
-     * @return result
-     */
-    public static <T> @NotNull Result<T> of(int code, String msg) {
-        Result<T> result = new Result<>();
-        result.setCode(code);
-        result.setMsg(msg);
         return result;
     }
 
@@ -87,7 +87,8 @@ public final class Result<T> extends Maps<String, Object> implements Session {
      * @return 字符串
      */
     @Override
-    public @NotNull String toString() {
+    public @NotNull
+    final String toString() {
         return this.toJson();
     }
 
@@ -97,11 +98,13 @@ public final class Result<T> extends Maps<String, Object> implements Session {
      * @return Json
      */
     @Override
-    public @NotNull String toJson() {
+    public @NotNull
+    final String toJson() {
         return JsonUtils.toJson(this);
     }
 
-    public @NotNull Object readResolve() throws Exception {
+    public @NotNull
+    final Object readResolve() throws Exception {
         return this.getClass().getConstructor().newInstance();
     }
 
@@ -112,7 +115,7 @@ public final class Result<T> extends Maps<String, Object> implements Session {
      * @see java.util.Map
      */
     @Override
-    public @NotNull Result<T> toObject() {
+    public @NotNull Result<?> toObject() {
         return this;
     }
 
@@ -153,7 +156,11 @@ public final class Result<T> extends Maps<String, Object> implements Session {
         return get("data");
     }
 
-    public void setData(T data) {
+    public <E> E getData(Class<E> type) {
+        return JsonUtils.fromJson(JsonUtils.toJson(get("data")), type);
+    }
+
+    public void setData(Object data) {
         put("data", data);
     }
 }

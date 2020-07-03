@@ -11,13 +11,14 @@ import java.util.Map;
  * @author cliod
  * @since 7/1/20 4:05 PM
  */
-public class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
+public abstract class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
 
     public Maps(int initialCapacity) {
         super(initialCapacity);
     }
 
     public Maps() {
+        this(16);
     }
 
     public Maps(Map<? extends K, ? extends V> m) {
@@ -25,9 +26,9 @@ public class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
     }
 
     public static <K, V> @NotNull Maps<K, V> of(K k, V v) {
-        Maps<K, V> map = new Maps<>(16);
-        map.put(k, v);
-        return map;
+        return new Maps<K, V>(16) {{
+            put(k, v);
+        }};
     }
 
     public Maps<K, V> set(K k, V v) {

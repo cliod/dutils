@@ -41,8 +41,8 @@ public class Response {
      * @param msg  响应消息
      * @return 结果
      */
-    public static @NotNull Maps<String, Object> resp(int code, String msg) {
-        return Maps.of("status", (Object) code).add("msg", msg);
+    public static @NotNull Result<Object> resp(int code, String msg) {
+        return Result.of(code, msg);
     }
 
     /**

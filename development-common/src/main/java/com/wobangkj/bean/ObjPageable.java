@@ -17,8 +17,9 @@ public class ObjPageable<T> extends Pageable {
 
     private T param;
 
-    public Optional<T> getParam() {
-        return Optional.of(param);
+    public @NotNull
+    final Optional<T> getParam() {
+        return Optional.of(get());
     }
 
     public static <T> @NotNull ObjPageable<T> of(int page, int size, T obj) {
