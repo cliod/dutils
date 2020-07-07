@@ -6,6 +6,7 @@ import com.wobangkj.api.Session;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * api返回统一封装
@@ -13,6 +14,7 @@ import java.util.Map;
  * @author cliod
  * @since 2019/5/20 13:20
  */
+@Deprecated
 public class Result<T> extends Maps<String, Object> implements Session {
 
     private static final long serialVersionUID = -1884640212713045469L;
@@ -33,6 +35,31 @@ public class Result<T> extends Maps<String, Object> implements Session {
         Result<Object> map = new Result<>();
         map.put(k, v);
         return map;
+    }
+
+    @Override
+    public Result<T> add(String k, Object v) {
+        put(k, v);
+        return this;
+    }
+
+    @Override
+    public Maps<String, Object> set(String k, Object v) {
+        if (!Objects.isNull(v) && !Objects.isNull(k)) {
+            put(k, v);
+        }
+        return this;
+    }
+
+    @Override
+    public Result<T> del(String k) {
+        remove(k);
+        return this;
+    }
+
+    @Override
+    public Object rem(String k) {
+        return remove(k);
     }
 
     /**
@@ -100,7 +127,7 @@ public class Result<T> extends Maps<String, Object> implements Session {
     @Override
     public @NotNull
     final String toJson() {
-        return JsonUtils.toJson(this);
+        return JsonUtils.toJson(this.toObject());
     }
 
     public @NotNull
@@ -115,7 +142,7 @@ public class Result<T> extends Maps<String, Object> implements Session {
      * @see java.util.Map
      */
     @Override
-    public @NotNull Result<?> toObject() {
+    public @NotNull Result<T> toObject() {
         return this;
     }
 

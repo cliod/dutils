@@ -1,5 +1,7 @@
 package com.wobangkj.api;
 
+import com.wobangkj.exception.AppException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,5 +60,9 @@ public interface EnumMsg extends Session {
                 "code: " + this.getCode() +
                 ", msg: \"" + this.getMsg() + '\"' +
                 '}';
+    }
+
+    default Throwable toThrowable() {
+        return new AppException(getCode(), getMsg());
     }
 }

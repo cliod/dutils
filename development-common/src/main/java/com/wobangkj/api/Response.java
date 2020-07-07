@@ -1,6 +1,7 @@
 package com.wobangkj.api;
 
 import com.wobangkj.bean.Page;
+import com.wobangkj.bean.Res;
 import com.wobangkj.bean.Result;
 import com.wobangkj.enums.ResultEnum;
 import lombok.Data;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.wobangkj.bean.Result.of;
+import static com.wobangkj.bean.Res.of;
 
 /**
  * 接口数据响应包装
@@ -28,9 +29,9 @@ public class Response {
 
     public static Map<String, Object> OK = ok();
     public static Map<String, Object> ERR = err("未知异常");
-    public static Map<String, Object> DELETE = resp(200, ResultEnum.SUCCESS_DELETE.getMsg());
-    public static Maps<String, Object> UPDATE = resp(200, ResultEnum.SUCCESS_EDIT.getMsg());
-    public static Maps<String, Object> INSERT = resp(200, ResultEnum.SUCCESS_ADD.getMsg());
+    public static Map<String, Object> DELETE = ok(200, ResultEnum.SUCCESS_DELETE.getMsg());
+    public static Maps<String, Object> UPDATE = ok(200, ResultEnum.SUCCESS_EDIT.getMsg());
+    public static Maps<String, Object> INSERT = ok(200, ResultEnum.SUCCESS_ADD.getMsg());
 
     public static Page<Object> PAGE_NULL = Page.of();
 
@@ -41,15 +42,15 @@ public class Response {
      * @param msg  响应消息
      * @return 结果
      */
-    public static @NotNull Result<Object> resp(int code, String msg) {
-        return Result.of(code, msg);
+    protected static @NotNull Res ok(int code, String msg) {
+        return of(code, msg);
     }
 
     /**
      * 无返回(请求成功)
      */
     public static @NotNull Maps<String, Object> ok() {
-        return resp(200, "请求成功");
+        return ok(200, "请求成功");
     }
 
     /**
@@ -95,7 +96,7 @@ public class Response {
      * @return 结果
      */
     public static @NotNull Maps<String, Object> fail(String msg) {
-        return resp(271, msg);
+        return ok(271, msg);
     }
 
     /**
@@ -105,7 +106,7 @@ public class Response {
      * @return 结果
      */
     public static @NotNull Maps<String, Object> err(String msg) {
-        return resp(500, msg);
+        return ok(500, msg);
     }
 
     /**
@@ -113,18 +114,25 @@ public class Response {
      *
      * @return 结果
      */
-    public static @NotNull Result<Object> error() {
+    public static @NotNull Res error() {
         return of(500, "未知异常");
     }
 
     /**
      * 未知异常,携带信息
      *
-     * @param msg 异常
+     * @param throwable 异常
      * @return 结果
      */
-    public static @NotNull Result<Object> error(Throwable msg) {
-        return of(500, "系统异常", msg);
+    public static @NotNull Res error(Throwable throwable) {
+        return of(500, "系统异常", throwable);
+    }
+
+    /**
+     * 已处理失败返回
+     */
+    public static @NotNull Res fail(String msg, @NotNull ResultEnum re) {
+        return of(271, msg, re.toThrowable());
     }
 
     /**
@@ -158,7 +166,7 @@ public class Response {
      */
     @NotNull
     @Deprecated
-    public static <T> Result<T> ok(@NotNull EnumMsg re, T o) {
+    public static <T> Res ok(@NotNull EnumMsg re, T o) {
         return ok(re.getCode(), re.getMsg(), o);
     }
 
@@ -167,7 +175,7 @@ public class Response {
      */
     @NotNull
     @Deprecated
-    public static <T> Result<T> ok(int code, String msg, T o) {
+    public static <T> Res ok(int code, String msg, T o) {
         return of(code, msg, o);
     }
 
@@ -177,7 +185,7 @@ public class Response {
     @NotNull
     @Deprecated
     public static Result<Object> error(@NotNull EnumMsg err) {
-        return of(500, "未知错误", err.toObject());
+        return of(500, "未知错误", err.toThrowable());
     }
 
     /**
@@ -185,8 +193,8 @@ public class Response {
      */
     @NotNull
     @Deprecated
-    public static Result<Object> fail(@NotNull ResultEnum re, @NotNull Throwable err) {
-        return of(re.getCode(), re.getMsg(), err.getMessage());
+    public static Result<Object> fail(@NotNull ResultEnum re, @NotNull Throwable throwable) {
+        return of(re.getCode(), re.getMsg(), throwable);
     }
 
     /**
@@ -195,7 +203,7 @@ public class Response {
     @NotNull
     @Deprecated
     public static Result<Object> fail(@NotNull ResultEnum re) {
-        return of(re.getCode(), re.getMsg(), re.toObject());
+        return of(re.getCode(), re.getMsg(), re.toThrowable());
     }
 
     /**
@@ -204,19 +212,7 @@ public class Response {
     @NotNull
     @Deprecated
     public static Result<Object> fail(@NotNull ResultEnum re, @NotNull EnumMsg err) {
-        return of(re.getCode(), re.getMsg(), err.toObject());
-    }
-
-    /**
-     * 已处理失败返回
-     */
-    @NotNull
-    @Deprecated
-    public static Result<Object> fail(String msg, @NotNull ResultEnum re) {
-        return of(271, msg, new HashMap<String, Object>(16) {{
-            put("status", re.getCode());
-            put("msg", re.getMsg());
-        }});
+        return of(re.getCode(), re.getMsg(), err.toThrowable());
     }
 
     @NotNull

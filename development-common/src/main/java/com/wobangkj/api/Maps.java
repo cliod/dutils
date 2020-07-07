@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * map工具类
@@ -32,7 +33,9 @@ public abstract class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
     }
 
     public Maps<K, V> set(K k, V v) {
-        put(k, v);
+        if (!Objects.isNull(v) && !Objects.isNull(k)) {
+            put(k, v);
+        }
         return this;
     }
 
