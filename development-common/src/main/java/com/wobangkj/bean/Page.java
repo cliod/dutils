@@ -1,12 +1,16 @@
 package com.wobangkj.bean;
 
 import com.wobangkj.JsonUtils;
+import com.wobangkj.api.Maps;
 import com.wobangkj.api.Session;
 import com.wobangkj.utils.BeanUtils;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 分页封装
@@ -120,7 +124,7 @@ public final class Page<T> implements Session {
      */
     @Override
     public @NotNull String toJson() {
-        return JsonUtils.toJson(this);
+        return JsonUtils.toJson(this.toObject());
     }
 
     /**
@@ -130,12 +134,11 @@ public final class Page<T> implements Session {
      * @see java.util.Map
      */
     @Override
-    public @NotNull Map<String, Object> toObject() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("count", getCount());
-        map.put("size", getSize());
-        map.put("list", getList());
-        map.put("page", getPage());
-        return map;
+    public @NotNull Maps<String, Object> toObject() {
+        return Maps.of("data", (Object) this.getList())
+                .add("pager", Maps
+                        .of("client_page", (Object) this.getPage())
+                        .set("every_page", this.getSize())
+                        .set("total_num", this.getCount()));
     }
 }
