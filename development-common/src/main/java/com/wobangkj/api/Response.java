@@ -214,7 +214,7 @@ public class Response {
     @Deprecated
     public static Result<Object> fail(String msg, @NotNull ResultEnum re) {
         return of(271, msg, new HashMap<String, Object>(16) {{
-            put("code", re.getCode());
+            put("status", re.getCode());
             put("msg", re.getMsg());
         }});
     }

@@ -1,6 +1,7 @@
 package com.wobangkj.api;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 枚举类型
@@ -58,10 +59,10 @@ public interface EnumType extends Session {
      */
     @Override
     default Object toObject() {
-        return new HashMap<String, Object>(4) {{
-            put("code", getCode());
-            put("desc", getDesc());
-        }};
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", this.getCode());
+        map.put("desc", this.getDesc());
+        return map;
     }
 
     /**
