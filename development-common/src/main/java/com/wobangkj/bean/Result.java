@@ -124,7 +124,7 @@ public class Result<T> extends Maps<String, Object> implements Session {
     }
 
     public void setCode(Integer code) {
-        put("code", code);
+        put("status", code);
     }
 
     @Deprecated
