@@ -1,0 +1,17 @@
+package com.wobangkj.api;
+
+/**
+ * 值 - 枚举
+ *
+ * @author cliod
+ * @since 7/8/20 3:33 PM
+ */
+public interface EnumValue<T> extends Session {
+
+    /**
+     * 枚举值
+     *
+     * @return 值
+     */
+    T value();
+}
