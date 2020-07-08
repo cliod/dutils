@@ -35,16 +35,6 @@ public enum GenderType implements EnumType {
     }
 
     @Override
-    public @NotNull Object toObject() {
-        return Entry.convert(this);
-    }
-
-    @Override
-    public @NotNull String toJson() {
-        return JsonUtils.toJson(this);
-    }
-
-    @Override
     public @NotNull String toString() {
         return this.toJson();
     }
@@ -77,34 +67,5 @@ public enum GenderType implements EnumType {
             }
         }
         return this;
-    }
-
-    /**
-     * 内置对象
-     */
-    @Data
-    public static class Entry implements Serializable {
-
-        private static final long serialVersionUID = 4140185593972696603L;
-        /**
-         * 状态码
-         */
-        private Integer code;
-        /**
-         * 消息
-         */
-        private String desc;
-
-        static <T extends Enum<T>> @NotNull Entry convert(@NotNull EnumType e) {
-            Entry entry = new Entry();
-            entry.setCode(e.getCode());
-            entry.setDesc(e.getDesc());
-            return entry;
-        }
-
-        @Override
-        public String toString() {
-            return JsonUtils.toJson(this);
-        }
     }
 }

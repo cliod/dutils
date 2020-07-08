@@ -1,9 +1,8 @@
 package com.wobangkj.api;
 
+import com.wobangkj.bean.Maps;
 import com.wobangkj.exception.AppException;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.wobangkj.utils.JsonUtils;
 
 /**
  * 枚举类型
@@ -43,10 +42,7 @@ public interface EnumMsg extends Session {
      */
     @Override
     default Object toObject() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("code", this.getCode());
-        map.put("msg", this.getMsg());
-        return map;
+        return Maps.of("code", (Object) getCode()).add("msg", getMsg());
     }
 
     /**
@@ -56,10 +52,7 @@ public interface EnumMsg extends Session {
      */
     @Override
     default String toJson() {
-        return "{" +
-                "code: " + this.getCode() +
-                ", msg: \"" + this.getMsg() + '\"' +
-                '}';
+        return JsonUtils.toJson(this.toObject());
     }
 
     default Throwable toThrowable() {

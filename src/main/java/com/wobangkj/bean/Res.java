@@ -16,7 +16,7 @@ import java.util.Objects;
 @SuppressWarnings("all")
 public class Res extends Result<Object> implements Session {
 
-    private static final long serialVersionUID = -1884640212713045469L;
+    private static final long serialVersionUID = -4892758069561565904L;
 
     public Res(int initialCapacity) {
         super(initialCapacity);

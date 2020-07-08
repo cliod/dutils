@@ -81,18 +81,6 @@ public enum ResultEnum implements EnumMsg {
         return this.toJson();
     }
 
-    @Override
-    @NotNull
-    public Object toObject() {
-        return Entry.convert(this);
-    }
-
-    @NotNull
-    @Override
-    public String toJson() {
-        return JsonUtils.toJson(this);
-    }
-
     /**
      * 内置类,进行json序列化使用
      */

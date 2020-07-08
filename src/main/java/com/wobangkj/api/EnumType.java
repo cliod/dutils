@@ -1,6 +1,7 @@
 package com.wobangkj.api;
 
 import com.wobangkj.bean.Maps;
+import com.wobangkj.utils.JsonUtils;
 
 /**
  * 枚举类型
@@ -68,9 +69,6 @@ public interface EnumType extends Session {
      */
     @Override
     default String toJson() {
-        return "{" +
-                "code: " + this.getCode() +
-                ", desc: \"" + this.getDesc() + '\"' +
-                '}';
+        return JsonUtils.toJson(this.toObject());
     }
 }

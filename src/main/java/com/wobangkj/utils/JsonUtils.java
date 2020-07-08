@@ -2,7 +2,10 @@ package com.wobangkj.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -16,6 +19,16 @@ import java.util.Map;
 public class JsonUtils {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final GsonBuilder gsonBuilder = new GsonBuilder();
+    private static final Gson gson = gsonBuilder.create();
+
+    public static ObjectMapper getJackson() {
+        return objectMapper;
+    }
+
+    public static @NotNull Gson getGoogleJson() {
+        return gson;
+    }
 
     /**
      * json转javabean
@@ -37,8 +50,8 @@ public class JsonUtils {
      * @return Map对象
      */
     @SneakyThrows
-    public static Object toObject(String json) {
-        return objectMapper.readValue(json, new TypeReference<Map<?, ?>>() {
+    public static <K, V> Map<K, V> toMap(String json) {
+        return objectMapper.readValue(json, new TypeReference<Map<K, V>>() {
             @Override
             public Type getType() {
                 return Map.class;
