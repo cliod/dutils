@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 public class AppException extends RuntimeException {
+    private static final long serialVersionUID = 8046453230562080501L;
     /**
      * 异常里面的详情
      */

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class AuthorizeException extends AppException {
 
+    private static final long serialVersionUID = -6521618167201387588L;
     private String auth;
 
     public AuthorizeException(@NotNull EnumMsg re) {

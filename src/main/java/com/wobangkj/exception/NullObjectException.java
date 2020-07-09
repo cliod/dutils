@@ -8,11 +8,12 @@ import org.jetbrains.annotations.NotNull;
  * 空异常处理
  *
  * @author cliod
- * @desc exception
  * @since 19-7-18
  */
 @Getter
 public class NullObjectException extends AccessException {
+
+    private static final long serialVersionUID = -2720840103578020963L;
 
     public NullObjectException(@NotNull EnumMsg re) {
         super(re);

@@ -13,7 +13,7 @@ import java.text.MessageFormat;
  * @since 4/28/20 11:57 AM
  * package: com.wobangkj.api
  */
-public interface NullExceptionIAssert extends EnumMsg, IAssert {
+public interface ExceptionAssert extends EnumMsg, IAssert {
 
     @Override
     default AppException newException(Object... args) {
@@ -29,6 +29,11 @@ public interface NullExceptionIAssert extends EnumMsg, IAssert {
 
     @Override
     default Integer getCode() {
+        return 271;
+    }
+
+    @Override
+    default int getStatus() {
         return 271;
     }
 }

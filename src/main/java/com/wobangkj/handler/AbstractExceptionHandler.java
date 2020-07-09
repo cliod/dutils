@@ -51,4 +51,16 @@ public abstract class AbstractExceptionHandler implements ExceptionHandler {
         }
         return r;
     }
+
+    public Res handler(@NotNull IllegalArgumentException e) {
+        Res res = Res.of(217, e.getMessage());
+        process(res);
+        return res;
+    }
+
+    public void process(Res res) {
+    }
+
+    public void process(Res res, HttpServletRequest request, HttpServletResponse response) {
+    }
 }

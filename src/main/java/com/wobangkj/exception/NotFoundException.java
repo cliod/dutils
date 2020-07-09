@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class NotFoundException extends AccessException {
 
+    private static final long serialVersionUID = 5648923359297934582L;
     private Object resources;
 
     public NotFoundException(@NotNull EnumMsg re) {

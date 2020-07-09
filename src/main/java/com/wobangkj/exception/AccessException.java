@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class AccessException extends AppException {
 
+    private static final long serialVersionUID = -7905713641826818108L;
     private Object access;
 
     public AccessException(@NotNull EnumMsg re) {
