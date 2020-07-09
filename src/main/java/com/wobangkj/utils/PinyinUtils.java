@@ -1,5 +1,6 @@
 package com.wobangkj.utils;
 
+import lombok.SneakyThrows;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -19,6 +20,16 @@ public class PinyinUtils {
         throw new UnsupportedOperationException();
     }
 
+    private static final StringBuilder pinyinStr;
+    private static final HanyuPinyinOutputFormat defaultFormat;
+
+    static {
+        pinyinStr = new StringBuilder();
+        defaultFormat = new HanyuPinyinOutputFormat();
+        defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+    }
+
     /**
      * 获取字符串拼音的第一个字母
      *
@@ -36,20 +47,14 @@ public class PinyinUtils {
      * @param chinese 中文字符
      * @return 拼音
      */
+    @SneakyThrows(value = BadHanyuPinyinOutputFormatCombination.class)
     @NotNull
     public static String toPinyin(@NotNull String chinese) {
-        StringBuilder pinyinStr = new StringBuilder();
         char[] newChar = chinese.toCharArray();
-        HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
-        defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
-        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
         for (char c : newChar) {
+            // 小于128为英文字符
             if (c > 128) {
-                try {
-                    pinyinStr.append(PinyinHelper.toHanyuPinyinStringArray(c, defaultFormat)[0]);
-                } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
-                }
+                pinyinStr.append(PinyinHelper.toHanyuPinyinStringArray(c, defaultFormat)[0]);
             } else {
                 pinyinStr.append(c);
             }

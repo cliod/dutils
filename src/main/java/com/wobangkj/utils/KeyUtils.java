@@ -85,8 +85,8 @@ public class KeyUtils {
     }
 
     /**
-     * SHA-265 机密
-     * 等效于{@link} com.wobangkj.util.EncryptUtils.encodeSha256String()
+     * SHA-265 加密
+     * 等效于{@link com.wobangkj.utils.EncryptUtils#encodeSha256String(String)}
      *
      * @param value 字符串
      * @return 加密结果
@@ -109,7 +109,7 @@ public class KeyUtils {
 
     /**
      * MD5 计算
-     * 等效于{@link} com.wobangkj.util.Md5Utils.encode32()
+     * 等效于{@link com.wobangkj.utils.Md5Utils#encode32(String)}
      *
      * @param value 字符串
      * @return MD5值

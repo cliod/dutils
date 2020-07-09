@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
-import java.util.Random;
 
 /**
  * 二维码生成器
@@ -54,14 +53,12 @@ public class QrCodeUtils {
     /**
      * 生成二维码
      *
-     * @param content      二维码内容
-     * @param logoPath     logo地址
-     * @param needCompress 是否压缩logo
+     * @param content 二维码内容
      * @return 图片
      * @throws Exception 异常
      */
     @NotNull
-    public static BufferedImage createImage(String content, String logoPath, boolean needCompress) throws Exception {
+    public static BufferedImage createImage(String content) throws Exception {
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
@@ -76,11 +73,46 @@ public class QrCodeUtils {
                 image.setRGB(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
             }
         }
+        return image;
+    }
+
+    /**
+     * 生成二维码
+     *
+     * @param content      二维码内容
+     * @param logoPath     logo地址
+     * @param needCompress 是否压缩logo
+     * @return 图片
+     * @throws Exception 异常
+     */
+    @NotNull
+    public static BufferedImage createImage(String content, String logoPath, boolean needCompress) throws Exception {
+        BufferedImage image = createImage(content);
         if (logoPath == null || "".equals(logoPath)) {
             return image;
         }
         // 插入图片
         insertImage(image, logoPath, needCompress);
+        return image;
+    }
+
+    /**
+     * 生成二维码
+     *
+     * @param content      二维码内容
+     * @param inputStream  logo地址
+     * @param needCompress 是否压缩logo
+     * @return 图片
+     * @throws Exception 异常
+     */
+    @NotNull
+    public static BufferedImage createImage(String content, InputStream inputStream, boolean needCompress) throws Exception {
+        BufferedImage image = createImage(content);
+        if (inputStream == null || inputStream.available() == 0) {
+            return image;
+        }
+        // 插入图片
+        insertImage(image, inputStream, needCompress);
         return image;
     }
 
@@ -93,42 +125,52 @@ public class QrCodeUtils {
      */
     private static void insertImage(BufferedImage source, String logoPath, boolean needCompress) {
         try (InputStream inputStream = QrCodeUtils.class.getResourceAsStream(logoPath)) {
-            Image src = ImageIO.read(inputStream);
-            int width = src.getWidth(null);
-            int height = src.getHeight(null);
-            // 压缩LOGO
-            if (needCompress) {
-                if (width > LOGO_WIDTH) {
-                    width = LOGO_WIDTH;
-                }
-                if (height > LOGO_HEIGHT) {
-                    height = LOGO_HEIGHT;
-                }
-                Image image = src.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-                BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-                Graphics g = tag.getGraphics();
-                // 绘制缩小后的图
-                g.drawImage(image, 0, 0, null);
-                g.dispose();
-                src = image;
-            }
-            // 插入LOGO
-            Graphics2D graph = source.createGraphics();
-            int x = (QR_CODE_SIZE - width) / 2;
-            int y = (QR_CODE_SIZE - height) / 2;
-            graph.drawImage(src, x, y, width, height, null);
-            Shape shape = new RoundRectangle2D.Float(x, y, width, width, 6, 6);
-            graph.setStroke(new BasicStroke(3f));
-            graph.draw(shape);
-            graph.dispose();
+            insertImage(source, inputStream, needCompress);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
-     * 生成二维码(内嵌LOGO)
-     * 二维码文件名随机，文件名可能会有重复
+     * 插入LOGO
+     *
+     * @param source       二维码图片
+     * @param inputStream  LOGO图片地址
+     * @param needCompress 是否压缩
+     */
+    private static void insertImage(BufferedImage source, InputStream inputStream, boolean needCompress) throws IOException {
+        Image src = ImageIO.read(inputStream);
+        int width = src.getWidth(null);
+        int height = src.getHeight(null);
+        // 压缩LOGO
+        if (needCompress) {
+            if (width > LOGO_WIDTH) {
+                width = LOGO_WIDTH;
+            }
+            if (height > LOGO_HEIGHT) {
+                height = LOGO_HEIGHT;
+            }
+            Image image = src.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            Graphics g = tag.getGraphics();
+            // 绘制缩小后的图
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            src = image;
+        }
+        // 插入LOGO
+        Graphics2D graph = source.createGraphics();
+        int x = (QR_CODE_SIZE - width) / 2;
+        int y = (QR_CODE_SIZE - height) / 2;
+        graph.drawImage(src, x, y, width, height, null);
+        Shape shape = new RoundRectangle2D.Float(x, y, width, width, 6, 6);
+        graph.setStroke(new BasicStroke(3f));
+        graph.draw(shape);
+        graph.dispose();
+    }
+
+    /**
+     * 生成二维码(内嵌LOGO), 二维码文件名随机
      *
      * @param content      内容
      * @param logoPath     LOGO地址
@@ -137,17 +179,17 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     @NotNull
-    public static String encode(String content, String logoPath, String destPath, boolean needCompress) throws Exception {
+    public static File encode(String content, String logoPath, String destPath, boolean needCompress) throws Exception {
         BufferedImage image = createImage(content, logoPath, needCompress);
         mkdirs(destPath, 0);
-        String fileName = new Random().nextInt(99999999) + "." + FORMAT.toLowerCase();
-        ImageIO.write(image, FORMAT, new File(destPath + "/" + fileName));
-        return fileName;
+        String fileName = KeyUtils.get32uuid() + "." + FORMAT.toLowerCase();
+        File file = new File(destPath + "/" + fileName);
+        ImageIO.write(image, FORMAT, file);
+        return file;
     }
 
     /**
-     * 生成二维码(内嵌LOGO)
-     * 调用者指定二维码文件名
+     * 生成二维码(内嵌LOGO), 调用者指定二维码文件名
      *
      * @param content      内容
      * @param logoPath     LOGO地址
@@ -157,30 +199,13 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     @NotNull
-    public static String encode(String content, String logoPath, String destPath, String fileName, boolean needCompress) throws Exception {
+    public static File encode(String content, String logoPath, String destPath, String fileName, boolean needCompress) throws Exception {
         BufferedImage image = createImage(content, logoPath, needCompress);
         mkdirs(destPath, 0);
-        fileName = fileName.substring(0, fileName.indexOf(".") > 0 ? fileName.indexOf(".") : fileName.length())
-                + "." + FORMAT.toLowerCase();
-        ImageIO.write(image, FORMAT, new File(destPath + "/" + fileName));
-        return fileName;
-    }
-
-    /**
-     * 当文件夹不存在时，mkdirs会自动创建多层目录，区别于mkdir．
-     * (mkdir如果父目录不存在则会抛出异常)
-     *
-     * @param destPath 存放目录
-     */
-    public static void mkdirs(String destPath, int count) {
-        File file = new File(destPath);
-        if (!file.exists() && !file.isDirectory()) {
-            boolean a = file.mkdirs();
-            count++;
-            if (!a && count < 5) {
-                mkdirs(destPath, count);
-            }
-        }
+        fileName = fileName.substring(0, fileName.indexOf(".") > 0 ? fileName.indexOf(".") : fileName.length()) + "." + FORMAT.toLowerCase();
+        File file = new File(destPath + "/" + fileName);
+        ImageIO.write(image, FORMAT, file);
+        return file;
     }
 
     /**
@@ -192,12 +217,12 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     @NotNull
-    public static String encode(String content, String logoPath, String destPath) throws Exception {
+    public static File encode(String content, String logoPath, String destPath) throws Exception {
         return encode(content, logoPath, destPath, false);
     }
 
     /**
-     * 生成二维码
+     * 生成二维码(不带LOGO)
      *
      * @param content      内容
      * @param destPath     存储地址
@@ -205,7 +230,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     @NotNull
-    public static String encode(String content, String destPath, boolean needCompress) throws Exception {
+    public static File encode(String content, String destPath, boolean needCompress) throws Exception {
         return encode(content, null, destPath, needCompress);
     }
 
@@ -217,8 +242,21 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     @NotNull
-    public static String encode(String content, String destPath) throws Exception {
+    public static File encode(String content, String destPath) throws Exception {
         return encode(content, null, destPath, false);
+    }
+
+    /**
+     * 生成二维码
+     *
+     * @param content 内容
+     * @throws Exception 异常
+     */
+    @NotNull
+    public static File encode(String content, File file) throws Exception {
+        BufferedImage image = createImage(content);
+        ImageIO.write(image, FORMAT, file);
+        return file;
     }
 
     /**
@@ -244,5 +282,22 @@ public class QrCodeUtils {
      */
     public static void encode(String content, OutputStream output) throws Exception {
         encode(content, null, output, false);
+    }
+
+    /**
+     * 当文件夹不存在时，mkdirs会自动创建多层目录，区别于mkdir．
+     * (mkdir如果父目录不存在则会抛出异常)
+     *
+     * @param destPath 存放目录
+     */
+    public static void mkdirs(String destPath, int count) {
+        File file = new File(destPath);
+        if (!file.exists() && !file.isDirectory()) {
+            boolean a = file.mkdirs();
+            count++;
+            if (!a && count < 5) {
+                mkdirs(destPath, count);
+            }
+        }
     }
 }

@@ -20,9 +20,9 @@ import java.util.Random;
 public class CaptchaUtils {
 
     // 验证码存放在session中的key
-    public static final String CODE_SESSION_KEY = "297ef5196ca786a0016ca789abc60000acbd";
+    public static final String CODE_SESSION_KEY = "297ef5196ca786a0016ca789abc60000post";
     // 随机产生数字与字母组合的字符串
-    private static final String RANDOM_STRING = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+    private static final String RANDOM_STRING = "0123456789ABCDEFGHJKLMNOPQRSTUVWXYZ";
     // 白色（用于背景）
     private static final Color BG_COLOR = new Color(255, 255, 255);
     // 随机数

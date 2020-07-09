@@ -1594,13 +1594,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return subYear == 0 && subMouth == 0 && subDay == 0;
     }
 
-
-    /**
-     * Parse date by 'yyyy-MM-dd' pattern
-     *
-     * @param str
-     * @return
-     */
     public static @NotNull Date parseByDayPattern(String str) {
         try {
             return parseDate(str, DATE_DEFAULT.getPattern());
@@ -1609,12 +1602,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         }
     }
 
-    /**
-     * Parse date by 'yyyy-MM-dd HH:mm:ss' pattern
-     *
-     * @param str
-     * @return
-     */
     public static @NotNull Date parseByDateTimePattern(String str) {
         try {
             return parseDate(str, DATETIME_DEFAULT.getPattern());
@@ -1623,12 +1610,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         }
     }
 
-    /**
-     * Format date by 'yyyy-MM-dd' pattern
-     *
-     * @param date
-     * @return
-     */
     public static String formatByDayPattern(Date date) {
         if (date != null) {
             return DateFormatUtils.format(date, DATE_DEFAULT.getPattern());
@@ -1637,22 +1618,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         }
     }
 
-    /**
-     * Format date by 'yyyy-MM-dd HH:mm:ss' pattern
-     *
-     * @param date
-     * @return
-     */
     public static String formatByDateTimePattern(Date date) {
         return DateFormatUtils.format(date, DATETIME_DEFAULT.getPattern());
     }
 
-    /**
-     * Get current day using format date by 'yyyy-MM-dd HH:mm:ss' pattern
-     *
-     * @return
-     * @author yebo
-     */
     public static String getCurrentDayByDayPattern() {
         Calendar cal = Calendar.getInstance();
         return formatByDayPattern(cal.getTime());
