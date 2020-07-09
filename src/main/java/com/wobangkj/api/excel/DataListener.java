@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * listener
+ * 复杂操作
  *
  * @author @cliod
- * @since 5/21/20 10:00 AM
- * package: com.wobangkj.jzlw.utils.excel.write
+ * @since 7/9/20 5:03 PM
  */
 @Slf4j
 public abstract class DataListener<T extends Model> extends AnalysisEventListener<T> {
@@ -36,14 +35,16 @@ public abstract class DataListener<T extends Model> extends AnalysisEventListene
 
     @Override
     public void invoke(T data, AnalysisContext context) {
-        add(data, context);
+        process(data, context);
     }
 
-    protected void add(Model data, AnalysisContext context) {
-        this.filter(data);
+    protected void process(Model data, AnalysisContext context) {
+        if (this.filter(data, context)) {
+            return;
+        }
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (dataCache.size() >= BATCH_COUNT) {
-            process();
+            process(context);
             // 处理完成清理缓存
             dataCache.clear();
         }
@@ -52,20 +53,24 @@ public abstract class DataListener<T extends Model> extends AnalysisEventListene
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
         //将剩余的数据进行处理
-        process();
+        process(context);
     }
 
     /**
      * 加上存储数据库
+     *
+     * @param context 上下文内容
      */
-    protected abstract void process();
+    protected abstract void process(AnalysisContext context);
 
     /**
      * 在添加之前进行筛选
      *
-     * @param data 数据
+     * @param data    数据
+     * @param context 上下文内容
      */
-    protected void filter(Model data) {
+    protected boolean filter(Model data, AnalysisContext context) {
+        return false;
     }
 
     /**

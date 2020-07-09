@@ -9,16 +9,23 @@ import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.wobangkj.api.excel.DataListener;
 import com.wobangkj.api.excel.Model;
+import com.wobangkj.api.excel.SaveListener;
 import com.wobangkj.enums.Format;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * excel utils
@@ -65,6 +72,41 @@ public class ExcelUtils {
     }
 
     /**
+     * 导出
+     *
+     * @param response 响应
+     * @param data     导出数据
+     * @param clazz    导出对象类型
+     * @throws Exception 异常
+     */
+    public static void write(HttpServletResponse response, List<?> data, Class<?> clazz) throws Exception {
+        write(response, data, clazz, KeyUtils.get32uuid(), "sheet1", ExcelTypeEnum.XLS);
+    }
+
+    /**
+     * 导出
+     *
+     * @param response  响应
+     * @param data      导出数据
+     * @param fileName  文件名称
+     * @param sheetName 表格名称
+     * @param clazz     导出对象类型
+     * @throws Exception 异常
+     */
+    public static void write(HttpServletResponse response, List<?> data, Class<?> clazz, String fileName, String sheetName, ExcelTypeEnum typeEnum) throws Exception {
+        //表头样式
+        WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+        //设置表头居中对齐
+        headWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        //内容样式
+        WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
+        //设置内容靠左对齐
+        contentWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
+        HorizontalCellStyleStrategy horizontalCellStyleStrategy = new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
+        EasyExcel.write(getOutputStream(fileName, response, "application/vnd.ms-excel"), clazz).excelType(typeEnum).sheet(sheetName).registerWriteHandler(horizontalCellStyleStrategy).doWrite(data);
+    }
+
+    /**
      * 创建目录和文件
      *
      * @param filePath 文件目录
@@ -108,13 +150,33 @@ public class ExcelUtils {
      * 读取数据进行操作
      *
      * @param is       文件流
-     * @param model    模型
+     * @param type     模型
      * @param listener 监听并操作
      * @param <T>      模型类型
      */
-    public static <T extends Model> void read(InputStream is, @NotNull T model, DataListener<T> listener) {
+    public static <T extends Model> void read(InputStream is, @NotNull Class<T> type, DataListener<T> listener) {
         // 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
-        EasyExcel.read(is, model.getClass(), listener).sheet().doRead();
+        EasyExcel.read(is, type, listener).sheet().doRead();
+    }
+
+    public static <T> void read(@NotNull MultipartFile file, Class<T> type, Consumer<List<T>> func) throws IOException {
+        EasyExcel.read(file.getInputStream(), type, new SaveListener<>(func));
+    }
+
+    /**
+     * 获取输出流响应
+     *
+     * @param fileName 文件名称
+     * @param response 响应
+     * @return 结果
+     * @throws Exception 异常
+     */
+    public static OutputStream getOutputStream(String fileName, @NotNull HttpServletResponse response, String contentType) throws Exception {
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        response.setContentType(contentType);
+        response.setCharacterEncoding("utf8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
+        return response.getOutputStream();
     }
 
     /**
