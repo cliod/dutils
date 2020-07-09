@@ -9,7 +9,7 @@ import com.wobangkj.utils.JsonUtils;
  * @author cliod
  * @since 7/8/20 3:33 PM
  */
-public interface EnumValue<T> extends Session {
+public interface EnumValue<T> extends ValueWrapper<T> {
 
     /**
      * 枚举值

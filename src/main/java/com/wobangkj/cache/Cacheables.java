@@ -44,21 +44,21 @@ public interface Cacheables {
         valueLoader.call();
         ValueWrapper obj = get(key);
         if (Objects.isNull(obj)) return null;
-        return (T) obj.get();
+        return (T) obj.value();
     }
 
     @SuppressWarnings("unchecked")
     default <T> T get(@NotNull Object key, @Nullable Class<T> clazz) {
         ValueWrapper wrapper = get(key);
         if (Objects.isNull(wrapper)) return null;
-        Object obj = wrapper.get();
+        Object obj = wrapper.value();
         if (Objects.isNull(obj)) return null;
         if (!Objects.equals(clazz, obj.getClass())) return null;
         return (T) obj;
     }
 
     default Object obtain(Object key) {
-        return Optional.ofNullable(get(key)).orElse(new ValueWrapper.SimpleValueWrapper(null)).get();
+        return Optional.ofNullable(get(key)).orElse(new ValueWrapper.SimpleValueWrapper(null)).value();
     }
 
     void del(Object key);

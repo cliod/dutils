@@ -6,11 +6,11 @@ package com.wobangkj.api;
  * @author cliod
  * @since 7/9/20 3:55 PM
  */
-public interface ValueWrapper {
+public interface ValueWrapper<T> extends Session {
 
-    Object get();
+    T value();
 
-    class SimpleValueWrapper implements ValueWrapper {
+    class SimpleValueWrapper implements ValueWrapper<Object> {
         private final Object value;
 
         public SimpleValueWrapper(Object value) {
@@ -18,7 +18,7 @@ public interface ValueWrapper {
         }
 
         @Override
-        public Object get() {
+        public Object value() {
             return value;
         }
     }
