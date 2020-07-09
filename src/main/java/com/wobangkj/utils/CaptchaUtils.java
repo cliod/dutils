@@ -33,14 +33,14 @@ public class CaptchaUtils {
     /**
      * 生成一个4位数,长100像素,宽30像素的验证码
      */
-    public static String generateValidCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public static String generateValidCode(HttpServletRequest request, HttpServletResponse response) {
         return generateValidCode(4, 100, 30, null, null, null, request, response);
     }
 
     /**
      * 生成一个指定字符串大小的验证码
      */
-    public static String generateValidCode(int stringLength, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public static String generateValidCode(int stringLength, HttpServletRequest request, HttpServletResponse response) {
         return generateValidCode(stringLength, 100, 30, null, null, null, request, response);
     }
 
@@ -117,7 +117,7 @@ public class CaptchaUtils {
     /**
      * 生成一个指定字符串大小及长宽及字体的验证码
      */
-    public static String generateValidCode(int stringLength, int width, int height, String fontFamily, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public static String generateValidCode(int stringLength, int width, int height, String fontFamily, HttpServletRequest request, HttpServletResponse response) {
         return generateValidCode(stringLength, width, height, null, null, fontFamily, request, response);
     }
 

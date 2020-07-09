@@ -13,7 +13,7 @@ import java.util.Optional;
  * package: com.wobangkj.bean
  */
 @Setter
-public class ObjPageable<T> extends Pageable {
+public class ObjPager<T> extends Pageable {
 
     private T param;
 
@@ -22,8 +22,8 @@ public class ObjPageable<T> extends Pageable {
         return Optional.of(get());
     }
 
-    public static <T> @NotNull ObjPageable<T> of(int page, int size, T obj) {
-        ObjPageable<T> pageable = new ObjPageable<>();
+    public static <T> @NotNull ObjPager<T> of(int page, int size, T obj) {
+        ObjPager<T> pageable = new ObjPager<>();
         pageable.setParam(obj);
         pageable.setPage(page);
         pageable.setSize(size);

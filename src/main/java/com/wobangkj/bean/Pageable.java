@@ -22,6 +22,15 @@ public abstract class Pageable {
     /**
      * 静态方法
      *
+     * @return 结果
+     */
+    public static @NotNull Pageable of() {
+        return of(1, 10);
+    }
+
+    /**
+     * 静态方法
+     *
      * @param page 分页
      * @param size 大小
      * @return 结果

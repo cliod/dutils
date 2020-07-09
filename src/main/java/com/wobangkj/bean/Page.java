@@ -1,13 +1,10 @@
 package com.wobangkj.bean;
 
-import com.wobangkj.utils.JsonUtils;
 import com.wobangkj.api.Session;
-import com.wobangkj.utils.BeanUtils;
+import com.wobangkj.utils.JsonUtils;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,15 +37,15 @@ public final class Page<T> implements Session {
     /**
      * 静态of函数代替构造函数
      *
-     * @param length  总数目
-     * @param size    当前数目
-     * @param objects 列表
-     * @param <T>     类型
+     * @param totalNum 总数目
+     * @param size     当前数目
+     * @param objects  列表
+     * @param <T>      类型
      * @return 结果
      */
-    public static <T> @NotNull Page<T> of(long length, int page, int size, List<T> objects) {
+    public static <T> @NotNull Page<T> of(long totalNum, int page, int size, List<T> objects) {
         Page<T> pager = new Page<>();
-        pager.count = length;
+        pager.count = totalNum;
         pager.size = size;
         pager.list = objects;
         pager.page = page;
@@ -58,52 +55,35 @@ public final class Page<T> implements Session {
     /**
      * 静态of函数代替构造函数
      *
-     * @param length 总数目
-     * @param list   列表
-     * @param <T>    类型
+     * @param totalNum 总数目
+     * @param list     列表
+     * @param <T>      类型
      * @return 结果
      */
-    public static @NotNull <T> Page<T> of(long length, int page, List<T> list) {
-        return Page.of(length, page, list.size(), list);
+    public static <T> @NotNull Page<T> of(long totalNum, int page, List<T> list) {
+        return Page.of(totalNum, page, list.size(), list);
     }
 
     /**
      * 静态of函数代替构造函数
      *
-     * @param length   总数目
+     * @param totalNum 总数目
      * @param pageable 分页
      * @param objects  列表
      * @param <T>      类型
      * @return 结果
      */
-    public static <T> @NotNull Page<T> of(long length, @NotNull Pageable pageable, List<T> objects) {
+    public static <T> @NotNull Page<T> of(long totalNum, @NotNull Pageable pageable, List<T> objects) {
         Page<T> pager = new Page<>();
-        pager.count = length;
+        pager.count = totalNum;
         pager.size = pageable.getSize();
         pager.page = pageable.getPage();
         pager.list = objects;
         return pager;
     }
 
-    /**
-     * 静态of函数代替构造函数
-     *
-     * @param length 总数目
-     * @param list   列表
-     * @param <T>    类型
-     * @return 结果
-     */
-    @SafeVarargs
-    @Deprecated
-    public static @NotNull <T> Page<T> of(long length, final T... list) {
-        if (BeanUtils.isNull(list)) {
-            return Page.of(length, 1, 0, new ArrayList<>());
-        }
-        return Page.of(length, 1, list.length, Arrays.asList(list));
-    }
-
     public static <T> @NotNull Page<T> of() {
-        return Page.of(0, 1, 0, Collections.emptyList());
+        return Page.of(0, Pageable.of(), Collections.emptyList());
     }
 
     /**
@@ -134,7 +114,8 @@ public final class Page<T> implements Session {
      */
     @Override
     public @NotNull Maps<String, Object> toObject() {
-        return Maps.of("data", (Object) this.getList())
+        return Maps
+                .to("data", this.getList())
                 .add("pager", Maps
                         .of("client_page", (Object) this.getPage())
                         .set("every_page", this.getSize())

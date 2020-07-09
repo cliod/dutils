@@ -24,6 +24,7 @@ public enum Format implements EnumValue<String>, com.wobangkj.api.Format {
     FORMAT_DATETIME_DEFAULT("yyyy-MM-dd HH:mm:ss"),
     FORMAT_SLASH_DATE("yyyy/MM/dd"),
     FORMAT_SLASH_DATETIME("yyyy/MM/dd HH:mm:ss"),
+
     DATE("yyyyMMdd"),
     TIME("HHmmss"),
     DATETIME("yyyyMMddHHmmss"),
@@ -32,6 +33,8 @@ public enum Format implements EnumValue<String>, com.wobangkj.api.Format {
     DATETIME_DEFAULT("yyyy-MM-dd HH:mm:ss"),
     SLASH_DATE("yyyy/MM/dd"),
     SLASH_DATETIME("yyyy/MM/dd HH:mm:ss"),
+    DOT_DATE("yyyy.MM.dd"),
+    DOT_DATETIME("yyyy.MM.dd HH:mm:ss"),
     ;
 
     private final String pattern;

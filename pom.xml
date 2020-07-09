@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.3-SNAPSHOT</version>
 
     <name>dutils</name>
-    <url>http://www.wobangkj.com</url>
+    <url>https://blog.wobangkj.com</url>
 
     <licenses>
         <license>
@@ -21,7 +21,7 @@
         <developer>
             <name>cliod</name>
             <email>qi2415@qq.com</email>
-            <url>https://gitlab.com/cliod</url>
+            <url>https://gitlab.com/cliod/dutils</url>
         </developer>
     </developers>
 
