@@ -23,7 +23,6 @@ public abstract class Interceptor {
      * @param response 响应
      * @param handler  请求方法
      * @return 结果
-     * @throws Exception 可能的异常
      */
     protected abstract boolean process(HttpServletRequest request, HttpServletResponse response, Object handler);
 
