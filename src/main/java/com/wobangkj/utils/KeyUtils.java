@@ -86,25 +86,22 @@ public class KeyUtils {
 
     /**
      * SHA-265 加密
-     * 等效于{@link com.wobangkj.utils.EncryptUtils#encodeSha256String(String)}
+     * 等效于{@link com.wobangkj.utils.EncryptUtils#encodeSha256(String)}
      *
      * @param value 字符串
      * @return 加密结果
      */
     public static @NotNull String encrypt(String value) {
-        String encodeStr = "";
         if (BeanUtils.isEmpty(value)) {
-            return encodeStr;
+            return "";
         }
-        MessageDigest messageDigest;
         try {
-            messageDigest = MessageDigest.getInstance("SHA-256");
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(value.getBytes(StandardCharsets.UTF_8));
-            encodeStr = byte2Hex(messageDigest.digest());
+            return byte2Hex(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            return "";
         }
-        return encodeStr;
     }
 
     /**
