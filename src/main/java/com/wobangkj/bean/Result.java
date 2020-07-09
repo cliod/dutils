@@ -179,10 +179,6 @@ public class Result<T> extends Maps<String, Object> implements Session {
         return get("data");
     }
 
-    public <E> E getData(Class<E> type) {
-        return JsonUtils.fromJson(JsonUtils.toJson(get("data")), type);
-    }
-
     public void setData(Object data) {
         put("data", data);
     }

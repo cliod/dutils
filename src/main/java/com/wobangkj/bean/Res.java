@@ -118,7 +118,6 @@ public class Res extends Result<Object> implements Session {
         return this;
     }
 
-
     /**
      * 转成字符串
      *
