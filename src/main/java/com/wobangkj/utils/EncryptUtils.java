@@ -1,8 +1,6 @@
 package com.wobangkj.utils;
 
 import org.jetbrains.annotations.NotNull;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -12,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
@@ -111,7 +110,7 @@ public class EncryptUtils {
      * 5.内容加密
      * 6.返回字符串
      */
-    public static String encodeAse(String encodeRules, String content) {
+    public static @NotNull String encodeAse(String encodeRules, String content) {
         try {
             Cipher cipher = aseInit(encodeRules);
             //8.获取加密内容的字节数组(这里要设置为utf-8)不然内容中如果有中文和英文混合中文就会解密为乱码
@@ -119,7 +118,7 @@ public class EncryptUtils {
             //9.根据密码器的初始化方式--加密：将数据加密
             byte[] byte_AES = cipher.doFinal(byte_encode);
             //10.将加密后的数据转换为字符串
-            return new BASE64Encoder().encode(byte_AES);
+            return Arrays.toString(Base64.getEncoder().encode(byte_AES));
         } catch (Exception e) {
             return "";
         }
@@ -136,7 +135,7 @@ public class EncryptUtils {
         try {
             Cipher cipher = aseInit(encodeRules);
             //8.将加密并编码后的内容解码成字节数组
-            byte[] byte_content = new BASE64Decoder().decodeBuffer(content);
+            byte[] byte_content = Base64.getDecoder().decode(content);
             // 解密
             byte[] byte_decode = cipher.doFinal(byte_content);
             return new String(byte_decode, StandardCharsets.UTF_8);
