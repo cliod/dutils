@@ -15,6 +15,7 @@ import java.util.List;
  * @since 19-6-9
  */
 @Data
+@Deprecated
 public final class Page<T> implements Session {
     private static final long serialVersionUID = 7562274153136856700L;
     /**
