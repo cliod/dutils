@@ -10,10 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Base64.Encoder;
 
 /**
  * 字符串加密
@@ -85,8 +82,7 @@ public class EncryptUtils {
      */
     @NotNull
     public static String encodeBase64(@NotNull String str) {
-        Encoder encoder = Base64.getEncoder();
-        return encoder.encodeToString(str.getBytes());
+        return Base64.getEncoder().encodeToString(str.getBytes());
     }
 
     /**
@@ -97,8 +93,7 @@ public class EncryptUtils {
      */
     @NotNull
     public static String decodeBase64(String str) {
-        Decoder encoder = Base64.getDecoder();
-        return new String(encoder.decode(str));
+        return new String(Base64.getDecoder().decode(str));
     }
 
     /*
@@ -118,7 +113,7 @@ public class EncryptUtils {
             //9.根据密码器的初始化方式--加密：将数据加密
             byte[] byte_AES = cipher.doFinal(byte_encode);
             //10.将加密后的数据转换为字符串
-            return Arrays.toString(Base64.getEncoder().encode(byte_AES));
+            return Base64.getEncoder().encodeToString(byte_AES);
         } catch (Exception e) {
             return "";
         }
