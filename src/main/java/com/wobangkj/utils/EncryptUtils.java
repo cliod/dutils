@@ -115,6 +115,7 @@ public class EncryptUtils {
             //10.将加密后的数据转换为字符串
             return Base64.getEncoder().encodeToString(byte_AES);
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }
@@ -135,6 +136,7 @@ public class EncryptUtils {
             byte[] byte_decode = cipher.doFinal(byte_content);
             return new String(byte_decode, StandardCharsets.UTF_8);
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }
@@ -181,5 +183,10 @@ public class EncryptUtils {
             dstr.append(Integer.toHexString(tmp));
         }
         return dstr.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(encodeAse("github.com/dreamlu/gt dreamlu123", "123456"));
+        System.out.println(decodeAse("github.com/dreamlu/gt dreamlu123", "Jm2ApONeSIb5V4Fvk1Ss5Q=="));
     }
 }

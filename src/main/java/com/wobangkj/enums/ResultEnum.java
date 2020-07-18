@@ -1,7 +1,8 @@
 package com.wobangkj.enums;
 
-import com.wobangkj.utils.JsonUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wobangkj.api.EnumMsg;
+import com.wobangkj.utils.JsonUtils;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,7 @@ import java.io.Serializable;
  * @since 19-6-9
  */
 @Getter
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ResultEnum implements EnumMsg {
     /**
      * HTTP 状态码
