@@ -40,7 +40,6 @@ public class Pair<K, V> extends Var<Object> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Object value() {
         return _data.get(keyName);
     }
