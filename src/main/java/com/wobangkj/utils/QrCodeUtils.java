@@ -52,6 +52,20 @@ public class QrCodeUtils {
     private static int HUA_SE = 0xFF000000; // 码颜色 0xFF000000 黑色
     private static int DI_SE = 0xFFFFFFFF; // 底色 0xFFFFFFFF 白色
 
+    private static boolean DEFAULT_COMPRESS = true;
+
+    public static boolean isDefaultCompress() {
+        return DEFAULT_COMPRESS;
+    }
+
+    public static boolean getDefaultCompress() {
+        return DEFAULT_COMPRESS;
+    }
+
+    public static void setDefaultCompress(boolean defaultCompress) {
+        DEFAULT_COMPRESS = defaultCompress;
+    }
+
     private QrCodeUtils() {
     }
 
@@ -319,7 +333,7 @@ public class QrCodeUtils {
      */
     @Deprecated
     public static @NotNull File encode(@NotNull String content, String logoPath, String destPath) throws Exception {
-        return encode(content, logoPath, destPath, false);
+        return encode(content, logoPath, destPath, isDefaultCompress());
     }
 
     /**
@@ -387,7 +401,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static void encode(@NotNull String content, File logoFile, @NotNull File file) throws Exception {
-        encode(content, logoFile, file, false);
+        encode(content, logoFile, file, isDefaultCompress());
     }
 
     /**
@@ -399,7 +413,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static void encode(@NotNull String content, InputStream in, @NotNull File file) throws Exception {
-        encode(content, in, file, false);
+        encode(content, in, file, isDefaultCompress());
     }
 
     /**
@@ -423,7 +437,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static @NotNull File encode(@NotNull String content, @Nullable InputStream in) throws Exception {
-        return encode(content, in, false);
+        return encode(content, in, getDefaultCompress());
     }
 
     /**
@@ -446,7 +460,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static void encode(@NotNull String content, @NotNull File file) throws Exception {
-        encode(content, file, false);
+        encode(content, file, isDefaultCompress());
     }
 
     /**
@@ -516,7 +530,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static void encode(@NotNull String content, @Nullable File logoFile, @NotNull OutputStream output) throws Exception {
-        encode(content, logoFile, output, false);
+        encode(content, logoFile, output, isDefaultCompress());
     }
 
     /**
@@ -528,7 +542,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static void encode(@NotNull String content, @Nullable InputStream in, @NotNull OutputStream output) throws Exception {
-        encode(content, in, output, false);
+        encode(content, in, output, isDefaultCompress());
     }
 
     /**
