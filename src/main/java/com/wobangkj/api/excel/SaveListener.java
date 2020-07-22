@@ -2,6 +2,7 @@ package com.wobangkj.api.excel;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,12 @@ public class SaveListener<T> extends AnalysisEventListener<T> {
      */
     private final Consumer<List<T>> process;
 
-    public SaveListener(Consumer<List<T>> process) {
+    protected SaveListener(Consumer<List<T>> process) {
         this.process = process;
+    }
+
+    public static <T> @NotNull SaveListener<T> of(Consumer<List<T>> process) {
+        return new SaveListener<>(process);
     }
 
     @Override

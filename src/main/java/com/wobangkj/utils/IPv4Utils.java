@@ -43,6 +43,12 @@ public class IPv4Utils {
         return PATTERN.matcher(ip).matches();
     }
 
+    /**
+     * 获取请求的ip地址
+     *
+     * @param request 请求
+     * @return ip地址
+     */
     public static String getIpFromRequest(@NotNull HttpServletRequest request) {
         String ip;
         boolean found = false;
@@ -50,7 +56,7 @@ public class IPv4Utils {
             StringTokenizer tokenizer = new StringTokenizer(ip, ",");
             while (tokenizer.hasMoreTokens()) {
                 ip = tokenizer.nextToken().trim();
-                if (isIPv4Valid(ip) && !isIPv4Private(ip)) {
+                if (isIPv4Valid(ip)) {
                     found = true;
                     break;
                 }
@@ -62,5 +68,5 @@ public class IPv4Utils {
         return ip;
     }
 
-    //proxy_set_header X-Forward-For $remote_addr ;
+    //proxy_set_header X-Forwarded-For $remote_addr;
 }
