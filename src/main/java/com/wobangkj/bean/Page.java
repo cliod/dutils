@@ -44,6 +44,7 @@ public final class Page<T> implements Session {
      * @param <T>      类型
      * @return 结果
      */
+    @Deprecated
     public static <T> @NotNull Page<T> of(long totalNum, int page, int size, List<T> objects) {
         Page<T> pager = new Page<>();
         pager.count = totalNum;
@@ -61,6 +62,7 @@ public final class Page<T> implements Session {
      * @param <T>      类型
      * @return 结果
      */
+    @Deprecated
     public static <T> @NotNull Page<T> of(long totalNum, int page, List<T> list) {
         return Page.of(totalNum, page, list.size(), list);
     }
@@ -74,6 +76,7 @@ public final class Page<T> implements Session {
      * @param <T>      类型
      * @return 结果
      */
+    @Deprecated
     public static <T> @NotNull Page<T> of(long totalNum, @NotNull Pageable pageable, List<T> objects) {
         Page<T> pager = new Page<>();
         pager.count = totalNum;
@@ -83,6 +86,7 @@ public final class Page<T> implements Session {
         return pager;
     }
 
+    @Deprecated
     public static <T> @NotNull Page<T> of() {
         return Page.of(0, Pageable.of(), Collections.emptyList());
     }
@@ -93,6 +97,7 @@ public final class Page<T> implements Session {
      * @return 字符串
      */
     @Override
+    @Deprecated
     public @NotNull String toString() {
         return this.toJson();
     }
@@ -103,6 +108,7 @@ public final class Page<T> implements Session {
      * @return Json
      */
     @Override
+    @Deprecated
     public @NotNull String toJson() {
         return JsonUtils.toJson(this.toObject());
     }
@@ -114,6 +120,7 @@ public final class Page<T> implements Session {
      * @see java.util.Map
      */
     @Override
+    @Deprecated
     public @NotNull Maps<String, Object> toObject() {
         return Maps
                 .to("data", this.getList())

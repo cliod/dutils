@@ -39,6 +39,15 @@ public class Pair<K, V> extends Var<Object> {
         _data.put(keyName, key);
     }
 
+    @SuppressWarnings("unchecked")
+    public V getValue() {
+        return (V) _data.get(valueName);
+    }
+
+    public void setValue(V value) {
+        _data.put(valueName, value);
+    }
+
     @Override
     public Object value() {
         return _data.get(keyName);

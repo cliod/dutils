@@ -1,12 +1,10 @@
 package com.wobangkj.api;
 
 import com.wobangkj.bean.Maps;
-import com.wobangkj.bean.Page;
+import com.wobangkj.bean.Pager;
 import com.wobangkj.bean.Res;
 import com.wobangkj.enums.ResultEnum;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 import static com.wobangkj.bean.Res.of;
 
@@ -76,13 +74,13 @@ public class Response {
      * @param <T>   类型
      * @return 结果
      */
-    public static @NotNull <T> Res ok(@NotNull Page<T> pager) {
+    public static @NotNull <T> Res ok(@NotNull Pager<T> pager) {
         return ok()
-                .add("data", pager.getList())
+                .add("data", pager.getData())
                 .add("pager", Maps
-                        .of("client_page", (Object) pager.getPage())
-                        .set("every_page", pager.getSize())
-                        .set("total_num", pager.getCount()));
+                        .of("client_page", (Object) pager.getClientPage())
+                        .set("every_page", pager.getEveryPage())
+                        .set("total_num", pager.getTotalNum()));
     }
 
     /**

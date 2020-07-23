@@ -13,8 +13,7 @@ import java.util.Objects;
  * @author cliod
  * @since 2019/5/20 13:20
  */
-@SuppressWarnings("all")
-public class Res extends Result<Object> implements Session {
+public class Res extends Maps<String, Object> implements Session {
 
     private static final long serialVersionUID = -4892758069561565904L;
 
