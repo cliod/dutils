@@ -1,6 +1,7 @@
 package com.wobangkj.utils;
 
 import com.wobangkj.enums.Format;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -164,6 +165,15 @@ public class FileUtils {
      */
     public static @NotNull InputStream fileToInputStream(@NotNull File file) throws FileNotFoundException {
         return new FileInputStream(file);
+    }
+
+    @SneakyThrows
+    public static @Nullable InputStream readFile(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            return new FileInputStream(file);
+        }
+        return null;
     }
 
     /**

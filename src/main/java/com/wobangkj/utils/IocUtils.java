@@ -24,6 +24,12 @@ public abstract class IocUtils implements ApplicationContextAware {
         return applicationContext;
     }
 
+    /**
+     * 注入ioc
+     *
+     * @param applicationContext ioc容器
+     * @throws BeansException bean异常
+     */
     @Override
     public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         IocUtils.applicationContext = applicationContext;

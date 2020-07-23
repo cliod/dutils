@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public interface Cacheables {
 
-    ValueWrapper get(Object kry);
+    ValueWrapper<Object> get(Object kry);
 
     default void put(@NotNull Object key, Object value) {
         this.set(key, value);
@@ -42,14 +42,14 @@ public interface Cacheables {
     @SuppressWarnings("unchecked")
     default <T> T get(@NotNull Object key, @NotNull Callable<T> valueLoader) {
         valueLoader.call();
-        ValueWrapper obj = get(key);
+        ValueWrapper<Object> obj = get(key);
         if (Objects.isNull(obj)) return null;
         return (T) obj.value();
     }
 
     @SuppressWarnings("unchecked")
     default <T> T get(@NotNull Object key, @Nullable Class<T> clazz) {
-        ValueWrapper wrapper = get(key);
+        ValueWrapper<Object> wrapper = get(key);
         if (Objects.isNull(wrapper)) return null;
         Object obj = wrapper.value();
         if (Objects.isNull(obj)) return null;

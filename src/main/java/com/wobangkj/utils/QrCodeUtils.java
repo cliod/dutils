@@ -200,7 +200,7 @@ public class QrCodeUtils {
      */
     @Deprecated
     public static void insertImage(BufferedImage source, String logoPath, boolean needCompress) {
-        try (InputStream inputStream = QrCodeUtils.class.getResourceAsStream(logoPath)) {
+        try (InputStream inputStream = FileUtils.readFile(logoPath)) {
             insertImage(source, inputStream, needCompress);
         } catch (IOException e) {
             throw new RuntimeException(e);

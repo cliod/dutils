@@ -32,6 +32,12 @@ public class IPv4Utils {
                 + (Integer.parseInt(octets[2]) << 8) + Integer.parseInt(octets[3]);
     }
 
+    /**
+     * 是否私有ipv4
+     *
+     * @param ip ip地址字符串
+     * @return 是否私有ipv4地址
+     */
     public static boolean isIPv4Private(String ip) {
         long longIp = ipV4ToLong(ip);
         return (longIp >= ipV4ToLong("10.0.0.0") && longIp <= ipV4ToLong("10.255.255.255"))
@@ -39,12 +45,19 @@ public class IPv4Utils {
                 || longIp >= ipV4ToLong("192.168.0.0") && longIp <= ipV4ToLong("192.168.255.255");
     }
 
+    /**
+     * 是否有效ipv4
+     *
+     * @param ip 字符串
+     * @return 是否ipv4地址
+     */
     public static boolean isIPv4Valid(String ip) {
         return PATTERN.matcher(ip).matches();
     }
 
     /**
      * 获取请求的ip地址
+     * nginx转发需要设置 //proxy_set_header X-Forwarded-For $remote_addr;
      *
      * @param request 请求
      * @return ip地址
@@ -67,6 +80,4 @@ public class IPv4Utils {
         }
         return ip;
     }
-
-    //proxy_set_header X-Forwarded-For $remote_addr;
 }
