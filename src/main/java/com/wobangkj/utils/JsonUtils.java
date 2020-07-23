@@ -21,17 +21,30 @@ public class JsonUtils {
     /**
      * json序列化
      */
-    private static final ObjectMapper objectMapper = new Serializer() {{
-    }}.objectMapper();
-    private static final GsonBuilder gsonBuilder = new GsonBuilder();
-    private static final Gson gson = gsonBuilder.create();
+    private static ObjectMapper objectMapper = new Serializer() {
+    }.objectMapper();
+    private static GsonBuilder gsonBuilder = new GsonBuilder();
+    private static Gson gson = gsonBuilder.create();
 
-    public static ObjectMapper getJackson() {
+    public static @NotNull ObjectMapper getJackson() {
         return objectMapper;
     }
 
     public static @NotNull Gson getGoogleJson() {
         return gson;
+    }
+
+    public static void setObjectMapper(@NotNull ObjectMapper objectMapper) {
+        JsonUtils.objectMapper = objectMapper;
+    }
+
+    public static void setGsonBuilder(@NotNull GsonBuilder gsonBuilder) {
+        JsonUtils.gsonBuilder = gsonBuilder;
+        setGson(gsonBuilder.create());
+    }
+
+    public static void setGson(@NotNull Gson gson) {
+        JsonUtils.gson = gson;
     }
 
     /**
@@ -90,6 +103,4 @@ public class JsonUtils {
     public static String toJson(Object obj) {
         return objectMapper.writeValueAsString(obj);
     }
-
-
 }
