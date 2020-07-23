@@ -113,6 +113,16 @@ public class FileUtils {
     }
 
     /**
+     * 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+     *
+     * @param file 文件
+     * @return 结果字符串
+     */
+    public static @NotNull String getBase64FromInputStream(@NotNull File file) throws IOException {
+        return FileUtils.getBase64FromInputStream(new FileInputStream(file));
+    }
+
+    /**
      * 将网络文件MultipartFile转存成内存File
      *
      * @param file     流文件

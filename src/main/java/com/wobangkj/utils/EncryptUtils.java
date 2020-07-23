@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 /**
  * 字符串加密
@@ -69,28 +68,6 @@ public class EncryptUtils {
     }
 
     /**
-     * 用base64算法进行加密
-     *
-     * @param str 需要加密的字符串
-     * @return base64加密后的结果
-     */
-    @NotNull
-    public static String encodeBase64(@NotNull String str) {
-        return Base64.getEncoder().encodeToString(str.getBytes());
-    }
-
-    /**
-     * 用base64算法进行解密
-     *
-     * @param str 需要解密的字符串
-     * @return base64解密后的结果
-     */
-    @NotNull
-    public static String decodeBase64(String str) {
-        return new String(Base64.getDecoder().decode(str));
-    }
-
-    /**
      * 加密
      *
      * @param content 字符串内容
@@ -98,7 +75,7 @@ public class EncryptUtils {
      */
     public static @NotNull String encodeAse(String content) {
         try {
-            return AseUtils.encrypt(content, AseUtils.AES_KEY, AseUtils.AES_IV);
+            return AseUtils.encode(content, AseUtils.AES_KEY, AseUtils.AES_IV);
         } catch (Exception ex) {
             ex.printStackTrace();
             return "";
@@ -113,7 +90,7 @@ public class EncryptUtils {
      */
     public static @NotNull String decodeAse(String content) {
         try {
-            return AseUtils.decrypt(content, AseUtils.AES_KEY, AseUtils.AES_IV);
+            return AseUtils.decode(content, AseUtils.AES_KEY, AseUtils.AES_IV);
         } catch (Exception ex) {
             ex.printStackTrace();
             return "";
@@ -135,7 +112,7 @@ public class EncryptUtils {
      */
     public static @NotNull String encodeAse(String encodeRules, String content) {
         try {
-            return AseUtils.encrypt(content, encodeRules, AseUtils.AES_IV);
+            return AseUtils.encode(content, encodeRules, AseUtils.AES_IV);
         } catch (Exception ex) {
             ex.printStackTrace();
             return "";
@@ -155,7 +132,7 @@ public class EncryptUtils {
      */
     public static @NotNull String decodeAse(String encodeRules, String content) {
         try {
-            return AseUtils.decrypt(content, encodeRules, AseUtils.AES_IV);
+            return AseUtils.decode(content, encodeRules, AseUtils.AES_IV);
         } catch (Exception ex) {
             ex.printStackTrace();
             return "";
@@ -166,8 +143,8 @@ public class EncryptUtils {
     private static String encode(@NotNull String str, String method) throws NoSuchAlgorithmException {
         MessageDigest mdInst;
         // 把密文转换成十六进制的字符串形式
-        // 单线程用StringBuilder，速度快 多线程用stringbuffer，安全
-        StringBuilder dstr = new StringBuilder();
+        // 单线程用StringBuilder，速度快 多线程用stringBuffer，安全
+        StringBuilder builder = new StringBuilder();
         // 获得MD5摘要算法的 MessageDigest对象
         mdInst = MessageDigest.getInstance(method);
         // 使用指定的字节更新摘要
@@ -180,11 +157,11 @@ public class EncryptUtils {
                 tmp += 256;
             }
             if (tmp < 16) {
-                dstr.append("0");
+                builder.append("0");
             }
-            dstr.append(Integer.toHexString(tmp));
+            builder.append(Integer.toHexString(tmp));
         }
-        return dstr.toString();
+        return builder.toString();
     }
 
     // https://blog.csdn.net/chengbinbbs/article/details/78640589

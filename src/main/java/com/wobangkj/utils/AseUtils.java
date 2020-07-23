@@ -8,7 +8,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 /**
  * ase加解密工具类
@@ -28,7 +27,7 @@ public class AseUtils {
      * slatKey: 加密的盐，16位字符串
      * vectorKey: 加密的向量，16位字符串
      */
-    public static String encrypt(@NotNull String content, @NotNull String slatKey, @NotNull String vectorKey)
+    public static @NotNull String encode(@NotNull String content, @NotNull String slatKey, @NotNull String vectorKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
             InvalidAlgorithmParameterException, InvalidKeyException {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -36,7 +35,7 @@ public class AseUtils {
         IvParameterSpec iv = new IvParameterSpec(vectorKey.getBytes());
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         byte[] encrypted = cipher.doFinal(content.getBytes());
-        return Base64.getEncoder().encodeToString(encrypted);
+        return Base64Utils.encode(encrypted);
     }
 
     /**
@@ -44,22 +43,58 @@ public class AseUtils {
      * slatKey: 加密时使用的盐，16位字符串
      * vectorKey: 加密时使用的向量，16位字符串
      */
-    public static @NotNull String decrypt(String base64Content, @NotNull String slatKey, @NotNull String vectorKey)
+    public static @NotNull String decode(String content, @NotNull String slatKey, @NotNull String vectorKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
             InvalidAlgorithmParameterException, InvalidKeyException {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecretKey secretKey = new SecretKeySpec(slatKey.getBytes(), "AES");
         IvParameterSpec iv = new IvParameterSpec(vectorKey.getBytes());
         cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
-        byte[] content = Base64.getDecoder().decode(base64Content);
-        byte[] encrypted = cipher.doFinal(content);
+        byte[] contents = Base64Utils.decode(content);
+        byte[] encrypted = cipher.doFinal(contents);
+        return new String(encrypted);
+    }
+
+    /**
+     * content: 加密内容
+     * slatKey: 加密的盐，16位字符串
+     * vectorKey: 加密的向量，16位字符串
+     */
+    public static @NotNull String encrypt(@NotNull String content, @NotNull String slatKey, @NotNull String vectorKey)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
+            InvalidAlgorithmParameterException, InvalidKeyException {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        IvParameterSpec iv = new IvParameterSpec(vectorKey.getBytes());
+        SecretKey secretKey = new SecretKeySpec(slatKey.getBytes(), "AES");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
+        byte[] encrypted = cipher.doFinal(content.getBytes());
+        return HexUtils.bytes2Hex(encrypted);
+    }
+
+    /**
+     * content: 解密内容(base64编码格式)
+     * slatKey: 加密时使用的盐，16位字符串
+     * vectorKey: 加密时使用的向量，16位字符串
+     */
+    public static @NotNull String decrypt(String content, @NotNull String slatKey, @NotNull String vectorKey)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
+            InvalidAlgorithmParameterException, InvalidKeyException {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        SecretKey secretKey = new SecretKeySpec(slatKey.getBytes(), "AES");
+        IvParameterSpec iv = new IvParameterSpec(vectorKey.getBytes());
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
+        byte[] contents = HexUtils.hex2Bytes(content);
+        byte[] encrypted = cipher.doFinal(contents);
         return new String(encrypted);
     }
 
     public static void main(String[] args) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-        String a = encrypt("admin", AES_KEY, AES_IV);
+        String a = encode("admin", AES_KEY, AES_IV);
+        String b = encrypt("admin", AES_KEY, AES_IV);
         System.out.println(a);
-        System.out.println(decrypt(a, AES_KEY, AES_IV));
-        System.out.println(decrypt("sPa0sTmDf6gasS9tHvIqKw==", AES_KEY, AES_IV));
+        System.out.println(b);
+        System.out.println(decode(a, AES_KEY, AES_IV));
+        System.out.println(decrypt(b, AES_KEY, AES_IV));
+        System.out.println(decode("sPa0sTmDf6gasS9tHvIqKw==", AES_KEY, AES_IV));
     }
 }
