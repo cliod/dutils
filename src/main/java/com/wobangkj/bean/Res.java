@@ -81,6 +81,11 @@ public class Res extends Maps<String, Object> implements Session {
         return result;
     }
 
+    public Res addAll(Map<String, Object> map) {
+        putAll(map);
+        return this;
+    }
+
     @Override
     public Res add(String k, Object v) {
         put(k, v);

@@ -6,11 +6,20 @@ package com.wobangkj.api;
  * @author cliod
  * @since 7/8/20 5:02 PM
  */
-public interface Format {
+public interface Format<T> extends ValueWrapper<T> {
     /**
      * 获取样式
      *
      * @return 样式
      */
-    String getPattern();
+    T getPattern();
+
+    /**
+     * 获取内容
+     *
+     * @return 值
+     */
+    default T value() {
+        return getPattern();
+    }
 }

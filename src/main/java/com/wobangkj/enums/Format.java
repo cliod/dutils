@@ -1,5 +1,6 @@
 package com.wobangkj.enums;
 
+import com.wobangkj.api.DateFormat;
 import com.wobangkj.api.EnumValue;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ import lombok.Getter;
  * package : com.wobangkj.api
  */
 @Getter
-public enum Format implements EnumValue<String>, com.wobangkj.api.Format {
+public enum Format implements EnumValue<String>, DateFormat {
 
     /**
      * 时间格式

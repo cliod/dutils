@@ -18,14 +18,17 @@ public class Result<T> extends Maps<String, Object> implements Session {
 
     private static final long serialVersionUID = -1884640212713045469L;
 
+    @Deprecated
     public Result(int initialCapacity) {
         super(initialCapacity);
     }
 
+    @Deprecated
     public Result() {
         super();
     }
 
+    @Deprecated
     public Result(Map<? extends String, ?> m) {
         super(m);
     }

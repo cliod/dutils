@@ -21,18 +21,22 @@ public final class Page<T> implements Session {
     /**
      * 总数量
      */
+    @Deprecated
     private Long count;
     /**
      * 当前页
      */
+    @Deprecated
     private Integer page;
     /**
      * 当前数量
      */
+    @Deprecated
     private Integer size;
     /**
      * 列表
      */
+    @Deprecated
     private List<T> list;
 
     /**

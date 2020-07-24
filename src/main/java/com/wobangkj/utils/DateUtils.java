@@ -102,7 +102,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * @return 周一
      */
     @NotNull
-    public static Date getThisWeekMonday(@NotNull String datetime, com.wobangkj.api.@NotNull Format format) {
+    public static Date getThisWeekMonday(@NotNull String datetime, com.wobangkj.api.@NotNull DateFormat format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format.getPattern());
         if (FORMAT_DATETIME_DEFAULT.getPattern().length() == datetime.length()) {
             return getThisWeekMonday(sdf.parse(datetime, new ParsePosition(0)));
@@ -578,7 +578,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static Date addSecond(Date date, int second) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        ;
         calendar.add(Calendar.SECOND, second);
         return calendar.getTime();
     }
