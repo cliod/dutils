@@ -94,10 +94,31 @@ public class Response {
     }
 
     /**
+     * 失败返回,携带系统错误信息
+     */
+    public static @NotNull Res fail(@NotNull EnumTextMsg re) {
+        return ok(re.getCode(), re.getMsg());
+    }
+
+    /**
      * 已处理失败返回
      */
     public static @NotNull Res fail(String msg, @NotNull ResultEnum re) {
         return of(271, msg, re.toThrowable());
+    }
+
+    /**
+     * 失败返回,携带系统错误信息
+     */
+    public static @NotNull Res fail(@NotNull EnumTextMsg re, @NotNull Throwable throwable) {
+        return of(re.getCode(), re.getMsg(), throwable);
+    }
+
+    /**
+     * 失败返回,携带系统错误信息
+     */
+    public static @NotNull Res fail(String msg, @NotNull Throwable throwable) {
+        return of(271, msg, throwable);
     }
 
     /**
@@ -149,7 +170,7 @@ public class Response {
      * 失败返回,携带系统错误信息
      */
     @Deprecated
-    public static @NotNull Res fail(@NotNull ResultEnum re, @NotNull Throwable throwable) {
+    public static @NotNull Res fail(@NotNull EnumMsg re, @NotNull Throwable throwable) {
         return of(re.getCode(), re.getMsg(), throwable);
     }
 
@@ -157,7 +178,7 @@ public class Response {
      * 失败返回
      */
     @Deprecated
-    public static @NotNull Res fail(@NotNull ResultEnum re) {
+    public static @NotNull Res fail(@NotNull EnumMsg re) {
         return of(re.getCode(), re.getMsg(), re.toThrowable());
     }
 
@@ -165,7 +186,7 @@ public class Response {
      * 已处理失败返回
      */
     @Deprecated
-    public static @NotNull Res fail(@NotNull ResultEnum re, @NotNull EnumMsg err) {
+    public static @NotNull Res fail(@NotNull EnumMsg re, @NotNull EnumMsg err) {
         return of(re.getCode(), re.getMsg(), err.toThrowable());
     }
 
