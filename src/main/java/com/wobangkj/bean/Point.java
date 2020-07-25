@@ -33,8 +33,7 @@ public abstract class Point<X extends Number, Y extends Number> implements Coord
         a = Math.sin(x * HALF);
         b = Math.sin(y * HALF);
         distance = EARTH_RADIUS * Math.asin(Math.sqrt(a * a + Math.cos(lat1) * Math.cos(lat2) * b * b)) / HALF;
-
-        return new BigDecimal(distance).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return BigDecimal.valueOf(distance).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     public static <X extends Number, Y extends Number> @NotNull Point<X, Y> of(X x, Y y) {
