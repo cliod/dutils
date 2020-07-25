@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * 序列化器
@@ -27,6 +28,13 @@ import java.util.Date;
  * @since 7/9/20 3:33 PM
  */
 public abstract class Serializer {
+
+    protected static final Serializer SERIALIZER = new DefaultSerializer();
+
+    public static Serializer getInstance() {
+        return Serializer.SERIALIZER;
+    }
+
     /**
      * 生成objectMapper
      *
@@ -34,15 +42,6 @@ public abstract class Serializer {
      */
     public final @NotNull ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
-        //设置null值为""
-        objectMapper.getSerializerProvider().setNullValueSerializer(new JacksonNullSerializer());
-        //这个设置会覆盖字段注解
-        objectMapper.setDateFormat(new SimpleDateFormat(com.wobangkj.enums.Format.DATETIME_DEFAULT.getPattern()));
-        //设置全局日期格式同时允许 DateTimeFormat 注解,默认取JsonFormat
-        //其次取DateTimeFormat,都取不到用默认的
-        objectMapper.setAnnotationIntrospector(this.getAnnotationIntrospector());
         this.process(objectMapper);
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
@@ -80,7 +79,23 @@ public abstract class Serializer {
      *
      * @param objectMapper 设置参数
      */
-    public void process(ObjectMapper objectMapper) {
+    public abstract void process(@NotNull ObjectMapper objectMapper);
+
+    private static class DefaultSerializer extends Serializer {
+        @Override
+        public void process(@NotNull ObjectMapper objectMapper) {
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
+            //设置null值为""
+            objectMapper.getSerializerProvider().setNullValueSerializer(new JacksonNullSerializer());
+            //这个设置会覆盖字段注解
+            objectMapper.setDateFormat(new SimpleDateFormat(com.wobangkj.enums.Format.DATETIME_DEFAULT.getPattern()));
+            //设置全局日期格式同时允许 DateTimeFormat 注解,默认取JsonFormat
+            //其次取DateTimeFormat,都取不到用默认的
+            objectMapper.setAnnotationIntrospector(this.getAnnotationIntrospector());
+            // 时区设置为当前时区
+            objectMapper.setTimeZone(TimeZone.getDefault());
+        }
     }
 }
 

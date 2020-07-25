@@ -21,8 +21,7 @@ public class JsonUtils {
     /**
      * json序列化
      */
-    private static ObjectMapper objectMapper = new Serializer() {
-    }.objectMapper();
+    private static ObjectMapper objectMapper = Serializer.getInstance().objectMapper();
     private static GsonBuilder gsonBuilder = new GsonBuilder();
     private static Gson gson = gsonBuilder.create();
 
