@@ -1,9 +1,8 @@
 package com.wobangkj.utils;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.*;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,10 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -58,52 +61,32 @@ public class QrCodeUtils {
         return DEFAULT_COMPRESS;
     }
 
-    public static boolean getDefaultCompress() {
-        return DEFAULT_COMPRESS;
-    }
-
-    public static void setDefaultCompress(boolean defaultCompress) {
-        DEFAULT_COMPRESS = defaultCompress;
-    }
-
     private QrCodeUtils() {
     }
 
     /**
-     * 获取图片格式
+     * 全局设置是否压缩, 默认压缩
      *
-     * @return 设置图片格式
+     * @param defaultCompress 是否压缩
      */
-    public static String getFORMAT() {
-        return FORMAT;
-    }
-
-    public static void setFORMAT(String FORMAT) {
-        QrCodeUtils.FORMAT = FORMAT;
+    public static void setDefaultCompress(boolean defaultCompress) {
+        DEFAULT_COMPRESS = defaultCompress;
     }
 
     /**
-     * 获取码颜色
+     * 全局设置码颜色
      *
-     * @return 码颜色
+     * @param huaSe 码颜色
      */
-    public static int getHuaSe() {
-        return HUA_SE;
-    }
-
     public static void setHuaSe(int huaSe) {
         HUA_SE = huaSe;
     }
 
     /**
-     * 获取底色
+     * 全局设置底色
      *
-     * @return 底色
+     * @param diSe 底色
      */
-    public static int getDiSe() {
-        return DI_SE;
-    }
-
     public static void setDiSe(int diSe) {
         DI_SE = diSe;
     }
@@ -127,7 +110,7 @@ public class QrCodeUtils {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                image.setRGB(x, y, bitMatrix.get(x, y) ? getHuaSe() : getDiSe());
+                image.setRGB(x, y, bitMatrix.get(x, y) ? HUA_SE : DI_SE);
             }
         }
         return image;
@@ -425,7 +408,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static @NotNull File encode(@NotNull String content, @Nullable InputStream in, boolean needCompress) throws Exception {
-        File file = new File("tmp." + getFORMAT());
+        File file = new File("tmp." + FORMAT);
         encode(content, in, file, needCompress);
         return file;
     }
@@ -437,7 +420,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static @NotNull File encode(@NotNull String content, @Nullable InputStream in) throws Exception {
-        return encode(content, in, getDefaultCompress());
+        return encode(content, in, DEFAULT_COMPRESS);
     }
 
     /**
@@ -470,7 +453,7 @@ public class QrCodeUtils {
      * @throws Exception 异常
      */
     public static @NotNull File encode(@NotNull String content) throws Exception {
-        File file = new File("tmp." + getFORMAT());
+        File file = new File("tmp." + FORMAT);
         encode(content, file);
         return file;
     }
@@ -603,6 +586,87 @@ public class QrCodeUtils {
     }
 
     /**
+     * 解码获取二维码内容
+     *
+     * @param path 二维码文件路径
+     * @return 二维码内容
+     * @throws Exception 异常
+     */
+    @Deprecated
+    public static String decode(String path) throws Exception {
+        if (StringUtils.isEmpty(path)) {
+            return null;
+        }
+        if (path.startsWith("http"))
+            return decode(new URL(path));
+        else
+            return decode(new File(path));
+    }
+
+    /**
+     * 解码获取二维码内容
+     *
+     * @param file 二维码文件
+     * @return 二维码内容
+     * @throws Exception 异常
+     */
+    public static String decode(File file) throws Exception {
+        BufferedImage image;
+        image = ImageIO.read(file);
+        if (image == null) {
+            return null;
+        }
+        return getContentByImage(image);
+    }
+
+    /**
+     * 解码获取二维码内容
+     *
+     * @param is 二维码流
+     * @return 二维码内容
+     * @throws Exception 异常
+     */
+    public static String decode(InputStream is) throws Exception {
+        BufferedImage image = ImageIO.read(is);
+        if (image == null) {
+            return null;
+        }
+        return getContentByImage(image);
+    }
+
+    /**
+     * 解码获取二维码内容
+     *
+     * @param url 二维码网络地址
+     * @return 二维码内容
+     * @throws Exception 异常
+     */
+    public static String decode(URL url) throws Exception {
+        BufferedImage image = ImageIO.read(url);
+        if (image == null) {
+            return null;
+        }
+        return getContentByImage(image);
+    }
+
+    /**
+     * 从二维码中解析内容
+     *
+     * @param image 二维码image
+     * @return 内容
+     * @throws NotFoundException 文件异常
+     */
+    public static String getContentByImage(BufferedImage image) throws NotFoundException {
+        BufferedImageLuminanceSource source = new BufferedImageLuminanceSource(image);
+        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+        Result result;
+        Map<DecodeHintType, String> hints = new HashMap<>();
+        hints.put(DecodeHintType.CHARACTER_SET, CHARSET);
+        result = new MultiFormatReader().decode(bitmap, hints);
+        return result.getText();
+    }
+
+    /**
      * 当文件夹不存在时，mkdirs会自动创建多层目录，区别于mkdir．
      * (mkdir如果父目录不存在则会抛出异常)
      *
@@ -628,4 +692,95 @@ public class QrCodeUtils {
         fileName = fileName.substring(0, fileName.indexOf(".") > 0 ? fileName.indexOf(".") : fileName.length()) + "." + FORMAT.toLowerCase();
         return new File(destPath + "/" + fileName);
     }
+}
+
+/**
+ * 图片亮度源
+ */
+class BufferedImageLuminanceSource extends LuminanceSource {
+
+    private final BufferedImage image;
+    private final int left;
+    private final int top;
+
+    public BufferedImageLuminanceSource(BufferedImage image) {
+        this(image, 0, 0, image.getWidth(), image.getHeight());
+    }
+
+    public BufferedImageLuminanceSource(BufferedImage image, int left, int top, int width, int height) {
+        super(width, height);
+
+        int sourceWidth = image.getWidth();
+        int sourceHeight = image.getHeight();
+        if (left + width > sourceWidth || top + height > sourceHeight) {
+            throw new IllegalArgumentException("Crop rectangle does not fit within image data.");
+        }
+
+        for (int y = top; y < top + height; y++) {
+            for (int x = left; x < left + width; x++) {
+                if ((image.getRGB(x, y) & 0xFF000000) == 0) {
+                    image.setRGB(x, y, 0xFFFFFFFF); // = white
+                }
+            }
+        }
+
+        this.image = new BufferedImage(sourceWidth, sourceHeight, BufferedImage.TYPE_BYTE_GRAY);
+        this.image.getGraphics().drawImage(image, 0, 0, null);
+        this.left = left;
+        this.top = top;
+    }
+
+    @Override
+    public byte[] getRow(int y, byte[] row) {
+        if (y < 0 || y >= getHeight()) {
+            throw new IllegalArgumentException("Requested row is outside the image: " + y);
+        }
+        int width = getWidth();
+        if (row == null || row.length < width) {
+            row = new byte[width];
+        }
+        image.getRaster().getDataElements(left, top + y, width, 1, row);
+        return row;
+    }
+
+    @Override
+    public byte[] getMatrix() {
+        int width = getWidth();
+        int height = getHeight();
+        int area = width * height;
+        byte[] matrix = new byte[area];
+        image.getRaster().getDataElements(left, top, width, height, matrix);
+        return matrix;
+    }
+
+    @Override
+    public boolean isCropSupported() {
+        return true;
+    }
+
+    @Override
+    public LuminanceSource crop(int left, int top, int width, int height) {
+        return new BufferedImageLuminanceSource(image, this.left + left, this.top + top, width, height);
+    }
+
+    @Override
+    public boolean isRotateSupported() {
+        return true;
+    }
+
+    @Override
+    public LuminanceSource rotateCounterClockwise() {
+        int sourceWidth = image.getWidth();
+        int sourceHeight = image.getHeight();
+        AffineTransform transform = new AffineTransform(0.0, -1.0, 1.0, 0.0, 0.0, sourceWidth);
+        // 旋转图片,宽高对调
+        BufferedImage rotatedImage = new BufferedImage(sourceHeight, sourceWidth, BufferedImage.TYPE_BYTE_GRAY);
+        Graphics2D g = rotatedImage.createGraphics();
+        g.drawImage(image, transform, null);
+        g.dispose();
+        // 新高
+        int width = getWidth();
+        return new BufferedImageLuminanceSource(rotatedImage, top, sourceWidth - (left + width), getHeight(), width);
+    }
+
 }
