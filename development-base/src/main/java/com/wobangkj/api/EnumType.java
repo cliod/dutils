@@ -26,13 +26,6 @@ public interface EnumType extends Session {
     String getDesc();
 
     /**
-     * 枚举名字
-     *
-     * @return 枚举
-     */
-    String name();
-
-    /**
      * 序列化,转成字符串
      *
      * @return Json

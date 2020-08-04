@@ -140,7 +140,7 @@ public class Response {
      * 非默认返回信息返回
      */
     @NotNull
-    public static <T> Result<T> ok(@NotNull BaseEnum<?> re, T o) {
+    public static <T> Result<T> ok(@NotNull EnumMsg re, T o) {
         return ok(re.getCode(), re.getMsg(), o);
     }
 
@@ -164,7 +164,7 @@ public class Response {
      * 位置异常,携带信息
      */
     @NotNull
-    public static Result<Object> error(@NotNull BaseEnum<? extends Enum<?>> err) {
+    public static Result<Object> error(@NotNull EnumMsg err) {
         return of(500, false, "未知错误", err.toObject(), null);
     }
 
@@ -196,7 +196,7 @@ public class Response {
      * 已处理失败返回
      */
     @NotNull
-    public static Result<Object> fail(@NotNull ResultEnum re, @NotNull BaseEnum<? extends Enum<?>> err) {
+    public static Result<Object> fail(@NotNull ResultEnum re, @NotNull EnumMsg err) {
         return of(re.getCode(), false, re.getMsg(), err.toObject(), null);
     }
 
@@ -207,7 +207,7 @@ public class Response {
     public static Result<Object> fail(@NotNull ResultEnum re, int code, String msg) {
         return of(re.getCode(), false, re.getMsg(), new HashMap<String, Object>(16) {{
             put("code", code);
-            put("errMsg", msg);
+            put("msg", msg);
         }}, null);
     }
 
@@ -238,11 +238,13 @@ public class Response {
         }
 
         @NotNull
+        @Deprecated
         public Builder put(String title, Date data) {
             return this.put(title, data, "yyyy-MM-dd HH:mm:ss");
         }
 
         @NotNull
+        @Deprecated
         public Builder put(String title, @NotNull Date data, String pattern) {
             this.data.put(title, DateTimeFormatter.ofPattern(pattern)
                     .format(data.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));

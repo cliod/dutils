@@ -2,7 +2,6 @@ package com.wobangkj.enums.type;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wobangkj.api.BaseType;
 import com.wobangkj.api.EnumType;
 import lombok.Data;
 import lombok.Getter;
@@ -17,7 +16,7 @@ import java.io.Serializable;
  */
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum GenderType implements BaseType<GenderType>, EnumType {
+public enum GenderType implements EnumType {
     /**
      * 性别
      */
@@ -26,8 +25,8 @@ public enum GenderType implements BaseType<GenderType>, EnumType {
     UNKNOWN(0, "未知"),
     ;
 
-    private Integer code;
-    private String desc;
+    private final Integer code;
+    private final String desc;
 
     GenderType(Integer code, String desc) {
         this.code = code;
@@ -60,12 +59,6 @@ public enum GenderType implements BaseType<GenderType>, EnumType {
         return this.get(code.intValue());
     }
 
-    @Override
-    public GenderType[] list() {
-        return values();
-    }
-
-    @Override
     public GenderType get(int code) {
         for (GenderType value : values()) {
             if (value.code.equals(code)) {
@@ -102,7 +95,7 @@ public enum GenderType implements BaseType<GenderType>, EnumType {
         private String desc;
 
         @NotNull
-        static <T extends Enum<T>> Entry convert(@NotNull BaseType<T> e) {
+        static <T extends Enum<T>> Entry convert(@NotNull EnumType e) {
             Entry entry = new Entry();
             entry.setCode(e.getCode());
             entry.setDesc(e.getDesc());

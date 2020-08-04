@@ -1,6 +1,6 @@
 package com.wobangkj.utils;
 
-import com.wobangkj.api.BaseEnum;
+import com.wobangkj.api.EnumMsg;
 import com.wobangkj.exception.NullObjectException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,7 @@ public class BeanUtils {
      * @param e   为空时抛出的异常
      * @param <T> 对象类型
      */
-    public static <T> void verifyNonNull(T obj, @NotNull BaseEnum<? extends Enum<?>> e) throws IllegalAccessException {
+    public static <T> void verifyNonNull(T obj, @NotNull EnumMsg e) throws IllegalAccessException {
         if (isNull(obj) || isEmpty(obj)) {
             throw new NullObjectException(e);
         }
@@ -48,7 +48,7 @@ public class BeanUtils {
      * @param <T> 对象类型
      * @return 对象
      */
-    public static <T> T requireNonNull(T obj, @NotNull BaseEnum<? extends Enum<?>> e) {
+    public static <T> T requireNonNull(T obj, @NotNull EnumMsg e) {
         if (isNull(obj)) {
             throw new NullObjectException(e);
         }
@@ -63,12 +63,7 @@ public class BeanUtils {
      * @return 对象
      */
     public static <T, R extends Enum<R>> T requireNonNull(T obj) {
-        return requireNonNull(obj, new BaseEnum<R>() {
-            @Override
-            public R[] list() {
-                return null;
-            }
-
+        return requireNonNull(obj, new EnumMsg() {
             @Override
             public Integer getCode() {
                 return 0;
@@ -76,7 +71,7 @@ public class BeanUtils {
 
             @Override
             public String getMsg() {
-                return "null";
+                return "未知异常";
             }
         });
     }

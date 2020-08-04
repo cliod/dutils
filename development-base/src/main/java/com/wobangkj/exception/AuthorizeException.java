@@ -1,6 +1,6 @@
 package com.wobangkj.exception;
 
-import com.wobangkj.api.BaseEnum;
+import com.wobangkj.api.EnumMsg;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public class AuthorizeException extends AppException {
 
     private String auth;
 
-    public AuthorizeException(@NotNull BaseEnum<? extends Enum<?>> re) {
+    public AuthorizeException(@NotNull EnumMsg re) {
         super(re);
     }
 
@@ -24,7 +24,7 @@ public class AuthorizeException extends AppException {
         super(code, s);
     }
 
-    public AuthorizeException(@NotNull BaseEnum<? extends Enum<?>> re, @NotNull Object detail) {
+    public AuthorizeException(@NotNull EnumMsg re, @NotNull Object detail) {
         super(re);
         this.auth = detail.toString();
     }

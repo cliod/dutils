@@ -25,7 +25,7 @@ public enum Format {
     FORMAT_SLASH_DATETIME("yyyy/MM/dd HH:mm:ss"),
     ;
 
-    private String patten;
+    private final String patten;
 
     Format(String patten) {
         this.patten = patten;

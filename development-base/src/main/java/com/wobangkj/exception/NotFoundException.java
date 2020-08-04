@@ -1,6 +1,6 @@
 package com.wobangkj.exception;
 
-import com.wobangkj.api.BaseEnum;
+import com.wobangkj.api.EnumMsg;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public class NotFoundException extends AccessException {
 
     private Object resources;
 
-    public NotFoundException(@NotNull BaseEnum<? extends Enum<?>> re) {
+    public NotFoundException(@NotNull EnumMsg re) {
         super(re);
     }
 
@@ -24,7 +24,7 @@ public class NotFoundException extends AccessException {
         super(code, s);
     }
 
-    public NotFoundException(@NotNull BaseEnum<? extends Enum<?>> re, Object resources) {
+    public NotFoundException(@NotNull EnumMsg re, Object resources) {
         super(re);
         this.resources = resources;
     }
@@ -34,7 +34,7 @@ public class NotFoundException extends AccessException {
         this.resources = resources;
     }
 
-    public NotFoundException(@NotNull BaseEnum<? extends Enum<?>> re, Object access, Object resources) {
+    public NotFoundException(@NotNull EnumMsg re, Object access, Object resources) {
         super(re, access);
         this.resources = resources;
     }

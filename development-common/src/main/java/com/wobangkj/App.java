@@ -17,7 +17,7 @@ public class App {
         System.out.println(ResultEnum.ERROR.toObject());
 
         System.out.println(Response.build().put("id", "1").put("name", "mymy")
-                .put("date", new Date()).ok());
+                .put("date", new Date().toInstant().toString()).ok());
 
         System.out.println(GenderType.valueOf("FEMALE").toObject());
         System.out.println(GenderType.valueOf("FEMALE").name());

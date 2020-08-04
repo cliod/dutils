@@ -1,6 +1,6 @@
 package com.wobangkj.exception;
 
-import com.wobangkj.api.BaseEnum;
+import com.wobangkj.api.EnumMsg;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ public class NullObjectException extends AppException {
 
     private Object detail;
 
-    public NullObjectException(@NotNull BaseEnum<? extends Enum<?>> re) {
+    public NullObjectException(@NotNull EnumMsg re) {
         super(re);
     }
 
@@ -24,7 +24,7 @@ public class NullObjectException extends AppException {
         super(code, s);
     }
 
-    public NullObjectException(@NotNull BaseEnum<? extends Enum<?>> re, Object detail) {
+    public NullObjectException(@NotNull EnumMsg re, Object detail) {
         super(re);
         this.detail = detail;
     }

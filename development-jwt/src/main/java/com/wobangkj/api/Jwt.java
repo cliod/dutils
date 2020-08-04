@@ -85,6 +85,14 @@ public class Jwt {
         return this.unsign(jwt, Map.class);
     }
 
+    /**
+     * 解密
+     *
+     * @param jwt   jwt密匙
+     * @param clazz 类
+     * @param <T>   类型
+     * @return 结果对象
+     */
     public <T> T unsign(String jwt, Class<T> clazz) {
         final DecodedJWT claims = verifier.verify(jwt);
         Date date = claims.getExpiresAt();

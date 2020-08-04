@@ -16,6 +16,7 @@
         <module>development-jwt</module>
         <module>development-pinyin</module>
         <module>development-qrcode</module>
+        <module>development-db</module>
     </modules>
 
     <name>development</name>

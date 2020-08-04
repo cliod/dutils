@@ -1,6 +1,6 @@
 package com.wobangkj.exception;
 
-import com.wobangkj.api.BaseEnum;
+import com.wobangkj.api.EnumMsg;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,9 +16,9 @@ public class AppException extends RuntimeException {
     /**
      * 异常里面的详情
      */
-    private Integer code;
+    private final Integer code;
 
-    public AppException(@NotNull BaseEnum<? extends Enum<?>> re) {
+    public AppException(@NotNull EnumMsg re) {
         super(re.getMsg());
         this.code = re.getCode();
     }
