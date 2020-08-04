@@ -1,8 +1,5 @@
 package com.wobangkj.utils;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
@@ -52,7 +49,7 @@ public class RsaUtils {
 		byte[] signatureByte = sign(plain);
 		System.out.println("原始报文是:" + plain);
 		System.out.println("加签结果:");
-		System.out.println(new BASE64Encoder().encode(signatureByte));
+		System.out.println(Base64Utils.encode(signatureByte));
 		//验签
 		boolean verifyResult = verify(plain, signatureByte);
 		System.out.println("验签结果:" + verifyResult);
@@ -63,9 +60,9 @@ public class RsaUtils {
 	 *
 	 * @param plain 需要加签的内容
 	 * @return 加签结果
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeyException
-	 * @throws SignatureException
+	 * @throws NoSuchAlgorithmException 异常
+	 * @throws InvalidKeyException      异常
+	 * @throws SignatureException       异常
 	 */
 	private static byte[] sign(String plain) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InvalidKeySpecException, IOException {
 		//根据对应算法，获取签名对象实例
@@ -83,14 +80,14 @@ public class RsaUtils {
 	/**
 	 * 验签方法
 	 *
-	 * @param plain
-	 * @param signatureByte
-	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeyException
-	 * @throws IOException
-	 * @throws SignatureException
-	 * @throws InvalidKeySpecException
+	 * @param plain 字符串
+	 * @param signatureByte 签名
+	 * @return 结果
+	 * @throws NoSuchAlgorithmException 异常
+	 * @throws InvalidKeyException 异常
+	 * @throws IOException 异常
+	 * @throws SignatureException 异常
+	 * @throws InvalidKeySpecException 异常
 	 */
 	private static boolean verify(String plain, byte[] signatureByte) throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException, InvalidKeySpecException {
 		//获取公钥
@@ -105,9 +102,18 @@ public class RsaUtils {
 		return signature.verify(signatureByte);
 	}
 
+	/**
+	 * 从文件中获取公钥
+	 *
+	 * @param publicKeyStr 公钥字符串
+	 * @return 公钥对象
+	 * @throws InvalidKeySpecException  异常
+	 * @throws IOException              异常
+	 * @throws NoSuchAlgorithmException 异常
+	 */
 	private static PublicKey getPublicKey(String publicKeyStr) throws InvalidKeySpecException, IOException, NoSuchAlgorithmException {
 		java.security.spec.X509EncodedKeySpec bobPubKeySpec = new java.security.spec.X509EncodedKeySpec(
-				new BASE64Decoder().decodeBuffer(publicKeyStr));
+				Base64Utils.decode(publicKeyStr));
 		// RSA对称加密算法
 		java.security.KeyFactory keyFactory;
 		keyFactory = java.security.KeyFactory.getInstance("RSA");
@@ -115,9 +121,18 @@ public class RsaUtils {
 		return keyFactory.generatePublic(bobPubKeySpec);
 	}
 
+	/**
+	 * 获取配置文件
+	 *
+	 * @param privateKeyStr 私钥字符串
+	 * @return 私钥对象
+	 * @throws InvalidKeySpecException  异常
+	 * @throws NoSuchAlgorithmException 异常
+	 * @throws IOException              异常
+	 */
 	private static PrivateKey getPrivateKey(String privateKeyStr) throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
 		PKCS8EncodedKeySpec priPKCS8;
-		priPKCS8 = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(privateKeyStr));
+		priPKCS8 = new PKCS8EncodedKeySpec(Base64Utils.decode(privateKeyStr));
 		KeyFactory keyfactory = KeyFactory.getInstance("RSA");
 		return keyfactory.generatePrivate(priPKCS8);
 	}
