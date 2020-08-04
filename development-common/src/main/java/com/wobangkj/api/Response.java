@@ -106,7 +106,7 @@ public class Response {
      */
     @NotNull
     public static <V> Result<Map<String, Object>> ok(String valueName, V value) {
-        return ok(new HashMap<>(4) {{
+        return ok(new HashMap<String, Object>(4) {{
             put(valueName, value);
         }});
     }
@@ -214,7 +214,7 @@ public class Response {
     @NotNull
     public static Builder build(String title, Object data) {
         return new Builder() {{
-            setData(new HashMap<>(16) {{
+            setData(new HashMap<String, Object>(16) {{
                 put(title, data);
             }});
         }};

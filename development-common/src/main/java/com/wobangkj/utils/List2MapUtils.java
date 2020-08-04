@@ -17,7 +17,7 @@ public class List2MapUtils {
 
     @NotNull
     public static <T> Map<String, T> convert(@NotNull List<T> list, @NotNull String key) throws NoSuchFieldException, IllegalAccessException {
-        return new HashMap<>(list.size() * 4 / 3 + 1) {{
+        return new HashMap<String, T>(list.size() * 4 / 3 + 1) {{
             Object obj;
             for (T t : list) {
                 obj = BeanUtils.getFieldValue(t, key);
@@ -36,7 +36,7 @@ public class List2MapUtils {
 
     @NotNull
     public static <T> Map<String, Object> convert(@NotNull List<T> list, @NotNull String keyName, String valueName) throws NoSuchFieldException, IllegalAccessException {
-        return new HashMap<>() {{
+        return new HashMap<String, Object>() {{
             Object obj;
             for (T t : list) {
                 obj = BeanUtils.getFieldValue(t, keyName);
@@ -50,7 +50,7 @@ public class List2MapUtils {
 
     @NotNull
     public static Map<String, Long> statistics(@NotNull List<?> list, String key) throws NoSuchFieldException, IllegalAccessException {
-        return new HashMap<>() {{
+        return new HashMap<String, Long>() {{
             Object obj;
             Long temp;
             for (Object t : list) {
