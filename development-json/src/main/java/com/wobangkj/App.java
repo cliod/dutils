@@ -3,6 +3,7 @@ package com.wobangkj;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.wobangkj.utils.JsonUtils;
 
 import static com.wobangkj.Test.Bean;
 import static com.wobangkj.Test.get;

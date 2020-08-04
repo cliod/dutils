@@ -1,6 +1,6 @@
 package com.wobangkj.bean;
 
-import com.wobangkj.JsonUtils;
+import com.wobangkj.utils.JsonUtils;
 import com.wobangkj.api.Session;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;

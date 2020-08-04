@@ -1,6 +1,6 @@
 package com.wobangkj.mybatis;
 
-import com.wobangkj.JsonUtils;
+import com.wobangkj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
