@@ -1,6 +1,6 @@
 package com.wobangkj.api;
 
-import com.wobangkj.JsonUtils;
+import com.wobangkj.utils.JsonUtils;
 
 import java.util.HashMap;
 import java.util.Map;

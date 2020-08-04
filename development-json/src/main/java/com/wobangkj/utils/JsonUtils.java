@@ -1,4 +1,4 @@
-package com.wobangkj;
+package com.wobangkj.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

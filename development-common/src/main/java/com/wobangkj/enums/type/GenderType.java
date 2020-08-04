@@ -1,7 +1,7 @@
 package com.wobangkj.enums.type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wobangkj.JsonUtils;
+import com.wobangkj.utils.JsonUtils;
 import com.wobangkj.api.EnumType;
 import lombok.Data;
 import lombok.Getter;
