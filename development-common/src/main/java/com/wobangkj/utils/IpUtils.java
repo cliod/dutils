@@ -51,7 +51,7 @@ public class IpUtils {
             StringTokenizer tokenizer = new StringTokenizer(ip, ",");
             while (tokenizer.hasMoreTokens()) {
                 ip = tokenizer.nextToken().trim();
-                if (isIPv4Valid(ip) && !isIPv4Private(ip)) {
+                if (isIPv4Valid(ip)) {
                     found = true;
                     break;
                 }
@@ -63,5 +63,5 @@ public class IpUtils {
         return ip;
     }
 
-    //proxy_set_header X-Forward-For $remote_addr ;
+    //proxy_set_header X-Forwarded-For $remote_addr ;
 }
