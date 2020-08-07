@@ -1,18 +1,15 @@
 package com.wobangkj.utils;
 
-import com.aliyuncs.CommonRequest;
-import com.aliyuncs.CommonResponse;
-import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.IAcsClient;
+import com.aliyuncs.AcsResponse;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.http.MethodType;
-import com.aliyuncs.profile.DefaultProfile;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.wobangkj.api.sms.Sms;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
+import java.util.Objects;
+
+import static com.wobangkj.api.sms.DefaultSms.SmsParam;
+import static com.wobangkj.api.sms.DefaultSms.getInstance;
 
 /**
  * 短信发送工具类
@@ -21,16 +18,20 @@ import java.util.Map;
  * @since 2020/08/02
  */
 public class SmsUtils {
-    private static SmsParam smsParam;
-
-    static {
-        //设置超时时间-可自行调整
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-    }
 
     private SmsUtils() {
         throw new UnsupportedOperationException();
+    }
+
+    private static SmsParam smsParam;
+    private static Sms sms;
+
+    public static SmsParam getSmsParam() {
+        return smsParam;
+    }
+
+    public static void setSmsParam(SmsParam smsParam) {
+        SmsUtils.smsParam = smsParam;
     }
 
     /**
@@ -41,8 +42,37 @@ public class SmsUtils {
      * @return 响应
      * @throws ClientException 客户端异常
      */
-    public static CommonResponse send(String phoneNumber, final String templateCode) throws ClientException {
-        return send(smsParam, phoneNumber, templateCode, "");
+    public static AcsResponse send(final String templateCode, String... phoneNumber) throws ClientException {
+        return send(smsParam, "", templateCode, phoneNumber);
+    }
+
+    /**
+     * 根据手机号和模板 发送指定参数的短信
+     *
+     * @param phoneNumber  手机号
+     * @param templateCode 模板
+     * @return 响应
+     * @throws ClientException 客户端异常
+     */
+    public static AcsResponse send(final String templateCode, Map<String, Object> params, String... phoneNumber) throws ClientException {
+        final String templateParam = JsonUtils.toJson(params);
+        return send(smsParam, templateCode, templateParam, phoneNumber);
+    }
+
+    public static AcsResponse send(String templateCode, String templateParamJson, String... phoneNumber) throws ClientException {
+        return send(smsParam, templateCode, templateParamJson, phoneNumber);
+    }
+
+    /**
+     * 根据手机号和模板 发送无参数短信
+     *
+     * @param phoneNumber  手机号
+     * @param templateCode 模板
+     * @return 响应
+     * @throws ClientException 客户端异常
+     */
+    public static AcsResponse send(SmsParam param, final String templateCode, String... phoneNumber) throws ClientException {
+        return send(param, "", templateCode, phoneNumber);
     }
 
     /**
@@ -54,41 +84,31 @@ public class SmsUtils {
      * @return 响应
      * @throws ClientException 客户端异常
      */
-    public static CommonResponse send(String phoneNumber, final String templateCode, Map<String, Object> param) throws ClientException {
-        final String templateParam = JsonUtils.toJson(param);
-        return send(smsParam, phoneNumber, templateCode, templateParam);
+    public static AcsResponse send(SmsParam param, final String templateCode, Map<String, Object> params, String... phoneNumber) throws ClientException {
+        final String templateParam = JsonUtils.toJson(params);
+        return send(param, templateCode, templateParam, phoneNumber);
     }
 
-    private static CommonResponse send(SmsParam param, String phoneNumber, String templateCode, String templateParamJson) throws ClientException {
-        final String accessKeyId = param.accessKeyId;
-        final String accessSecret = param.accessSecret;
-        final String signName = param.signName;
-        final String regionId = param.regionId;
-
-        DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, accessSecret);
-        IAcsClient client = new DefaultAcsClient(profile);
-
-        CommonRequest request = new CommonRequest();
-        request.setSysMethod(MethodType.POST);
-        request.setSysDomain("dysmsapi.aliyuncs.com");
-        request.setSysVersion("2017-05-25");
-        request.setSysAction("SendSms");
-        request.putQueryParameter("RegionId", regionId);
-        request.putQueryParameter("PhoneNumbers", phoneNumber);
-        request.putQueryParameter("SignName", signName);
-        request.putQueryParameter("TemplateCode", templateCode);
-        request.putQueryParameter("TemplateParam", templateParamJson);
-        return client.getCommonResponse(request);
+    public static AcsResponse send(SmsParam param, String templateCode, String templateParamJson, String... phoneNumber) throws ClientException {
+        if (check(param)) {
+            param = smsParam;
+            if (check(param)) {
+                if (Objects.isNull(sms)) {
+                    sms = getInstance(param);
+                }
+                return sms.send(templateCode, templateParamJson, phoneNumber);
+            }
+        }
+        throw new ClientException("发送失败: 参数不存在");
     }
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class SmsParam {
-        private String accessKeyId;
-        private String accessSecret;
-        private String signName;
-        private String regionId;
+    private static boolean check(SmsParam param) {
+        if (Objects.isNull(param)) {
+            return false;
+        }
+        return !(StringUtils.isEmpty(param.getAccessKeyId()) ||
+                StringUtils.isEmpty(param.getAccessSecret()) ||
+                StringUtils.isEmpty(param.getRegionId()) ||
+                StringUtils.isEmpty(param.getSignName()));
     }
 }
