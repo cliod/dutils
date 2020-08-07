@@ -107,8 +107,13 @@ public class Res extends Maps<String, Object> implements Session {
     }
 
     @Override
-    public Object rem(String k) {
-        return remove(k);
+    public Object rem(String s) {
+        return super.rem(s);
+    }
+
+    @Override
+    public Object pop(String s) {
+        return super.pop(s);
     }
 
     /**

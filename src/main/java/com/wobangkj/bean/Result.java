@@ -168,15 +168,6 @@ public class Result<T> extends Maps<String, Object> implements Session {
     }
 
     @Deprecated
-    public @NotNull Boolean getState() {
-        return true;
-    }
-
-    @Deprecated
-    public void setState(Boolean state) {
-    }
-
-    @Deprecated
     public String getMsg() {
         return (String) get("msg");
     }

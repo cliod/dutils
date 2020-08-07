@@ -27,32 +27,18 @@ public abstract class LinkMaps<K, V> extends LinkedHashMap<K, V> implements Map<
         super(m);
     }
 
+    public LinkMaps(int initialCapacity, float loadFactor, boolean accessOrder) {
+        super(initialCapacity, loadFactor, accessOrder);
+    }
+
     public static <K, V> @NotNull LinkMaps<K, V> of(K k, V v) {
         Assert.notNull(k, "key对象不能为空");
-        return new LinkMaps<K, V>(16) {
-            {
-                put(k, v);
-            }
-
-            @Override
-            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-                return false;
-            }
-        };
+        return new LinkMaps<K, V>(16) {{put(k, v);}};
     }
 
     public static @NotNull LinkMaps<String, Object> to(String k, Object v) {
         Assert.notNull(k, "key对象不能为空");
-        return new LinkMaps<String, Object>(16) {
-            {
-                put(k, v);
-            }
-
-            @Override
-            protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
-                return false;
-            }
-        };
+        return new LinkMaps<String, Object>(16) {{put(k, v);}};
     }
 
     public LinkMaps<K, V> set(K k, V v) {
@@ -78,16 +64,8 @@ public abstract class LinkMaps<K, V> extends LinkedHashMap<K, V> implements Map<
      * @param k 键
      * @return 值
      */
-    public V rem(K k) {
+    public V pop(K k) {
         return remove(k);
     }
 
-    /**
-     * 是否删除最末的数据
-     *
-     * @param eldest 最末节点
-     * @return 是否删除
-     */
-    @Override
-    protected abstract boolean removeEldestEntry(Entry<K, V> eldest);
 }

@@ -64,7 +64,18 @@ public abstract class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
      * @param k 键
      * @return 值
      */
+    @Deprecated
     public V rem(K k) {
+        return remove(k);
+    }
+
+    /**
+     * 获取并删除一个键值
+     *
+     * @param k 键
+     * @return 值
+     */
+    public V pop(K k) {
         return remove(k);
     }
 }

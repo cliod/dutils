@@ -1,9 +1,9 @@
 package com.wobangkj.cache;
 
 import com.wobangkj.api.ValueWrapper;
+import com.wobangkj.bean.LinkMaps;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -57,7 +57,7 @@ public class LruCacheImpl extends MapCacheImpl {
     /**
      * 缓存
      */
-    public static final class LruCache extends LinkedHashMap<Object, Object> {
+    public static final class LruCache extends LinkMaps<Object, Object> {
         private static final long serialVersionUID = 1L;
         private final int maxSize;
 

@@ -15,22 +15,22 @@ import java.util.Optional;
 @Setter
 public class ObjPager<T> extends Pageable {
 
-    private T param;
-
-    public @NotNull
-    final Optional<T> getParam() {
-        return Optional.of(get());
-    }
+    private T data;
 
     public static <T> @NotNull ObjPager<T> of(int page, int size, T obj) {
         ObjPager<T> pageable = new ObjPager<>();
-        pageable.setParam(obj);
+        pageable.setData(obj);
         pageable.setPage(page);
         pageable.setSize(size);
         return pageable;
     }
 
+    public @NotNull
+    final Optional<T> getData() {
+        return Optional.of(get());
+    }
+
     public T get() {
-        return param;
+        return data;
     }
 }

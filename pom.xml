@@ -6,7 +6,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>3.2.22-SNAPSHOT</version>
+    <version>3.2.23-SNAPSHOT</version>
 
     <name>dutils</name>
     <url>https://blog.wobangkj.com</url>
@@ -54,6 +54,7 @@
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
             <optional>true</optional>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -109,6 +110,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
+            <scope>provided</scope>
             <optional>false</optional>
         </dependency>
         <dependency>
@@ -126,14 +128,14 @@
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
             <version>3.3.3</version>
-            <optional>false</optional>
+            <optional>true</optional>
         </dependency>
         <!--中文文字转拼音-->
         <dependency>
             <groupId>com.belerweb</groupId>
             <artifactId>pinyin4j</artifactId>
             <version>2.5.1</version>
-            <optional>false</optional>
+            <optional>true</optional>
         </dependency>
         <!-- jwt -->
         <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
@@ -141,11 +143,13 @@
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>3.8.2</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
             <version>2.1.6</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -159,6 +163,14 @@
             <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--短信sdk-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>[4.5.6,)</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -168,6 +180,7 @@
                 <artifactId>lombok</artifactId>
                 <version>[1.18.12,)</version>
                 <optional>true</optional>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains</groupId>
@@ -233,6 +246,7 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>[4.0.1,)</version>
+                <scope>provided</scope>
             </dependency>
             <!--日志通用接口-->
             <dependency>
@@ -268,6 +282,7 @@
                 <groupId>com.belerweb</groupId>
                 <artifactId>pinyin4j</artifactId>
                 <version>2.5.1</version>
+                <optional>true</optional>
             </dependency>
             <!-- jwt -->
             <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
@@ -275,12 +290,14 @@
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
                 <version>3.8.2</version>
+                <optional>true</optional>
             </dependency>
             <!--excel操作-->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
                 <version>2.1.6</version>
+                <optional>true</optional>
             </dependency>
         </dependencies>
     </dependencyManagement>
