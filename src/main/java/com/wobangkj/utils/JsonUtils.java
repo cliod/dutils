@@ -76,6 +76,18 @@ public class JsonUtils {
     }
 
     /**
+     * json转java对象(Map)
+     *
+     * @param json json字符串
+     * @return Map对象
+     */
+    @Deprecated
+    @SneakyThrows
+    public static <K, V> Map<K, V> toObject(String json) {
+        return toMap(json);
+    }
+
+    /**
      * json转java列表(List)
      *
      * @param <T>  类型

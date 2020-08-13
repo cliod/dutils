@@ -23,7 +23,7 @@ import java.util.Objects;
  */
 public class FileUtils {
 
-    public static String ROOT_PATH = "";
+    public static String ROOT_PATH = System.getProperty("user.home");
 
     private FileUtils(String filePath) {
         ROOT_PATH = filePath;

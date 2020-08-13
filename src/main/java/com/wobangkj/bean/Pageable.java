@@ -16,7 +16,6 @@ import java.util.Objects;
 public abstract class Pageable {
 
     private Integer size;
-
     private Integer page;
 
     /**
@@ -42,13 +41,21 @@ public abstract class Pageable {
         }};
     }
 
-//    public final @NotNull Integer getJpaPage() {
-//        return getPage() - 1;
-//    }
+    public final @NotNull Integer getJpaPage() {
+        return getPage() - 1;
+    }
 
-//    public final @NotNull Integer getMybatisPage() {
-//        return getSize() * (getPage() - 1);
-//    }
+    public final @NotNull Integer getMybatisPage() {
+        return getSize() * (getPage() - 1);
+    }
+
+    public final @NotNull Integer getOffset() {
+        return getSize() * (getPage() - 1);
+    }
+
+    public final @NotNull Integer getLimit() {
+        return getSize();
+    }
 
     public Integer getSize() {
         return Objects.isNull(size) ? 5 : size;
