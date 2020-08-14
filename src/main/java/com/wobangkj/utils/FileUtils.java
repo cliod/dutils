@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * 文件上传工具
@@ -23,37 +24,51 @@ import java.util.Objects;
  */
 public class FileUtils {
 
-    public static String ROOT_PATH = System.getProperty("user.home");
-
-    private FileUtils(String filePath) {
-        ROOT_PATH = filePath;
-    }
+    private static final String osName = System.getProperty("os.name");
+    private static final Pattern winPathSrc = Pattern.compile("(^[A-Z]:(([\\\\/])([a-zA-Z0-9\\-_]){1,255}){1,255}|([A-Z]:([\\\\/])))");
+    private static final Pattern linuxPathSrc = Pattern.compile("(/([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255}/)*([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255})|/)");
 
     /**
      * 文件上传
      *
-     * @param file    文件
-     * @param keyPath 唯一id
+     * @param file     文件
+     * @param rootPath 文件存储路径
      * @return 返回相对路径
      * @throws IOException IO异常
      */
     @NotNull
-    public static String upload(@NotNull MultipartFile file, String keyPath) throws IOException {
-        if (StringUtils.isEmpty(keyPath)) {
-            keyPath = "file";
+    public static String upload(@NotNull MultipartFile file, String rootPath) throws IOException {
+        if (StringUtils.isEmpty(rootPath)) {
+            rootPath = System.getProperty("user.home");
         }
-        String date = DateUtils.getNow(Format.DATE.getPattern());
+        checkPath(rootPath);
+
         //虚拟路径,用与访问
-        String path = "/file/" + date + "/" + keyPath + "/";
+        String path = "/file/" + DateUtils.getNow(Format.DATE.getPattern()) + "/";
         //真实物理路径
-        String filePath = ROOT_PATH + path;
+        String filePath = rootPath + path;
+
         String originalFilename = file.getOriginalFilename();
         assert originalFilename != null;
         String extendName = originalFilename.substring(originalFilename.lastIndexOf("."));
+
         //文件新名字
         String fileName = KeyUtils.get32uuid() + extendName;
         transferToFile(file, filePath, fileName);
         return path + fileName;
+    }
+
+    private static void checkPath(String path) throws IllegalArgumentException {
+        if (osName.contains("linux")) {
+            if (!linuxPathSrc.matcher(path).matches())
+                throw new IllegalArgumentException("文件路径不正确");
+        } else if (osName.contains("win")) {
+            if (!winPathSrc.matcher(path).matches())
+                throw new IllegalArgumentException("文件路径不正确");
+        } else {
+            if (!linuxPathSrc.matcher(path).matches())
+                throw new IllegalArgumentException("文件路径不正确");
+        }
     }
 
     /**
@@ -71,8 +86,7 @@ public class FileUtils {
         byte[] buff = new byte[1024];
         //创建缓冲输入流
         try (OutputStream outputStream = response.getOutputStream();
-             BufferedInputStream bis =
-                     new BufferedInputStream(fileToInputStream(file))) {
+             BufferedInputStream bis = new BufferedInputStream(fileToInputStream(file))) {
             int read = bis.read(buff);
             //通过while循环写入到指定了的文件夹中
             while (read != -1) {
@@ -80,8 +94,8 @@ public class FileUtils {
                 outputStream.flush();
                 read = bis.read(buff);
             }
-        } finally {
-            System.out.println(file.delete());
+        } catch (Exception e) {
+            throw new Exception(e);
         }
     }
 
