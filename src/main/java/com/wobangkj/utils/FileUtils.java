@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -59,15 +60,10 @@ public class FileUtils {
     }
 
     private static void checkPath(String path) throws IllegalArgumentException {
-        if (osName.contains("linux")) {
-            if (!linuxPathSrc.matcher(path).matches())
-                throw new IllegalArgumentException("文件路径不正确");
-        } else if (osName.contains("win")) {
-            if (!winPathSrc.matcher(path).matches())
-                throw new IllegalArgumentException("文件路径不正确");
+        if (osName.toLowerCase().contains("win")) {
+            Assert.isTrue(!winPathSrc.matcher(path).matches(), "文件路径不正确");
         } else {
-            if (!linuxPathSrc.matcher(path).matches())
-                throw new IllegalArgumentException("文件路径不正确");
+            Assert.isTrue(!linuxPathSrc.matcher(path).matches(), "文件路径不正确");
         }
     }
 
