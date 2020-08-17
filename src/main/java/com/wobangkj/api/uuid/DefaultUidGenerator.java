@@ -18,7 +18,7 @@ package com.wobangkj.api.uuid;
 import com.wobangkj.exception.UidGenerateException;
 import com.wobangkj.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -85,7 +85,7 @@ public class DefaultUidGenerator implements UidGenerator {
      */
     protected WorkerIdAssigner workerIdAssigner;
 
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // initialize bits allocator
         bitsAllocator = new BitsAllocator(timeBits, workerBits, seqBits);
 

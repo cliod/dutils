@@ -8,6 +8,10 @@ package com.wobangkj.api;
  */
 public interface ValueWrapper<T> extends Session {
 
+    static ValueWrapper<Object> of(Object obj) {
+        return new SimpleValueWrapper(obj);
+    }
+
     T value();
 
     class SimpleValueWrapper implements ValueWrapper<Object> {
