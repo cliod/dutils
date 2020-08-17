@@ -12,12 +12,10 @@ import java.util.function.Function;
  * 列表转化为Map,通过id和对象映射
  *
  * @author cliod
- * @see CovUtils
- * @since 2019/7/26
+ * @since 2020/07/26
  * package : com.wobangkj.util
  */
-@Deprecated
-public class ListUtils {
+public class CovUtils {
 	//因子
 	private static final Function<Integer, Integer> factor = size -> size * 4 / 3 + 1;
 
@@ -25,12 +23,13 @@ public class ListUtils {
 	 * obj列表根据指定项进行map转化
 	 *
 	 * @param list 列表对象
-	 * @param <T>  类型
+	 * @param <K>  类型
+	 * @param <V>  类型
 	 * @return map对象
 	 * @throws NoSuchFieldException   未知field异常
 	 * @throws IllegalAccessException 非法访问异常
 	 */
-	public static <T> @NotNull Map<String, T> convert(@NotNull Collection<T> list) throws NoSuchFieldException, IllegalAccessException {
+	public static <K, V> @NotNull Map<K, V> convert(@NotNull Collection<V> list) throws NoSuchFieldException, IllegalAccessException {
 		return convert(list, "id");
 	}
 
@@ -39,20 +38,21 @@ public class ListUtils {
 	 *
 	 * @param list    列表对象
 	 * @param keyName map的key在obj的名称
-	 * @param <T>     类型
+	 * @param <K>     类型
+	 * @param <V>     类型
 	 * @return map对象
 	 * @throws NoSuchFieldException   未知field异常
 	 * @throws IllegalAccessException 非法访问异常
 	 */
-	public static <T> @NotNull Map<String, T> convert(@NotNull Collection<T> list, @NotNull String keyName) throws NoSuchFieldException, IllegalAccessException {
-		return new HashMap<String, T>(factor.apply(list.size())) {{
-			Object obj;
-			for (T t : list) {
-				obj = BeanUtils.getFieldValue(t, keyName);
-				if (Objects.isNull(obj)) {
-					continue;
+	@SuppressWarnings("unchecked")
+	public static <K, V> @NotNull Map<K, V> convert(@NotNull Collection<V> list, @NotNull String keyName) throws NoSuchFieldException, IllegalAccessException {
+		return new HashMap<K, V>() {{
+			K key;
+			for (V obj : list) {
+				key = (K) BeanUtils.getFieldValue(obj, keyName);
+				if (Objects.nonNull(key)) {
+					put(key, obj);
 				}
-				put(obj.toString(), t);
 			}
 		}};
 	}
@@ -63,20 +63,17 @@ public class ListUtils {
 	 * @param list      列表对象
 	 * @param keyName   map的key在obj的名称
 	 * @param valueName map的value在obj的名称
-	 * @param <T>       类型
 	 * @return map对象
 	 * @throws NoSuchFieldException   未知field异常
 	 * @throws IllegalAccessException 非法访问异常
 	 */
-	public static <T> @NotNull Map<String, Object> convert(@NotNull Collection<T> list, @NotNull String keyName, String valueName) throws NoSuchFieldException, IllegalAccessException {
-		return new HashMap<String, Object>(factor.apply(list.size())) {{
-			Object obj;
-			for (T t : list) {
-				obj = BeanUtils.getFieldValue(t, keyName);
-				if (Objects.isNull(obj)) {
-					continue;
-				}
-				put(obj.toString(), BeanUtils.getFieldValue(t, valueName));
+	@SuppressWarnings("unchecked")
+	public static <K, T, V> @NotNull Map<K, V> convert(@NotNull Collection<T> list, @NotNull String keyName, String valueName) throws NoSuchFieldException, IllegalAccessException {
+		return new HashMap<K, V>(factor.apply(list.size())) {{
+			K obj;
+			for (Object t : list) {
+				obj = (K) BeanUtils.getFieldValue(t, keyName);
+				if (Objects.nonNull(obj)) {put(obj, (V) BeanUtils.getFieldValue(t, valueName));}
 			}
 		}};
 	}
@@ -90,21 +87,22 @@ public class ListUtils {
 	 * @throws NoSuchFieldException   未知field异常
 	 * @throws IllegalAccessException 非法访问异常
 	 */
-	public static @NotNull Map<String, Long> statistics(@NotNull Collection<?> list, String keyName) throws NoSuchFieldException, IllegalAccessException {
-		return new HashMap<String, Long>(factor.apply(list.size())) {{
-			Object obj;
+	@SuppressWarnings("unchecked")
+	public static <K, T> @NotNull Map<K, Long> statistics(@NotNull Collection<T> list, String keyName) throws NoSuchFieldException, IllegalAccessException {
+		return new HashMap<K, Long>(factor.apply(list.size())) {{
+			K obj;
 			Long temp;
 			for (Object t : list) {
-				obj = BeanUtils.getFieldValue(t, keyName);
+				obj = (K) BeanUtils.getFieldValue(t, keyName);
 				if (Objects.isNull(obj)) {
 					continue;
 				}
-				temp = get(obj.toString());
+				temp = get(obj);
 				if (Objects.isNull(temp)) {
-					put(obj.toString(), 1L);
+					put(obj, 1L);
 				} else {
 					temp += 1L;
-					put(obj.toString(), temp);
+					put(obj, temp);
 				}
 			}
 		}};

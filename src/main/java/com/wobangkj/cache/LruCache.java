@@ -1,5 +1,6 @@
 package com.wobangkj.cache;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class LruCache<K, V> {
             node.value = value;
             if (maxSize <= cache.size()) {
                 // 从双向列表删除
-                CacheNode<K, V> tail = popTail();
+                popTail();
                 // 从hash删除
                 cache.remove(key);
             }
@@ -115,6 +116,7 @@ public class LruCache<K, V> {
      * @param <K> key类型
      * @param <V> value类型
      */
+    @Getter
     protected static class CacheNode<K, V> {
         private K key;
         private V value;

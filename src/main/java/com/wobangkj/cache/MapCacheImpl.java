@@ -1,8 +1,8 @@
 package com.wobangkj.cache;
 
 import com.wobangkj.ThreadExecutor;
-import com.wobangkj.api.ValueWrapper;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.cache.support.SimpleValueWrapper;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -50,8 +50,8 @@ public class MapCacheImpl implements Cacheables {
     }
 
     @Override
-    public ValueWrapper<Object> get(@NotNull Object key) {
-        return new ValueWrapper.SimpleValueWrapper(CACHE.get(key));
+    public ValueWrapper get(@NotNull Object key) {
+        return new SimpleValueWrapper(CACHE.get(key));
     }
 
     @Override
