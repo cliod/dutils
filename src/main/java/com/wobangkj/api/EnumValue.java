@@ -1,7 +1,6 @@
 package com.wobangkj.api;
 
 import com.wobangkj.bean.Maps;
-import com.wobangkj.utils.JsonUtils;
 
 /**
  * 值 - 枚举
@@ -21,10 +20,5 @@ public interface EnumValue<T> extends ValueWrapper<T> {
     @Override
     default Object toObject() {
         return Maps.of("value", value());
-    }
-
-    @Override
-    default String toJson() {
-        return JsonUtils.toJson(this.toObject());
     }
 }

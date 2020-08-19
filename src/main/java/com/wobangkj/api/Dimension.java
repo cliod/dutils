@@ -3,7 +3,7 @@ package com.wobangkj.api;
 /**
  * 维度
  */
-public interface Dimension extends Session {
+public interface Dimension extends SessionSerializable {
     /**
      * 获取维度
      *

@@ -6,7 +6,7 @@ package com.wobangkj.api;
  * @author cliod
  * @since 7/9/20 3:55 PM
  */
-public interface ValueWrapper<T> extends Session {
+public interface ValueWrapper<T> extends SessionSerializable {
 
     static ValueWrapper<Object> of(Object obj) {
         return new SimpleValueWrapper(obj);

@@ -1,7 +1,6 @@
 package com.wobangkj.bean;
 
-import com.wobangkj.api.Session;
-import com.wobangkj.utils.JsonUtils;
+import com.wobangkj.api.SessionSerializable;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * @since 19-6-9
  */
 @Data
-public final class Pager<T> implements Session {
+public final class Pager<T> implements SessionSerializable {
     private static final long serialVersionUID = 7562274153136856700L;
     /**
      * 总数量
@@ -94,16 +93,6 @@ public final class Pager<T> implements Session {
     @Override
     public @NotNull String toString() {
         return this.toJson();
-    }
-
-    /**
-     * 转成Json
-     *
-     * @return Json
-     */
-    @Override
-    public @NotNull String toJson() {
-        return JsonUtils.toJson(this.toObject());
     }
 
     /**

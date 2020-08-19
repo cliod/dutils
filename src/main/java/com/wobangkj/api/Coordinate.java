@@ -1,7 +1,6 @@
 package com.wobangkj.api;
 
 import com.wobangkj.bean.Maps;
-import com.wobangkj.utils.JsonUtils;
 
 /**
  * 点
@@ -49,11 +48,6 @@ public interface Coordinate<X, Y, Z> extends Dimension {
      */
     default String getPoint() {
         return String.format("(%s,%s,%s)", getX(), getY(), getZ());
-    }
-
-    @Override
-    default String toJson() {
-        return JsonUtils.toJson(this.toObject());
     }
 
     @Override

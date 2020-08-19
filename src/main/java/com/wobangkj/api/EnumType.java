@@ -1,7 +1,6 @@
 package com.wobangkj.api;
 
 import com.wobangkj.bean.Maps;
-import com.wobangkj.utils.JsonUtils;
 
 /**
  * 枚举类型
@@ -10,7 +9,7 @@ import com.wobangkj.utils.JsonUtils;
  * @since 2019/12/27
  * package : com.wobangkj.api
  */
-public interface EnumType extends Session {
+public interface EnumType extends SessionSerializable {
 
     /**
      * 获取code
@@ -25,14 +24,6 @@ public interface EnumType extends Session {
      * @return 描述
      */
     String getDesc();
-
-    /**
-     * 序列化,转成字符串
-     *
-     * @return Json
-     */
-    @Override
-    String toString();
 
     /**
      * 根据数值获取对象
@@ -60,15 +51,5 @@ public interface EnumType extends Session {
     @Override
     default Object toObject() {
         return Maps.of("code", (Object) getCode()).add("desc", getDesc());
-    }
-
-    /**
-     * 序列化,转成Json
-     *
-     * @return Json
-     */
-    @Override
-    default String toJson() {
-        return JsonUtils.toJson(this.toObject());
     }
 }

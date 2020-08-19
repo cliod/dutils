@@ -1,6 +1,6 @@
 package com.wobangkj.bean;
 
-import com.wobangkj.api.Session;
+import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.JsonUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ import java.util.Objects;
  * @author cliod
  * @since 2019/5/20 13:20
  */
-public class Res extends Maps<String, Object> implements Session {
+public class Res extends Maps<String, Object> implements SessionSerializable {
 
     private static final long serialVersionUID = -4892758069561565904L;
 
@@ -135,16 +135,6 @@ public class Res extends Maps<String, Object> implements Session {
     @Override
     public final @NotNull String toString() {
         return this.toJson();
-    }
-
-    /**
-     * 转成Json
-     *
-     * @return Json
-     */
-    @Override
-    public final @NotNull String toJson() {
-        return JsonUtils.toJson(this.toObject());
     }
 
     public final @NotNull Object readResolve() throws Exception {
