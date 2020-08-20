@@ -53,7 +53,7 @@ public abstract class AbstractExceptionHandler implements ExceptionHandler {
     }
 
     public Res handler(@NotNull IllegalArgumentException e) {
-        return Res.of(217, e.getMessage());
+        return Res.ofRes(217, e.getMessage());
     }
 
 }

@@ -7,6 +7,7 @@ import com.wobangkj.enums.ResultEnum;
 import org.jetbrains.annotations.NotNull;
 
 import static com.wobangkj.bean.Res.of;
+import static com.wobangkj.bean.Res.ofRes;
 
 /**
  * 接口数据响应包装
@@ -21,9 +22,9 @@ public class Response {
 	public static final int errorMsg = 500;
 	public static Maps<String, Object> OK = ok();
 	public static Maps<String, Object> ERR = err("未知异常");
-	public static Maps<String, Object> DELETE = ok(successMsg, ResultEnum.SUCCESS_DELETE.getMsg());
-	public static Maps<String, Object> UPDATE = ok(successMsg, ResultEnum.SUCCESS_EDIT.getMsg());
-	public static Maps<String, Object> INSERT = ok(successMsg, ResultEnum.SUCCESS_ADD.getMsg());
+	public static Maps<String, Object> DELETE = ofRes(successMsg, ResultEnum.SUCCESS_DELETE.getMsg());
+	public static Maps<String, Object> UPDATE = ofRes(successMsg, ResultEnum.SUCCESS_EDIT.getMsg());
+	public static Maps<String, Object> INSERT = ofRes(successMsg, ResultEnum.SUCCESS_ADD.getMsg());
 
 	/**
 	 * 工具类私有构造函数
@@ -32,21 +33,10 @@ public class Response {
 	}
 
 	/**
-	 * 接口封装响应
-	 *
-	 * @param code 状态码
-	 * @param msg  响应消息
-	 * @return 结果
-	 */
-	protected static @NotNull Res ok(int code, String msg) {
-		return of(code, msg);
-	}
-
-	/**
 	 * 无返回(请求成功)
 	 */
 	public static @NotNull Res ok() {
-		return ok(successMsg, "请求成功");
+		return ofRes(successMsg, "请求成功");
 	}
 
 	/**
@@ -66,7 +56,7 @@ public class Response {
 	 * @return 结果
 	 */
 	public static @NotNull Res ok(String key, Object value) {
-		return ok().add("data", Maps.of(key, value));
+		return ok(Maps.of(key, value));
 	}
 
 	/**
@@ -77,9 +67,8 @@ public class Response {
 	 * @return 结果
 	 */
 	public static @NotNull <T> Res ok(@NotNull Pager<T> pager) {
-		return ok()
-				.add("data", pager.getData())
-				.add("pager", Maps.of("client_page", (Object) pager.getClientPage())
+		return ok(pager.getData())
+				.add("pager", of("client_page", pager.getClientPage())
 						.set("every_page", pager.getEveryPage())
 						.set("total_num", pager.getTotalNum()));
 	}
@@ -91,35 +80,51 @@ public class Response {
 	 * @return 结果
 	 */
 	public static @NotNull Res fail(String msg) {
-		return ok(showMsg, msg);
-	}
-
-	/**
-	 * 失败返回,携带系统错误信息
-	 */
-	public static @NotNull Res fail(@NotNull EnumTextMsg re) {
-		return ok(re.getCode(), re.getMsg());
+		return ofRes(showMsg, msg);
 	}
 
 	/**
 	 * 已处理失败返回
 	 */
-	public static @NotNull Res fail(String msg, @NotNull ResultEnum re) {
-		return of(showMsg, msg, re.toThrowable());
-	}
-
-	/**
-	 * 失败返回,携带系统错误信息
-	 */
-	public static @NotNull Res fail(@NotNull EnumTextMsg re, @NotNull Throwable throwable) {
-		return of(re.getCode(), re.getMsg(), throwable);
+	public static @NotNull Res fail(String msg, @NotNull EnumMsg em) {
+		return ofRes(showMsg, msg, em.toThrowable());
 	}
 
 	/**
 	 * 失败返回,携带系统错误信息
 	 */
 	public static @NotNull Res fail(String msg, @NotNull Throwable throwable) {
-		return of(showMsg, msg, throwable);
+		return ofRes(showMsg, msg, throwable);
+	}
+
+	/**
+	 * 失败返回,携带系统错误信息
+	 */
+	public static @NotNull Res fail(@NotNull EnumTextMsg msg) {
+		return ofRes(msg.getCode(), msg.getMsg());
+	}
+
+	/**
+	 * 失败返回,携带系统错误信息
+	 */
+	public static @NotNull Res fail(@NotNull EnumTextMsg msg, @NotNull EnumMsg em) {
+		return ofRes(msg.getCode(), msg.getMsg(), em.toThrowable());
+	}
+
+	/**
+	 * 失败返回,携带系统错误信息
+	 */
+	public static @NotNull Res fail(@NotNull EnumTextMsg msg, @NotNull Throwable throwable) {
+		return ofRes(msg.getCode(), msg.getMsg(), throwable);
+	}
+
+	/**
+	 * 未知异常
+	 *
+	 * @return 结果
+	 */
+	public static @NotNull Res err() {
+		return ofRes(errorMsg, "未知异常");
 	}
 
 	/**
@@ -129,16 +134,7 @@ public class Response {
 	 * @return 结果
 	 */
 	public static @NotNull Res err(String msg) {
-		return ok(errorMsg, msg);
-	}
-
-	/**
-	 * 未知异常
-	 *
-	 * @return 结果
-	 */
-	public static @NotNull Res err() {
-		return of(errorMsg, "未知异常");
+		return ofRes(errorMsg, msg);
 	}
 
 	/**
@@ -148,15 +144,15 @@ public class Response {
 	 * @return 结果
 	 */
 	public static @NotNull Res err(Throwable throwable) {
-		return of(errorMsg, "系统异常", throwable);
+		return ofRes(errorMsg, "系统异常", throwable);
 	}
 
 	/**
 	 * 非默认返回信息返回
 	 */
 	@Deprecated
-	public static @NotNull Res ok(@NotNull EnumMsg re, Object o) {
-		return ok(re.getCode(), re.getMsg(), o);
+	public static @NotNull Res ok(@NotNull EnumMsg msg, Object o) {
+		return ok(msg.getCode(), msg.getMsg(), o);
 	}
 
 	/**
@@ -164,31 +160,31 @@ public class Response {
 	 */
 	@Deprecated
 	public static @NotNull Res ok(int code, String msg, Object o) {
-		return of(code, msg, o);
-	}
-
-	/**
-	 * 失败返回,携带系统错误信息
-	 */
-	@Deprecated
-	public static @NotNull Res fail(@NotNull EnumMsg re, @NotNull Throwable throwable) {
-		return of(re.getCode(), re.getMsg(), throwable);
+		return ofRes(code, msg, o);
 	}
 
 	/**
 	 * 失败返回
 	 */
 	@Deprecated
-	public static @NotNull Res fail(@NotNull EnumMsg re) {
-		return of(re.getCode(), re.getMsg(), re.toThrowable());
+	public static @NotNull Res fail(@NotNull EnumMsg msg) {
+		return ofRes(msg.getCode(), msg.getMsg(), msg.toThrowable());
+	}
+
+	/**
+	 * 失败返回,携带系统错误信息
+	 */
+	@Deprecated
+	public static @NotNull Res fail(@NotNull EnumMsg msg, @NotNull Throwable throwable) {
+		return ofRes(msg.getCode(), msg.getMsg(), throwable);
 	}
 
 	/**
 	 * 已处理失败返回
 	 */
 	@Deprecated
-	public static @NotNull Res fail(@NotNull EnumMsg re, @NotNull EnumMsg err) {
-		return of(re.getCode(), re.getMsg(), err.toThrowable());
+	public static @NotNull Res fail(@NotNull EnumMsg msg, @NotNull EnumMsg em) {
+		return ofRes(msg.getCode(), msg.getMsg(), em.toThrowable());
 	}
 
 	/**
@@ -196,7 +192,7 @@ public class Response {
 	 */
 	@Deprecated
 	public static @NotNull Res err(@NotNull EnumMsg err) {
-		return of(errorMsg, "未知错误", err.toThrowable());
+		return ofRes(errorMsg, "未知错误", err.toThrowable());
 	}
 
 }

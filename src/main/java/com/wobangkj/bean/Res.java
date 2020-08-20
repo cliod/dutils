@@ -15,173 +15,222 @@ import java.util.Objects;
  */
 public class Res extends Maps<String, Object> implements SessionSerializable {
 
-    private static final long serialVersionUID = -4892758069561565904L;
+	private static final long serialVersionUID = -4892758069561565904L;
 
-    public Res(int initialCapacity) {
-        super(initialCapacity);
-    }
+	public Res(int initialCapacity) {
+		super(initialCapacity);
+	}
 
-    public Res() {
-        super();
-    }
+	public Res() {
+		super();
+	}
 
-    public Res(Map<? extends String, ?> m) {
-        super(m);
-    }
+	public Res(Map<? extends String, ?> m) {
+		super(m);
+	}
 
-    public static @NotNull Res of(String k, Object v) {
-        Res map = new Res();
-        map.put(k, v);
-        return map;
-    }
+	public static @NotNull Res of(String k, Object v) {
+		Res map = new Res();
+		map.put(k, v);
+		return map;
+	}
 
-    /**
-     * 代替构造方法
-     *
-     * @param code 状态码
-     * @param msg  响应消息
-     * @return result
-     */
-    public static @NotNull Res of(int code, String msg) {
-        Res result = new Res();
-        result.setCode(code);
-        result.setMsg(msg);
-        return result;
-    }
+	/**
+	 * 代替构造方法
+	 *
+	 * @param code 状态码
+	 * @param msg  响应消息
+	 * @return result
+	 */
+	@Deprecated
+	public static @NotNull Res of(int code, String msg) {
+		Res result = new Res();
+		result.setCode(code);
+		result.setMsg(msg);
+		return result;
+	}
 
-    /**
-     * 代替构造方法
-     *
-     * @param code 状态码
-     * @param msg  响应消息
-     * @param o    响应对象
-     * @return result
-     */
-    public static @NotNull Res of(int code, String msg, Object o) {
-        Res result = new Res();
-        result.setCode(code);
-        result.setMsg(msg);
-        result.setData(o);
-        return result;
-    }
+	/**
+	 * 代替构造方法
+	 *
+	 * @param code 状态码
+	 * @param msg  响应消息
+	 * @param o    响应对象
+	 * @return result
+	 */
+	@Deprecated
+	public static @NotNull Res of(int code, String msg, Object o) {
+		Res result = new Res();
+		result.setCode(code);
+		result.setMsg(msg);
+		result.setData(o);
+		return result;
+	}
 
-    /**
-     * 代替构造方法
-     *
-     * @param code 状态码
-     * @param msg  响应消息
-     * @param o    响应异常
-     * @return result
-     */
-    public static @NotNull Res of(int code, String msg, @NotNull Throwable o) {
-        Res result = new Res();
-        result.setCode(code);
-        result.setMsg(msg);
-        result.setErr(o.getMessage());
-        return result;
-    }
+	/**
+	 * 代替构造方法
+	 *
+	 * @param code 状态码
+	 * @param msg  响应消息
+	 * @param o    响应异常
+	 * @return result
+	 */
+	@Deprecated
+	public static @NotNull Res of(int code, String msg, @NotNull Throwable o) {
+		Res result = new Res();
+		result.setCode(code);
+		result.setMsg(msg);
+		result.setErr(o.getMessage());
+		return result;
+	}
 
-    public Res addAll(Map<String, Object> map) {
-        putAll(map);
-        return this;
-    }
+	/**
+	 * 代替构造方法
+	 *
+	 * @param code 状态码
+	 * @param msg  响应消息
+	 * @return result
+	 */
+	public static @NotNull Res ofRes(int code, String msg) {
+		Res result = new Res();
+		result.setCode(code);
+		result.setMsg(msg);
+		return result;
+	}
 
-    @Override
-    public Res add(String k, Object v) {
-        put(k, v);
-        return this;
-    }
+	/**
+	 * 代替构造方法
+	 *
+	 * @param code 状态码
+	 * @param msg  响应消息
+	 * @param o    响应对象
+	 * @return result
+	 */
+	public static @NotNull Res ofRes(int code, String msg, Object o) {
+		Res result = new Res();
+		result.setCode(code);
+		result.setMsg(msg);
+		result.setData(o);
+		return result;
+	}
 
-    @Override
-    public Res set(String k, Object v) {
-        if (!Objects.isNull(v) && !Objects.isNull(k)) {
-            put(k, v);
-        }
-        return this;
-    }
+	/**
+	 * 代替构造方法
+	 *
+	 * @param code 状态码
+	 * @param msg  响应消息
+	 * @param o    响应异常
+	 * @return result
+	 */
+	public static @NotNull Res ofRes(int code, String msg, @NotNull Throwable o) {
+		Res result = new Res();
+		result.setCode(code);
+		result.setMsg(msg);
+		result.setErr(o.getMessage());
+		return result;
+	}
 
-    @Override
-    public Res del(String k) {
-        remove(k);
-        return this;
-    }
+	public Res addAll(Map<String, Object> map) {
+		putAll(map);
+		return this;
+	}
 
-    @Override
-    public Object rem(String s) {
-        return super.rem(s);
-    }
+	@Override
+	public Res add(String k, Object v) {
+		put(k, v);
+		return this;
+	}
 
-    @Override
-    public Object pop(String s) {
-        return super.pop(s);
-    }
+	@Override
+	public Res set(String k, Object v) {
+		if (!Objects.isNull(v) && !Objects.isNull(k)) {
+			put(k, v);
+		}
+		return this;
+	}
 
-    /**
-     * 转成Map对象
-     *
-     * @return java.util.Map
-     * @see Map
-     */
-    @Override
-    public @NotNull Res toObject() {
-        return this;
-    }
+	@Override
+	public Res del(String k) {
+		remove(k);
+		return this;
+	}
 
-    /**
-     * 转成字符串
-     *
-     * @return 字符串
-     */
-    @Override
-    public final @NotNull String toString() {
-        return this.toJson();
-    }
+	@Override
+	public Object rem(String s) {
+		return super.rem(s);
+	}
 
-    public final @NotNull Object readResolve() throws Exception {
-        return this.getClass().getConstructor().newInstance();
-    }
+	@Override
+	public Object pop(String s) {
+		return super.pop(s);
+	}
 
-    public Integer getCode() {
-        return (Integer) get("status");
-    }
+	/**
+	 * 转成Map对象
+	 *
+	 * @return java.util.Map
+	 * @see Map
+	 */
+	@Override
+	public @NotNull Res toObject() {
+		return this;
+	}
 
-    public void setCode(Integer code) {
-        put("status", code);
-    }
+	/**
+	 * 转成字符串
+	 *
+	 * @return 字符串
+	 */
+	@Override
+	public final @NotNull String toString() {
+		return this.toJson();
+	}
 
-    public Integer getStatus() {
-        return (Integer) get("status");
-    }
+	public final @NotNull Object readResolve() throws Exception {
+		return this.getClass().getConstructor().newInstance();
+	}
 
-    public void setStatus(Integer code) {
-        put("status", code);
-    }
+	public Integer getCode() {
+		return (Integer) get("status");
+	}
 
-    public String getMsg() {
-        return (String) get("msg");
-    }
+	public void setCode(Integer code) {
+		put("status", code);
+	}
 
-    public void setMsg(String msg) {
-        put("msg", msg);
-    }
+	public Integer getStatus() {
+		return (Integer) get("status");
+	}
 
-    public Object getErr() {
-        return get("err");
-    }
+	public void setStatus(Integer code) {
+		put("status", code);
+	}
 
-    public void setErr(Object err) {
-        put("err", err);
-    }
+	public String getMsg() {
+		return (String) get("msg");
+	}
 
-    public Object getData() {
-        return get("data");
-    }
+	public void setMsg(String msg) {
+		put("msg", msg);
+	}
 
-    public void setData(Object data) {
-        put("data", data);
-    }
+	public Object getErr() {
+		return get("err");
+	}
 
-    public <E> E getData(Class<E> type) {
-        return JsonUtils.fromJson(JsonUtils.toJson(get("data")), type);
-    }
+	public void setErr(Object err) {
+		put("err", err);
+	}
+
+	public Object getData() {
+		return get("data");
+	}
+
+	public void setData(Object data) {
+		put("data", data);
+	}
+
+	public <E> E getData(Class<E> type) {
+		return JsonUtils.fromJson(JsonUtils.toJson(get("data")), type);
+	}
 }
