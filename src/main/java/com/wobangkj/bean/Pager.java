@@ -1,7 +1,7 @@
 package com.wobangkj.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.wobangkj.api.Session;
+import com.wobangkj.api.SessionSerializable;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,17 +15,17 @@ import java.util.List;
  * @since 19-6-9
  */
 @Data
-public final class Pager<T> implements Session {
-    private static final long serialVersionUID = 7562274153136856700L;
-    /**
-     * 总数量
-     */
-    private Long totalNum;
-    /**
-     * 当前页
-     */
-    private Integer clientPage;
-    /**
+public final class Pager<T> implements SessionSerializable {
+	private static final long serialVersionUID = 7562274153136856700L;
+	/**
+	 * 总数量
+	 */
+	private Long totalNum;
+	/**
+	 * 当前页
+	 */
+	private Integer clientPage;
+	/**
      * 当前数量
      */
     private Integer everyPage;
