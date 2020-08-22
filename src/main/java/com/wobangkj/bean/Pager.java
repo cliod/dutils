@@ -1,6 +1,7 @@
 package com.wobangkj.bean;
 
-import com.wobangkj.api.SessionSerializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wobangkj.api.Session;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @since 19-6-9
  */
 @Data
-public final class Pager<T> implements SessionSerializable {
+public final class Pager<T> implements Session {
     private static final long serialVersionUID = 7562274153136856700L;
     /**
      * 总数量
@@ -95,60 +96,67 @@ public final class Pager<T> implements SessionSerializable {
         return this.toJson();
     }
 
-    /**
-     * 转成Map对象
-     *
-     * @return java.util.Map
-     * @see java.util.Map
-     */
-    @Override
-    public @NotNull Maps<String, Object> toObject() {
-        return Maps
-                .to("data", this.getData())
-                .add("pager", Maps
-                        .of("client_page", (Object) this.getClientPage())
-                        .set("every_page", this.getEveryPage())
-                        .set("total_num", this.getTotalNum()));
-    }
+	/**
+	 * 转成Map对象
+	 *
+	 * @return java.util.Map
+	 * @see java.util.Map
+	 */
+	@Override
+	public @NotNull Res toObject() {
+		return Res.of("data", this.getData())
+				.add("pager", Res
+						.of("client_page", this.getClientPage())
+						.set("every_page", this.getEveryPage())
+						.set("total_num", this.getTotalNum()));
+	}
 
-    @Deprecated
-    public Long getCount() {
-        return totalNum;
-    }
+	@Deprecated
+	@JsonIgnore
+	public Long getCount() {
+		return totalNum;
+	}
 
-    @Deprecated
-    public void setCount(Long count) {
-        this.totalNum = count;
-    }
+	@Deprecated
+	@JsonIgnore
+	public void setCount(Long count) {
+		this.totalNum = count;
+	}
 
-    @Deprecated
-    public Integer getPage() {
-        return clientPage;
-    }
+	@Deprecated
+	@JsonIgnore
+	public Integer getPage() {
+		return clientPage;
+	}
 
-    @Deprecated
-    public void setPage(Integer page) {
-        this.clientPage = page;
-    }
+	@Deprecated
+	@JsonIgnore
+	public void setPage(Integer page) {
+		this.clientPage = page;
+	}
 
-    @Deprecated
-    public Integer getSize() {
-        return everyPage;
-    }
+	@Deprecated
+	@JsonIgnore
+	public Integer getSize() {
+		return everyPage;
+	}
 
-    @Deprecated
-    public void setSize(Integer size) {
-        this.everyPage = size;
-    }
+	@Deprecated
+	@JsonIgnore
+	public void setSize(Integer size) {
+		this.everyPage = size;
+	}
 
-    @Deprecated
-    public List<T> getList() {
-        return data;
-    }
+	@Deprecated
+	@JsonIgnore
+	public List<T> getList() {
+		return data;
+	}
 
-    @Deprecated
-    public void setList(List<T> list) {
-        this.data = list;
-    }
+	@Deprecated
+	@JsonIgnore
+	public void setList(List<T> list) {
+		this.data = list;
+	}
 
 }
