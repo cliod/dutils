@@ -1,16 +1,19 @@
 package com.wobangkj.api;
 
 import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -62,7 +65,7 @@ public interface QrCode {
 	 *
 	 * @throws WriterException 异常
 	 */
-	default void createImageToFile(File file) throws WriterException, IOException {
+	default void createImage(File file) throws WriterException, IOException {
 		ImageIO.write(createImage(), getFormat(), file);
 	}
 
@@ -109,10 +112,12 @@ public interface QrCode {
 
 	default void setLogo(File logo) throws IOException {
 		setLogo(ImageIO.read(logo));
+		setNeedLogo(true);
 	}
 
 	default void setLogo(InputStream logo) throws IOException {
 		setLogo(ImageIO.read(logo));
+		setNeedLogo(true);
 	}
 
 	void setNeedCompress(boolean needCompress);
@@ -137,4 +142,6 @@ public interface QrCode {
 	 * @param needLogo 是否需要
 	 */
 	void setNeedLogo(boolean needLogo);
+
+	void setColors(BitMatrix bitMatrix, Map<String, Color> color);
 }
