@@ -15,7 +15,9 @@ public interface BaseEnum extends Session {
      *
      * @return 数组
      */
-    BaseEnum[] list();
+    default BaseEnum[] list() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * 获取code
