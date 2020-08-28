@@ -1,7 +1,6 @@
 package com.wobangkj.api;
 
 import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
+import java.net.URL;
 import java.util.Objects;
 
 /**
@@ -38,10 +37,11 @@ public interface QrCode {
 				qrCode.setLogo((InputStream) logo);
 			else if (logo instanceof File)
 				qrCode.setLogo((File) logo);
+			else if (logo instanceof URL)
+				qrCode.setLogo((URL) logo);
 			else
 				qrCode.setLogo((BufferedImage) null);
 		else {
-			qrCode.setNeedCompress(false);
 			qrCode.setNeedLogo(false);
 		}
 		return qrCode;
@@ -53,95 +53,192 @@ public interface QrCode {
 	}
 
 	/**
-	 * 生成二维码
+	 * Generate QR code.
 	 *
-	 * @return 图片
-	 * @throws WriterException 异常
+	 * @return image object.
+	 * @throws WriterException Coding exception.
 	 */
 	@NotNull BufferedImage createImage() throws WriterException;
 
 	/**
-	 * 生成二维码
+	 * Generate QR code and output to file.
 	 *
+	 * @param file Used to receive the generated QR code
 	 * @throws WriterException 异常
 	 */
 	default void createImage(File file) throws WriterException, IOException {
-		ImageIO.write(createImage(), getFormat(), file);
+		ImageIO.write(this.createImage(), this.getFormat(), file);
 	}
 
 	/**
-	 * 生成二维码
+	 * Generate QR code and output to network.
 	 *
-	 * @throws WriterException 异常
+	 * @param response Used to receive the generated QR code
+	 * @throws WriterException Coding exception.
 	 */
 	default void createImage(@NotNull HttpServletResponse response) throws WriterException, IOException {
-		ImageIO.write(createImage(), getFormat(), response.getOutputStream());
+		ImageIO.write(this.createImage(), this.getFormat(), response.getOutputStream());
 	}
 
 	/**
-	 * 生成二维码
+	 * Generate QR code and output to stream.
 	 *
-	 * @throws WriterException 异常
+	 * @param output Used to receive the generated QR code
+	 * @throws WriterException Coding exception.
 	 */
 	default void createImage(@NotNull OutputStream output) throws WriterException, IOException {
-		ImageIO.write(createImage(), getFormat(), output);
+		ImageIO.write(this.createImage(), this.getFormat(), output);
 	}
 
 	/**
-	 * 生成二维码
+	 * Generate QR code
 	 *
-	 * @return 图片
-	 * @throws WriterException 异常
+	 * @param content The content string used to generate the QR code.
+	 * @return image object.
+	 * @throws WriterException Coding exception.
 	 */
 	default @NotNull BufferedImage createImage(String content) throws WriterException {
-		setContent(content);
+		this.setContent(content);
 		return createImage();
 	}
 
+	/**
+	 * Re-specify content to generate QR code and output to file.
+	 *
+	 * @param content The content string used to generate the QR code.
+	 * @param file    Used to receive the generated QR code
+	 * @throws WriterException Coding exception.
+	 */
+	default void createImage(String content, File file) throws WriterException, IOException {
+		this.setContent(content);
+		ImageIO.write(this.createImage(), this.getFormat(), file);
+	}
+
+	/**
+	 * Re-specify content to generate QR code and output to network.
+	 *
+	 * @param content  The content string used to generate the QR code.
+	 * @param response Used to receive the generated QR code
+	 * @throws WriterException Coding exception.
+	 */
+	default void createImage(String content, @NotNull HttpServletResponse response) throws WriterException, IOException {
+		this.setContent(content);
+		ImageIO.write(this.createImage(), this.getFormat(), response.getOutputStream());
+	}
+
+	/**
+	 * Re-specify content to generate QR code and output to stream.
+	 *
+	 * @param content The content string used to generate the QR code.
+	 * @param output  Used to receive the generated QR code
+	 * @throws WriterException Coding exception.
+	 */
+	default void createImage(String content, @NotNull OutputStream output) throws WriterException, IOException {
+		this.setContent(content);
+		ImageIO.write(this.createImage(), this.getFormat(), output);
+	}
+
+	/**
+	 * Set the content.
+	 *
+	 * @param content The content string used to generate the QR code.
+	 */
 	void setContent(String content);
 
+	/**
+	 * Set the content.
+	 *
+	 * @param content The content string used to generate the QR code.
+	 */
 	default void setContent(CharSequence content) {
-		setContent(content.toString());
+		this.setContent(content.toString());
 	}
 
+	/**
+	 * Set the content.
+	 *
+	 * @param content The content string used to generate the QR code.
+	 */
 	default void setContent(Object content) {
-		setContent(content.toString());
+		this.setContent(content.toString());
 	}
 
+	/**
+	 * Set the LOGO
+	 *
+	 * @param logo LOGO image object.
+	 */
 	void setLogo(BufferedImage logo);
 
+	/**
+	 * Set the LOGO
+	 *
+	 * @param logo LOGO image file object.
+	 */
 	default void setLogo(File logo) throws IOException {
-		setLogo(ImageIO.read(logo));
-		setNeedLogo(true);
+		this.setLogo(ImageIO.read(logo));
+		this.setNeedLogo(true);
 	}
 
+	/**
+	 * Set the LOGO
+	 *
+	 * @param logo LOGO image stream object.
+	 */
 	default void setLogo(InputStream logo) throws IOException {
-		setLogo(ImageIO.read(logo));
-		setNeedLogo(true);
+		this.setLogo(ImageIO.read(logo));
+		this.setNeedLogo(true);
 	}
 
+	/**
+	 * Set the LOGO
+	 *
+	 * @param logo network LOGO image.
+	 */
+	default void setLogo(URL logo) throws IOException {
+		this.setLogo(ImageIO.read(logo));
+		this.setNeedLogo(true);
+	}
+
+	/**
+	 * Set whether compression is required
+	 *
+	 * @param needCompress whether compression is required
+	 */
 	void setNeedCompress(boolean needCompress);
 
 	/**
-	 * 获取图片格式
+	 * Get file format of QR code image.
 	 *
-	 * @return 格式. 例如.jpg
+	 * @return File format of QR code image. Example: tmp.jpg
 	 */
 	String getFormat();
 
 	/**
-	 * 设置图片格式
+	 * Set file format of QR code image.
 	 *
-	 * @param format 格式. 例如.jpg
+	 * @param format File format of QR code image. Example: tmp.jpg
 	 */
 	void setFormat(String format);
 
 	/**
-	 * 是否需要logo, 默认不需要
+	 * whether it needs to insert a logo, not required by default
 	 *
-	 * @param needLogo 是否需要
+	 * @param needLogo whether it needs
 	 */
 	void setNeedLogo(boolean needLogo);
 
-	void setColors(BitMatrix bitMatrix, Map<String, Color> color);
+	/**
+	 * Set background color.
+	 *
+	 * @param background Background color.
+	 */
+	void setBackground(Color background);
+
+	/**
+	 * Set foreground color.
+	 *
+	 * @param foreground Foreground color.
+	 */
+	void setForeground(Color foreground);
 }

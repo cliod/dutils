@@ -14,7 +14,9 @@ public class App {
 		System.out.println("Hello World!");
 
 		QrCode qrCode = QrCode.of("1shtigah3045yurt03ufijsedifjisd");
-		qrCode.setLogo(new File("index.jpeg"));
+		qrCode.setLogo(new File("1.jpg"));
 		qrCode.createImage(new File("2.jpg"));
+		qrCode.setLogo(new File("2.jpg"));
+		qrCode.createImage(new File("3.jpg"));
 	}
 }

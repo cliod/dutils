@@ -1,9 +1,6 @@
 package com.wobangkj.api;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
+import com.google.zxing.*;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.Getter;
@@ -13,114 +10,155 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * qrCode
+ * Basic QR code to realize simple custom generation of QR code.
  *
  * @author cliod
  * @since 8/22/20 1:23 PM
  */
 public abstract class BaseQrCode implements QrCode {
 	/**
-	 * 编码
+	 * Specifies what character encoding to use where applicable (type {@link String})
 	 */
-	@Getter
-	private final String charset = "utf-8";
+	public static final String charset = "utf-8";
 	/**
-	 * 二维码尺寸
+	 * QR code size. The preferred size in pixels.
 	 */
-	private final int size = 300;
+	protected final int size = 300;
 	/**
-	 * LOGO宽度
+	 * The height of the QR code LOGO. The preferred height in pixels.
 	 */
-	private final int logoHeight = 60;
+	protected final int logoHeight = 60;
 	/**
-	 * LOGO高度
+	 * The width of the QR code LOGO. The preferred width in pixels.
 	 */
-	private final int logoWidth = 60;
-
-	// logo 位置
-	private final int x = (this.size - this.logoWidth) / 2;
-	private final int y = (this.size - this.logoHeight) / 2;
-
-	// logo形状
-	private final Shape shape = new RoundRectangle2D.Float(x, y, this.logoWidth, this.logoHeight, 6, 6);
-
-	// 二维码生成额外参数
-	private final Map<EncodeHintType, Object> hints;
-	// 图在渲染过程中用于描画图像的行动对象, 3宽度
-	private final Stroke stroke = new BasicStroke(3F);
+	protected final int logoWidth = 60;
 	/**
-	 * 二维码格式
+	 * The x position of the LOGO in the QR code.
+	 */
+	protected final int x;
+	/**
+	 * The y position of the LOGO in the QR code.
+	 */
+	protected final int y;
+	/**
+	 * The shape of the LOGO in the QR code.
+	 */
+	protected final Shape shape;
+	/**
+	 * Two-dimensional code encoding additional parameters.
+	 */
+	protected final Map<EncodeHintType, Object> hints;
+	/**
+	 * The action object used to draw the image during the rendering process, default 3F.
+	 */
+	protected final Stroke stroke;
+	/**
+	 * The object for object which encode/generate a barcode image.
+	 */
+	protected final Writer writer;
+	/**
+	 * File format of QR code image.
 	 */
 	@Setter
 	@Getter
-	public String format = "JPG";
+	protected String format = "JPG";
+	/**
+	 * Code color.
+	 * Note that color codes need to be hexadecimal strings.
+	 */
+	@Setter
+	protected Color foreground = Color.WHITE;
+	/**
+	 * Background color.
+	 * Note that color codes need to be hexadecimal strings.
+	 */
+	@Setter
+	protected Color background = Color.BLACK;
+	/**
+	 * Does the QR code LOGO need to be compressed/stretched?
+	 */
+	@Setter
+	protected boolean isNeedCompress = true;
+	/**
+	 * Do you need to enter and exit the LOGO (not required by default)
+	 */
+	@Setter
+	protected transient boolean isNeedLogo = false;
+	/**
+	 * Is the content of the two-dimensional code image and content the same?
+	 */
+	@Getter
+	protected transient boolean isChange = true;
 
-	// 需要注意 颜色码需是16进制字符串
-	@Getter
-	@Setter
-	private Color foreground = Color.WHITE; //码颜色
-	@Getter
-	@Setter
-	private Color background = Color.BLACK; //底色
-	// 是否需要压缩
-	@Getter
-	@Setter
-	private boolean isNeedCompress = true;
+	/**
+	 * Generated QR code image object.
+	 */
+	protected transient BufferedImage image;
+	/**
+	 * The content string used to generate the QR code.
+	 */
+	protected transient String content;
+	/**
+	 * LOGO image object.
+	 */
+	protected transient BufferedImage logo;
 
-	// 生成的二维码图片
-	private transient BufferedImage image;
-	// 生成二维码的内容
-	private transient String content;
-	@Getter
-	private transient boolean isChange = true;
-	private transient BufferedImage logo;
-	@Setter
-	private transient boolean isNeedLogo = false;
-
+	/**
+	 * QR code initialization.
+	 * <p>
+	 * The default LOGO is in the middle of the QR code image.
+	 * </p>
+	 * <p>
+	 * The default LOGO shape is square with 6 radians rounded corners.
+	 * </p>
+	 * <p>
+	 * Constructs a solid <code>BasicStroke</code> with the specified line width and with default values for the cap and join styles.
+	 * </p>
+	 */
 	public BaseQrCode() {
+		x = (this.size - this.logoWidth) / 2;
+		y = (this.size - this.logoHeight) / 2;
+		shape = new RoundRectangle2D.Float(x, y, this.logoWidth, this.logoHeight, 6, 6);
 		hints = new HashMap<>();
 		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
 		hints.put(EncodeHintType.CHARACTER_SET, charset);
 		hints.put(EncodeHintType.MARGIN, 1);
+		stroke = new BasicStroke(3F);
+		writer = new MultiFormatWriter();
 	}
 
-	public void setLogo(BufferedImage logo) {
-		this.logo = logo;
-		setNeedLogo(true);
+	public BaseQrCode(int x, int y, Shape shape, Map<EncodeHintType, Object> hints, Stroke stroke, Writer writer) {
+		this.x = x;
+		this.y = y;
+		this.shape = shape;
+		this.hints = hints;
+		this.stroke = stroke;
+		this.writer = writer;
 	}
 
-	@Override
-	public void setContent(String content) {
-		this.isChange = true;
-		this.content = content;
-	}
-
-	@Override
-	public void setColors(BitMatrix bitMatrix, Map<String, Color> color) {
-		for (int x = 0; x < bitMatrix.getWidth(); x++) {
-			for (int y = 0; y < bitMatrix.getHeight(); y++) {
-//				image.setRGB(x, y, bitMatrix.get(x, y) ? foreground.getRGB() : background.getRGB());
-				image.setRGB(x, y, color.get(x + "" + y + bitMatrix.get(x, y)).getRGB());
-			}
-		}
+	public BaseQrCode(int x, int y, Shape shape, Stroke stroke) {
+		this(x, y, shape, new HashMap<EncodeHintType, Object>() {{
+			put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+			put(EncodeHintType.CHARACTER_SET, charset);
+			put(EncodeHintType.MARGIN, 1);
+		}}, stroke, new MultiFormatWriter());
 	}
 
 	/**
-	 * 生成二维码
+	 * Generate QR code.
 	 *
-	 * @return 图片
-	 * @throws WriterException 异常
+	 * @return image object.
+	 * @throws WriterException Coding exception.
 	 */
 	@Override
 	public @NotNull BufferedImage createImage() throws WriterException {
 		// 点阵
-		BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, size, size, hints);
+		BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, size, size, hints);
 		int width = bitMatrix.getWidth();
 		int height = bitMatrix.getHeight();
 		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -129,7 +167,6 @@ public abstract class BaseQrCode implements QrCode {
 				image.setRGB(x, y, bitMatrix.get(x, y) ? foreground.getRGB() : background.getRGB());
 			}
 		}
-		System.out.println(Arrays.toString(image.getRGB(0, 0, width, height, null, 0, width)));
 		if (isNeedLogo && Objects.nonNull(this.logo))
 			insertLogo();
 		isChange = false;
@@ -137,62 +174,46 @@ public abstract class BaseQrCode implements QrCode {
 	}
 
 	/**
-	 * 插入LOGO
+	 * Set the LOGO
+	 *
+	 * @param logo LOGO image object.
 	 */
-	protected void insertLogo() {
-		Image src = logo;
-		// 压缩LOGO
-		if (isNeedCompress) {
-			src = src.getScaledInstance(this.logoWidth, this.logoHeight, Image.SCALE_SMOOTH);
-			Graphics g = new BufferedImage(this.logoWidth, this.logoHeight, BufferedImage.TYPE_INT_RGB).getGraphics();
-			// 绘制缩小后的图
-			g.drawImage(src, 0, 0, null);
-			g.dispose();
-		}
-		// 插入LOGO
-		Graphics2D graph = image.createGraphics();
-		graph.drawImage(src, x, y, this.logoWidth, this.logoHeight, null);
-		graph.setStroke(stroke);//在渲染过程中用于描画Shape的Stroke对象
-		graph.draw(shape);
-		graph.dispose();
+	@Override
+	public void setLogo(BufferedImage logo) {
+		this.logo = logo;
+		this.setNeedLogo(true);
 	}
 
 	/**
-	 * 插入LOGO
+	 * Set the content.
+	 *
+	 * @param content The content string used to generate the QR code.
 	 */
-	private void autoInsertLogo() {
+	@Override
+	public void setContent(String content) {
+		this.isChange = true;
+		this.content = content;
+	}
+
+	/**
+	 * Insert LOGO to QR code.
+	 */
+	protected void insertLogo() {
 		Image src = logo;
-		int width = logo.getWidth();
-		int height = logo.getHeight();
-		// 压缩LOGO
-		int nc = 0;
+		// Compress LOGO.
 		if (isNeedCompress) {
-			if (width > this.logoWidth) {
-				width = this.logoWidth;
-				nc++;
-			}
-			if (height > this.logoHeight) {
-				height = this.logoHeight;
-				nc++;
-			}
-			src = src.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-			Graphics g = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB).getGraphics();
-			// 绘制缩小后的图
+			src = src.getScaledInstance(this.logoWidth, this.logoHeight, Image.SCALE_SMOOTH);
+			Graphics g = new BufferedImage(this.logoWidth, this.logoHeight, BufferedImage.TYPE_INT_RGB).getGraphics();
+			// Draw the reduced picture.
 			g.drawImage(src, 0, 0, null);
 			g.dispose();
 		}
-		// 插入LOGO
+		// Insert LOGO.
 		Graphics2D graph = image.createGraphics();
-		int x = (this.size - width) / 2;
-		int y = (this.size - height) / 2;
-		graph.drawImage(src, x, y, width, height, null);
-		if (nc == 2) {
-			graph.draw(shape);
-		} else {
-			Shape shape = new RoundRectangle2D.Float(x, y, width, width, 6, 6);
-			graph.draw(shape);
-		}
-		graph.setStroke(stroke);//在渲染过程中用于描画Shape的Stroke对象
+		graph.drawImage(src, x, y, this.logoWidth, this.logoHeight, null);
+		// The Stroke object used to draw the Shape during the rendering process.
+		graph.setStroke(stroke);
+		graph.draw(shape);
 		graph.dispose();
 	}
 }
