@@ -180,6 +180,7 @@ public abstract class BaseQrCode implements QrCode {
 	 */
 	@Override
 	public void setLogo(BufferedImage logo) {
+		if (Objects.isNull(logo)) return;
 		this.logo = logo;
 		this.setNeedLogo(true);
 	}

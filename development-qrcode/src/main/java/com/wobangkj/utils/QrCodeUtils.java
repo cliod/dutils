@@ -1,10 +1,10 @@
 package com.wobangkj.utils;
 
 import com.google.zxing.*;
-import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.wobangkj.api.BufferedImageLuminanceSource;
+import com.wobangkj.api.DefaultQrCode;
+import com.wobangkj.api.QrCode;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,11 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 二维码生成器
@@ -27,36 +29,15 @@ import java.util.*;
  * package : com.example.git.magicked.util
  */
 public class QrCodeUtils {
-	/**
-	 * 编码
-	 */
-	private static final String CHARSET = "utf-8";
-	/**
-	 * 二维码尺寸
-	 */
-	private static final int QR_CODE_SIZE = 300;
-	/**
-	 * LOGO宽度
-	 */
-	private static final int LOGO_WIDTH = 60;
-	/**
-	 * LOGO高度
-	 */
-	private static final int LOGO_HEIGHT = 60;
-	/**
-	 * 二维码格式
-	 */
-	public static String FORMAT = "JPG";
-
-	// 需要注意 颜色码需是16进制字符串
-	private static Color foreground = Color.WHITE; //码颜色
-	private static Color background = Color.BLACK; //底色
 
 	private static boolean DEFAULT_COMPRESS = true;
+	private static QrCode qrCode = DefaultQrCode.getInstance();
+	private static final String FORMAT = qrCode.getFormat();
 
 	private QrCodeUtils() {
 	}
 
+	@Deprecated
 	public static boolean isDefaultCompress() {
 		return DEFAULT_COMPRESS;
 	}
@@ -67,6 +48,7 @@ public class QrCodeUtils {
 	 * @param defaultCompress 是否压缩
 	 */
 	public static void setDefaultCompress(boolean defaultCompress) {
+		qrCode.setNeedCompress(defaultCompress);
 		DEFAULT_COMPRESS = defaultCompress;
 	}
 
@@ -75,8 +57,9 @@ public class QrCodeUtils {
 	 *
 	 * @param huaSe 码颜色
 	 */
+	@Deprecated
 	public static void setHuaSe(int huaSe) {
-		foreground = new Color(huaSe);
+		qrCode.setForeground(new Color(huaSe));
 	}
 
 	/**
@@ -84,8 +67,9 @@ public class QrCodeUtils {
 	 *
 	 * @param diSe 底色
 	 */
+	@Deprecated
 	public static void setDiSe(int diSe) {
-		background = new Color(diSe);
+		qrCode.setBackground(new Color(diSe));
 	}
 
 	/**
@@ -96,21 +80,7 @@ public class QrCodeUtils {
 	 * @throws Exception 异常
 	 */
 	public static @NotNull BufferedImage createImage(String content) throws Exception {
-		Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
-		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-		hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
-		hints.put(EncodeHintType.MARGIN, 1);
-		BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, QR_CODE_SIZE, QR_CODE_SIZE,
-				hints);
-		int width = bitMatrix.getWidth();
-		int height = bitMatrix.getHeight();
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				image.setRGB(x, y, bitMatrix.get(x, y) ? foreground.getRGB() : background.getRGB());
-			}
-		}
-		return image;
+		return qrCode.createImage(content);
 	}
 
 	/**
@@ -124,13 +94,8 @@ public class QrCodeUtils {
 	 */
 	@Deprecated
 	public static @NotNull BufferedImage createImage(String content, String logoPath, boolean needCompress) throws Exception {
-		BufferedImage image = createImage(content);
-		if (StringUtils.isEmpty(logoPath)) {
-			return image;
-		}
-		// 插入图片
-		insertImage(image, logoPath, needCompress);
-		return image;
+		insertImage(null, new File(logoPath), needCompress);
+		return createImage(content);
 	}
 
 	/**
@@ -143,13 +108,8 @@ public class QrCodeUtils {
 	 * @throws Exception 异常
 	 */
 	public static @NotNull BufferedImage createImage(String content, File logoFile, boolean needCompress) throws Exception {
-		BufferedImage image = createImage(content);
-		if (logoFile == null || logoFile.length() == 0) {
-			return image;
-		}
-		// 插入图片
-		insertImage(image, logoFile, needCompress);
-		return image;
+		insertImage(null, logoFile, needCompress);
+		return createImage(content);
 	}
 
 	/**
@@ -162,13 +122,8 @@ public class QrCodeUtils {
 	 * @throws Exception 异常
 	 */
 	public static @NotNull BufferedImage createImage(String content, InputStream inputStream, boolean needCompress) throws Exception {
-		BufferedImage image = createImage(content);
-		if (inputStream == null || inputStream.available() == 0) {
-			return image;
-		}
-		// 插入图片
-		insertImage(image, inputStream, needCompress);
-		return image;
+		insertImage(null, inputStream, needCompress);
+		return createImage(content);
 	}
 
 	/**
@@ -179,14 +134,10 @@ public class QrCodeUtils {
 	 * @param needCompress 是否压缩
 	 */
 	@Deprecated
-	public static void insertImage(BufferedImage source, String logoPath, boolean needCompress) {
+	public static void insertImage(BufferedImage source, String logoPath, boolean needCompress) throws IOException {
 		File file = new File(logoPath);
 		if (!file.exists()) return;
-		try (InputStream inputStream = new FileInputStream(file)) {
-			insertImage(source, inputStream, needCompress);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		qrCode.setLogo(file, needCompress);
 	}
 
 	/**
@@ -196,11 +147,9 @@ public class QrCodeUtils {
 	 * @param logoFile     LOGO图片
 	 * @param needCompress 是否压缩
 	 */
+	@Deprecated
 	public static void insertImage(BufferedImage source, File logoFile, boolean needCompress) throws IOException {
-		InputStream in = null;
-		if (Objects.nonNull(logoFile))
-			in = new FileInputStream(logoFile);
-		insertImage(source, in, needCompress);
+		qrCode.setLogo(logoFile, needCompress);
 	}
 
 	/**
@@ -210,35 +159,9 @@ public class QrCodeUtils {
 	 * @param inputStream  LOGO图片流
 	 * @param needCompress 是否压缩
 	 */
+	@Deprecated
 	public static void insertImage(BufferedImage source, InputStream inputStream, boolean needCompress) throws IOException {
-		Image src = ImageIO.read(inputStream);
-		int width = src.getWidth(null);
-		int height = src.getHeight(null);
-		// 压缩LOGO
-		if (needCompress) {
-			if (width > LOGO_WIDTH) {
-				width = LOGO_WIDTH;
-			}
-			if (height > LOGO_HEIGHT) {
-				height = LOGO_HEIGHT;
-			}
-			Image image = src.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-			BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-			Graphics g = tag.getGraphics();
-			// 绘制缩小后的图
-			g.drawImage(image, 0, 0, null);
-			g.dispose();
-			src = image;
-		}
-		// 插入LOGO
-		Graphics2D graph = source.createGraphics();
-		int x = (QR_CODE_SIZE - width) / 2;
-		int y = (QR_CODE_SIZE - height) / 2;
-		graph.drawImage(src, x, y, width, height, null);
-		Shape shape = new RoundRectangle2D.Float(x, y, width, width, 6, 6);
-		graph.setStroke(new BasicStroke(3f));
-		graph.draw(shape);
-		graph.dispose();
+		qrCode.setLogo(inputStream, needCompress);
 	}
 
 	/**
@@ -660,7 +583,7 @@ public class QrCodeUtils {
 		BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 		Result result;
 		Map<DecodeHintType, String> hints = new HashMap<>();
-		hints.put(DecodeHintType.CHARACTER_SET, CHARSET);
+		hints.put(DecodeHintType.CHARACTER_SET, "utf-8");
 		result = new MultiFormatReader().decode(bitmap, hints);
 		return result.getText();
 	}

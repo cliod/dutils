@@ -176,6 +176,7 @@ public interface QrCode {
 	 * @param logo LOGO image file object.
 	 */
 	default void setLogo(File logo) throws IOException {
+		if (Objects.isNull(logo)) return;
 		this.setLogo(ImageIO.read(logo));
 		this.setNeedLogo(true);
 	}
@@ -186,6 +187,7 @@ public interface QrCode {
 	 * @param logo LOGO image stream object.
 	 */
 	default void setLogo(InputStream logo) throws IOException {
+		if (Objects.isNull(logo)) return;
 		this.setLogo(ImageIO.read(logo));
 		this.setNeedLogo(true);
 	}
@@ -196,8 +198,45 @@ public interface QrCode {
 	 * @param logo network LOGO image.
 	 */
 	default void setLogo(URL logo) throws IOException {
+		if (Objects.isNull(logo)) return;
 		this.setLogo(ImageIO.read(logo));
 		this.setNeedLogo(true);
+	}
+
+	/**
+	 * Set the LOGO
+	 *
+	 * @param logo LOGO image file object.
+	 */
+	default void setLogo(File logo, boolean needCompress) throws IOException {
+		if (Objects.isNull(logo)) return;
+		this.setLogo(ImageIO.read(logo));
+		this.setNeedLogo(true);
+		this.setNeedCompress(needCompress);
+	}
+
+	/**
+	 * Set the LOGO
+	 *
+	 * @param logo LOGO image stream object.
+	 */
+	default void setLogo(InputStream logo, boolean needCompress) throws IOException {
+		if (Objects.isNull(logo)) return;
+		this.setLogo(ImageIO.read(logo));
+		this.setNeedLogo(true);
+		this.setNeedCompress(needCompress);
+	}
+
+	/**
+	 * Set the LOGO
+	 *
+	 * @param logo network LOGO image.
+	 */
+	default void setLogo(URL logo, boolean needCompress) throws IOException {
+		if (Objects.isNull(logo)) return;
+		this.setLogo(ImageIO.read(logo));
+		this.setNeedLogo(true);
+		this.setNeedCompress(needCompress);
 	}
 
 	/**
