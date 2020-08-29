@@ -1,5 +1,7 @@
 package com.wobangkj.api;
 
+import java.util.HashMap;
+
 /**
  * 值 - 枚举
  *
@@ -14,4 +16,11 @@ public interface EnumValue<T> extends SessionSerializable {
 	 * @return 值
 	 */
 	T value();
+
+	@Override
+	default Object toObject() {
+		return new HashMap<String, Object>() {{
+			put("value", value());
+		}};
+	}
 }

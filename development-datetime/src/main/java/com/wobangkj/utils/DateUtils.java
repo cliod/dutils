@@ -20,8 +20,7 @@ import static com.wobangkj.api.Format.*;
  * @since 19-7-19
  * com.wobangkj.git.magicked.util
  */
-@Deprecated
-public class DateTimeUtils extends org.apache.commons.lang3.time.DateUtils {
+public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	/**
 	 * 格式转化器
 	 */
@@ -1252,8 +1251,8 @@ public class DateTimeUtils extends org.apache.commons.lang3.time.DateUtils {
 	public static boolean isOverIntervalLimit(String startDateStr, String endDateStr, int interval) throws ParseException {
 		Date startDate;
 		Date endDate;
-		startDate = DateTimeUtils.parseDate(startDateStr, FORMAT_DATE_DEFAULT.getPattern());
-		endDate = DateTimeUtils.parseDate(endDateStr, FORMAT_DATE_DEFAULT.getPattern());
+		startDate = DateUtils.parseDate(startDateStr, FORMAT_DATE_DEFAULT.getPattern());
+		endDate = DateUtils.parseDate(endDateStr, FORMAT_DATE_DEFAULT.getPattern());
 		if (startDate == null || endDate == null) {
 			return true;
 		}
@@ -1419,7 +1418,7 @@ public class DateTimeUtils extends org.apache.commons.lang3.time.DateUtils {
 		ca.setTime(dt);
 		ca.add(Calendar.DAY_OF_MONTH, 1);
 		dt1 = ca.getTime();
-		dt1 = DateTimeUtils.getMinTime(dt1);
+		dt1 = DateUtils.getMinTime(dt1);
 		ca.setTime(dt1);
 		ca.add(Calendar.SECOND, -1);
 		dt1 = ca.getTime();
@@ -1434,7 +1433,7 @@ public class DateTimeUtils extends org.apache.commons.lang3.time.DateUtils {
 	 */
 	public static Date getMinTime(Date dt) {
 		Date dt1 = null;
-		dt1 = DateTimeUtils.getDateByStr(DateTimeUtils.formatDate(dt, FORMAT_DATE_DEFAULT.getPattern()));
+		dt1 = DateUtils.getDateByStr(DateUtils.formatDate(dt, FORMAT_DATE_DEFAULT.getPattern()));
 		return dt1;
 	}
 
@@ -1575,7 +1574,7 @@ public class DateTimeUtils extends org.apache.commons.lang3.time.DateUtils {
 	public static List<String> getLastDays(int countDay) {
 		List<String> listDate = new ArrayList<String>();
 		for (int i = 0; i < countDay; i++) {
-			listDate.add(DateTimeUtils.getReqDateTight(DateTimeUtils.getDate(-i)));
+			listDate.add(DateUtils.getReqDateTight(DateUtils.getDate(-i)));
 		}
 		return listDate;
 	}

@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>development</artifactId>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <modules>
@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <version>2.2.0-SNAPSHOT</version>
+        <version>2.2.1-SNAPSHOT</version>
     </properties>
 
     <dependencies>
@@ -71,6 +71,17 @@
                 <version>19.0.0</version>
                 <scope>compile</scope>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.10</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.wobangkj</groupId>
@@ -82,39 +93,9 @@
                 <artifactId>development-common</artifactId>
                 <version>${version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.wobangkj</groupId>
-                <artifactId>development-datetime</artifactId>
-                <version>${version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wobangkj</groupId>
-                <artifactId>development-json</artifactId>
-                <version>${version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wobangkj</groupId>
-                <artifactId>development-jwt</artifactId>
-                <version>${version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wobangkj</groupId>
-                <artifactId>development-pintin</artifactId>
-                <version>${version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wobangkj</groupId>
-                <artifactId>development-qrcode</artifactId>
-                <version>${version}</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.7</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
         <plugins>
             <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
@@ -127,22 +108,22 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>3.1.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.0.0-M4</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -170,7 +151,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>nexus-release</id>
