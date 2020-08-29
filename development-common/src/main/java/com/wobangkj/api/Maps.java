@@ -14,48 +14,59 @@ import java.util.Objects;
  */
 public abstract class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
 
-    public Maps(int initialCapacity) {
-        super(initialCapacity);
-    }
+	public Maps(int initialCapacity) {
+		super(initialCapacity);
+	}
 
-    public Maps() {
-        this(16);
-    }
+	public Maps() {
+		this(16);
+	}
 
-    public Maps(Map<? extends K, ? extends V> m) {
-        super(m);
-    }
+	public Maps(Map<? extends K, ? extends V> m) {
+		super(m);
+	}
 
-    public static <K, V> @NotNull Maps<K, V> of(K k, V v) {
-        return new Maps<K, V>(16) {{
-            put(k, v);
-        }};
-    }
+	public static <K, V> @NotNull Maps<K, V> of(K k, V v) {
+		return new Maps<K, V>(16) {{
+			put(k, v);
+		}};
+	}
 
-    public Maps<K, V> set(K k, V v) {
-        if (!Objects.isNull(v) && !Objects.isNull(k)) {
-            put(k, v);
-        }
-        return this;
-    }
+	public Maps<K, V> set(K k, V v) {
+		if (!Objects.isNull(v) && !Objects.isNull(k)) {
+			put(k, v);
+		}
+		return this;
+	}
 
-    public Maps<K, V> add(K k, V v) {
-        put(k, v);
-        return this;
-    }
+	public Maps<K, V> add(K k, V v) {
+		put(k, v);
+		return this;
+	}
 
-    public Maps<K, V> del(K k) {
-        remove(k);
-        return this;
-    }
+	public Maps<K, V> del(K k) {
+		remove(k);
+		return this;
+	}
 
-    /**
-     * 获取并删除一个键值
-     *
-     * @param k 键
-     * @return 值
-     */
-    public V rem(K k) {
-        return remove(k);
-    }
+	/**
+	 * 获取并删除一个键值
+	 *
+	 * @param k 键
+	 * @return 值
+	 */
+	@Deprecated
+	public V rem(K k) {
+		return remove(k);
+	}
+
+	/**
+	 * 获取并删除一个键值
+	 *
+	 * @param k 键
+	 * @return 值
+	 */
+	public V pop(K k) {
+		return remove(k);
+	}
 }

@@ -13,6 +13,7 @@ import java.util.Optional;
  * package: com.wobangkj.bean
  */
 @Setter
+@Deprecated
 public class ObjPageable<T> extends Pageable {
 
     private T param;

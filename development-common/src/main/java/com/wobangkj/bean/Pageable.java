@@ -15,37 +15,46 @@ import java.util.Objects;
 @Setter
 public abstract class Pageable {
 
-    private Integer size;
+	private Integer size;
 
-    private Integer page;
+	private Integer page;
 
-    /**
-     * 静态方法
-     *
-     * @param page 分页
-     * @param size 大小
-     * @return 结果
-     */
-    public static @NotNull Pageable of(int page, int size) {
-        return new Pageable() {{
-            setPage(page);
-            setSize(size);
-        }};
-    }
+	/**
+	 * 静态方法
+	 *
+	 * @return 结果
+	 */
+	public static @NotNull Pageable of() {
+		return of(1, 10);
+	}
 
-    public final @NotNull Integer getJpaPage() {
-        return getPage() - 1;
-    }
+	/**
+	 * 静态方法
+	 *
+	 * @param page 分页
+	 * @param size 大小
+	 * @return 结果
+	 */
+	public static @NotNull Pageable of(int page, int size) {
+		return new Pageable() {{
+			setPage(page);
+			setSize(size);
+		}};
+	}
 
-    public Integer getSize() {
-        return Objects.isNull(size) ? 5 : size;
-    }
+	public final @NotNull Integer getJpaPage() {
+		return getPage() - 1;
+	}
 
-    public Integer getPage() {
-        return Objects.isNull(page) ? 1 : page;
-    }
+	public Integer getSize() {
+		return Objects.isNull(size) ? 5 : size;
+	}
 
-    public final @NotNull Integer getMybatisPage() {
-        return getSize() * (getPage() - 1);
-    }
+	public Integer getPage() {
+		return Objects.isNull(page) ? 1 : page;
+	}
+
+	public final @NotNull Integer getMybatisPage() {
+		return getSize() * (getPage() - 1);
+	}
 }

@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
  * 资源丢失
  *
  * @author cliod
- * @desc exception
  * @since 19-7-16
  */
 @Getter

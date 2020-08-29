@@ -2,7 +2,7 @@ package com.wobangkj.bean;
 
 import com.wobangkj.utils.JsonUtils;
 import com.wobangkj.api.Maps;
-import com.wobangkj.api.Session;
+import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.BeanUtils;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,8 @@ import java.util.List;
  * @since 19-6-9
  */
 @Data
-public final class Page<T> implements Session {
+@Deprecated
+public final class Page<T> implements SessionSerializable {
     private static final long serialVersionUID = 7562274153136856700L;
     /**
      * 总数量

@@ -10,8 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.wobangkj.bean.Res.of;
-
 /**
  * 接口数据响应包装
  *
@@ -43,7 +41,7 @@ public class Response {
      * @return 结果
      */
     protected static @NotNull Res ok(int code, String msg) {
-        return of(code, msg);
+        return Res.ofRes(code, msg);
     }
 
     /**
@@ -115,7 +113,7 @@ public class Response {
      * @return 结果
      */
     public static @NotNull Res error() {
-        return of(500, "未知异常");
+        return Res.ofRes(500, "未知异常");
     }
 
     /**
@@ -125,14 +123,14 @@ public class Response {
      * @return 结果
      */
     public static @NotNull Res error(Throwable throwable) {
-        return of(500, "系统异常", throwable);
+        return Res.ofRes(500, "系统异常", throwable);
     }
 
     /**
      * 已处理失败返回
      */
     public static @NotNull Res fail(String msg, @NotNull ResultEnum re) {
-        return of(271, msg, re.toThrowable());
+        return Res.ofRes(271, msg, re.toThrowable());
     }
 
     /**
@@ -176,7 +174,7 @@ public class Response {
     @NotNull
     @Deprecated
     public static <T> Res ok(int code, String msg, T o) {
-        return of(code, msg, o);
+        return Res.ofRes(code, msg, o);
     }
 
     /**
@@ -185,7 +183,7 @@ public class Response {
     @NotNull
     @Deprecated
     public static Result<Object> error(@NotNull EnumMsg err) {
-        return of(500, "未知错误", err.toThrowable());
+        return Res.ofRes(500, "未知错误", err.toThrowable());
     }
 
     /**
@@ -194,7 +192,7 @@ public class Response {
     @NotNull
     @Deprecated
     public static Result<Object> fail(@NotNull ResultEnum re, @NotNull Throwable throwable) {
-        return of(re.getCode(), re.getMsg(), throwable);
+        return Res.ofRes(re.getCode(), re.getMsg(), throwable);
     }
 
     /**
@@ -203,7 +201,7 @@ public class Response {
     @NotNull
     @Deprecated
     public static Result<Object> fail(@NotNull ResultEnum re) {
-        return of(re.getCode(), re.getMsg(), re.toThrowable());
+        return Res.ofRes(re.getCode(), re.getMsg(), re.toThrowable());
     }
 
     /**
@@ -212,7 +210,7 @@ public class Response {
     @NotNull
     @Deprecated
     public static Result<Object> fail(@NotNull ResultEnum re, @NotNull EnumMsg err) {
-        return of(re.getCode(), re.getMsg(), err.toThrowable());
+        return Res.ofRes(re.getCode(), re.getMsg(), err.toThrowable());
     }
 
     @NotNull

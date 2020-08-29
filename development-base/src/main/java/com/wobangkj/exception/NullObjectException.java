@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
  * 空异常处理
  *
  * @author cliod
- * @desc exception
  * @since 19-7-18
  */
 @Getter

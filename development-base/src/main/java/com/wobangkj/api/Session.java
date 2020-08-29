@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @since 2019/11/9
  * package : com.wobangkj.api
  */
+@Deprecated
 public interface Session extends Serializable {
 
     /**
