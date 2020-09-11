@@ -44,6 +44,7 @@
             <version>3.6.1</version>
         </dependency>
 
+        <!--Json相关-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
