@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wobangkj.api.Serializer;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,11 +16,12 @@ import java.util.Map;
  *
  * @author cliod
  */
+@Deprecated
 public class JsonUtils {
 	/**
 	 * json序列化
 	 */
-	private static ObjectMapper objectMapper = Serializer.getInstance().objectMapper();
+	private static ObjectMapper objectMapper = new ObjectMapper();
 	private static GsonBuilder gsonBuilder = new GsonBuilder();
 	private static Gson gson = gsonBuilder.create();
 

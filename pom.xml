@@ -10,13 +10,13 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>development-base</module>
-        <module>development-common</module>
-        <module>development-datetime</module>
-        <module>development-jwt</module>
-        <module>development-pinyin</module>
-        <module>development-qrcode</module>
-        <module>development-db</module>
+        <module>dutils-base</module>
+        <module>dutils-common</module>
+        <module>dutils-datetime</module>
+        <module>dutils-jwt</module>
+        <module>dutils-pinyin</module>
+        <module>dutils-qrcode</module>
+        <module>dutils-db</module>
     </modules>
 
     <name>development</name>
