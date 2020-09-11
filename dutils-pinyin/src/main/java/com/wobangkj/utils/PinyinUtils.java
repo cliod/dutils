@@ -1,5 +1,6 @@
 package com.wobangkj.utils;
 
+import lombok.SneakyThrows;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -15,67 +16,71 @@ import org.jetbrains.annotations.NotNull;
  * package : com.wobangkj.git.magicked.util
  */
 public class PinyinUtils {
-    public PinyinUtils() {
-        throw new UnsupportedOperationException();
-    }
+	private static final StringBuilder pinyinStr;
+	private static final HanyuPinyinOutputFormat defaultFormat;
 
-    /**
-     * 获取字符串拼音的第一个字母
-     *
-     * @param chinese 中文字符
-     * @return 拼音首字母
-     */
-    @NotNull
-    public static String getFirstChar(String chinese) {
-        return String.valueOf(toPinyin(chinese).charAt(0));
-    }
+	static {
+		pinyinStr = new StringBuilder();
+		defaultFormat = new HanyuPinyinOutputFormat();
+		defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+		defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+	}
 
-    /**
-     * 汉字转为拼音
-     *
-     * @param chinese 中文字符
-     * @return 拼音
-     */
-    @NotNull
-    public static String toPinyin(@NotNull String chinese) {
-        StringBuilder pinyinStr = new StringBuilder();
-        char[] newChar = chinese.toCharArray();
-        HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
-        defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
-        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
-        for (char c : newChar) {
-            if (c > 128) {
-                try {
-                    pinyinStr.append(PinyinHelper.toHanyuPinyinStringArray(c, defaultFormat)[0]);
-                } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
-                }
-            } else {
-                pinyinStr.append(c);
-            }
-        }
-        return pinyinStr.toString();
-    }
+	public PinyinUtils() {
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * 汉字转为拼音并获取大写的首字母;
-     *
-     * @param chinese 中文字符
-     * @return 拼音
-     */
-    @NotNull
-    public static String getFirstCharUpper(@NotNull String chinese) {
-        return getFirstChar(chinese).toUpperCase();
-    }
+	/**
+	 * 获取字符串拼音的第一个字母
+	 *
+	 * @param chinese 中文字符
+	 * @return 拼音首字母
+	 */
+	@NotNull
+	public static String getFirstChar(String chinese) {
+		return String.valueOf(toPinyin(chinese).charAt(0));
+	}
 
-    /**
-     * 汉字转为拼音并获取大写的首字母;
-     *
-     * @param chinese 中文字符
-     * @return 拼音
-     */
-    @NotNull
-    public static String getFirstCharLower(@NotNull String chinese) {
-        return getFirstChar(chinese).toLowerCase();
-    }
+	/**
+	 * 汉字转为拼音
+	 *
+	 * @param chinese 中文字符
+	 * @return 拼音
+	 */
+	@SneakyThrows(value = BadHanyuPinyinOutputFormatCombination.class)
+	@NotNull
+	public static String toPinyin(@NotNull String chinese) {
+		char[] newChar = chinese.toCharArray();
+		for (char c : newChar) {
+			// 小于128为英文字符
+			if (c > 128) {
+				pinyinStr.append(PinyinHelper.toHanyuPinyinStringArray(c, defaultFormat)[0]);
+			} else {
+				pinyinStr.append(c);
+			}
+		}
+		return pinyinStr.toString();
+	}
+
+	/**
+	 * 汉字转为拼音并获取大写的首字母;
+	 *
+	 * @param chinese 中文字符
+	 * @return 拼音
+	 */
+	@NotNull
+	public static String getFirstCharUpper(@NotNull String chinese) {
+		return getFirstChar(chinese).toUpperCase();
+	}
+
+	/**
+	 * 汉字转为拼音并获取大写的首字母;
+	 *
+	 * @param chinese 中文字符
+	 * @return 拼音
+	 */
+	@NotNull
+	public static String getFirstCharLower(@NotNull String chinese) {
+		return getFirstChar(chinese).toLowerCase();
+	}
 }

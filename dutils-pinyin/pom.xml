@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.wobangkj</groupId>
-        <artifactId>development</artifactId>
+        <artifactId>dutils</artifactId>
         <version>4.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>development-pinyin</artifactId>
+    <artifactId>dutils-pinyin</artifactId>
 
-    <name>development-pinyin</name>
+    <name>dutils-pinyin</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 

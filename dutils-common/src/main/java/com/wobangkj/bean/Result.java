@@ -1,6 +1,5 @@
 package com.wobangkj.bean;
 
-import com.wobangkj.api.Maps;
 import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.JsonUtils;
 import org.jetbrains.annotations.NotNull;
@@ -104,6 +103,7 @@ public class Result<T> extends Maps<String, Object> implements SessionSerializab
 	}
 
 	@Override
+	@Deprecated
 	public Object rem(String k) {
 		return remove(k);
 	}

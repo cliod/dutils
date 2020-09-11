@@ -17,4 +17,12 @@ public interface EnumTextMsg extends EnumMsg {
 	default Integer getCode() {
 		return 271;
 	}
+
+	default String getMsg(String msg, Object... args) {
+		return getMsg() + " " + String.format(msg, args);
+	}
+
+	default String getMsg(Object... args) {
+		return String.format(getMsg(), args);
+	}
 }

@@ -1,14 +1,13 @@
 package com.wobangkj.api;
 
-import com.wobangkj.bean.Page;
+import com.wobangkj.bean.Maps;
+import com.wobangkj.bean.Pager;
 import com.wobangkj.bean.Res;
-import com.wobangkj.bean.Result;
 import com.wobangkj.enums.ResultEnum;
-import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.wobangkj.bean.Res.of;
+import static com.wobangkj.bean.Res.ofRes;
 
 /**
  * 接口数据响应包装
@@ -17,38 +16,21 @@ import java.util.Map;
  * @since 2019/9/14
  * package : com.wobangkj.bean
  */
-public class Response {
-    /**
-     * 工具类私有构造函数
-     */
-    public Response() {
-        throw new UnsupportedOperationException();
-    }
-
-    public static Map<String, Object> OK = ok();
-    public static Map<String, Object> ERR = err("未知异常");
-    public static Map<String, Object> DELETE = ok(200, ResultEnum.SUCCESS_DELETE.getMsg());
-    public static Maps<String, Object> UPDATE = ok(200, ResultEnum.SUCCESS_EDIT.getMsg());
-    public static Maps<String, Object> INSERT = ok(200, ResultEnum.SUCCESS_ADD.getMsg());
-
-    public static Page<Object> PAGE_NULL = Page.of();
-
-    /**
-     * 接口封装响应
-     *
-     * @param code 状态码
-     * @param msg  响应消息
-     * @return 结果
-     */
-    protected static @NotNull Res ok(int code, String msg) {
-        return Res.ofRes(code, msg);
-    }
+public interface Response {
+    public static final int showMsg = 271;
+    public static final int successMsg = 200;
+    public static final int errorMsg = 500;
+    public static Maps<String, Object> OK = ok();
+    public static Maps<String, Object> ERR = err("未知异常");
+    public static Maps<String, Object> DELETE = ofRes(successMsg, ResultEnum.SUCCESS_DELETE.getMsg());
+    public static Maps<String, Object> UPDATE = ofRes(successMsg, ResultEnum.SUCCESS_EDIT.getMsg());
+    public static Maps<String, Object> INSERT = ofRes(successMsg, ResultEnum.SUCCESS_ADD.getMsg());
 
     /**
      * 无返回(请求成功)
      */
-    public static @NotNull Maps<String, Object> ok() {
-        return ok(200, "请求成功");
+    public static @NotNull Res ok() {
+        return ofRes(successMsg, "请求成功");
     }
 
     /**
@@ -56,7 +38,7 @@ public class Response {
      *
      * @param value 对象
      */
-    public static @NotNull Maps<String, Object> ok(Object value) {
+    public static @NotNull Res ok(Object value) {
         return ok().add("data", value);
     }
 
@@ -67,8 +49,8 @@ public class Response {
      * @param value 值
      * @return 结果
      */
-    public static @NotNull Maps<String, Object> ok(String key, Object value) {
-        return ok().add("data", Maps.of(key, value));
+    public static @NotNull Res ok(String key, Object value) {
+        return ok(Maps.of(key, value));
     }
 
     /**
@@ -78,13 +60,11 @@ public class Response {
      * @param <T>   类型
      * @return 结果
      */
-    public static @NotNull <T> Maps<String, Object> ok(@NotNull Page<T> pager) {
-        return ok()
-                .add("data", pager.getList())
-                .add("pager", Maps
-                        .of("client_page", (Object) pager.getPage())
-                        .set("every_page", pager.getSize())
-                        .set("total_num", pager.getCount()));
+    public static @NotNull <T> Res ok(@NotNull Pager<T> pager) {
+        return ok(pager.getData())
+                .add("pager", of("client_page", pager.getClientPage())
+                        .set("every_page", pager.getEveryPage())
+                        .set("total_num", pager.getTotalNum()));
     }
 
     /**
@@ -93,8 +73,52 @@ public class Response {
      * @param msg 消息
      * @return 结果
      */
-    public static @NotNull Maps<String, Object> fail(String msg) {
-        return ok(271, msg);
+    public static @NotNull Res fail(String msg) {
+        return ofRes(showMsg, msg);
+    }
+
+    /**
+     * 已处理失败返回
+     */
+    public static @NotNull Res fail(String msg, @NotNull EnumMsg em) {
+        return ofRes(showMsg, msg, em.toThrowable());
+    }
+
+    /**
+     * 失败返回,携带系统错误信息
+     */
+    public static @NotNull Res fail(String msg, @NotNull Throwable throwable) {
+        return ofRes(showMsg, msg, throwable);
+    }
+
+    /**
+     * 失败返回,携带系统错误信息
+     */
+    public static @NotNull Res fail(@NotNull EnumTextMsg msg) {
+        return ofRes(msg.getCode(), msg.getMsg());
+    }
+
+    /**
+     * 失败返回,携带系统错误信息
+     */
+    public static @NotNull Res fail(@NotNull EnumTextMsg msg, @NotNull EnumMsg em) {
+        return ofRes(msg.getCode(), msg.getMsg(), em.toThrowable());
+    }
+
+    /**
+     * 失败返回,携带系统错误信息
+     */
+    public static @NotNull Res fail(@NotNull EnumTextMsg msg, @NotNull Throwable throwable) {
+        return ofRes(msg.getCode(), msg.getMsg(), throwable);
+    }
+
+    /**
+     * 未知异常
+     *
+     * @return 结果
+     */
+    public static @NotNull Res err() {
+        return ofRes(errorMsg, "未知异常");
     }
 
     /**
@@ -103,17 +127,8 @@ public class Response {
      * @param msg 500消息
      * @return 结果
      */
-    public static @NotNull Maps<String, Object> err(String msg) {
-        return ok(500, msg);
-    }
-
-    /**
-     * 未知异常
-     *
-     * @return 结果
-     */
-    public static @NotNull Res error() {
-        return Res.ofRes(500, "未知异常");
+    public static @NotNull Res err(String msg) {
+        return ofRes(errorMsg, msg);
     }
 
     /**
@@ -122,149 +137,56 @@ public class Response {
      * @param throwable 异常
      * @return 结果
      */
-    public static @NotNull Res error(Throwable throwable) {
-        return Res.ofRes(500, "系统异常", throwable);
-    }
-
-    /**
-     * 已处理失败返回
-     */
-    public static @NotNull Res fail(String msg, @NotNull ResultEnum re) {
-        return Res.ofRes(271, msg, re.toThrowable());
-    }
-
-    /**
-     * 多自定义字段, value 返回
-     */
-    @SafeVarargs
-    @Deprecated
-    @NotNull
-    public static <V> Maps<String, Object> ok(@NotNull String[] valueNames, @NotNull V... values) {
-        int len = Math.min(valueNames.length, values.length);
-        if (len == 0) {
-            return ok(new HashMap<>(0));
-        } else {
-            Map<String, Object> map = new HashMap<>(len * 4 / 3 + 1);
-            for (int i = 0; i < len; i++) {
-                map.put(valueNames[i], values[i]);
-            }
-            return ok(map);
-        }
-    }
-
-    @SafeVarargs
-    @Deprecated
-    @NotNull
-    public static <V> Maps<String, Object> ok(@NotNull String titles, V... values) {
-        return ok(titles.split(","), values);
+    public static @NotNull Res err(Throwable throwable) {
+        return ofRes(errorMsg, "系统异常", throwable);
     }
 
     /**
      * 非默认返回信息返回
      */
-    @NotNull
     @Deprecated
-    public static <T> Res ok(@NotNull EnumMsg re, T o) {
-        return ok(re.getCode(), re.getMsg(), o);
+    public static @NotNull Res ok(@NotNull EnumMsg msg, Object o) {
+        return ok(msg.getCode(), msg.getMsg(), o);
     }
 
     /**
      * 其他信息返回
      */
-    @NotNull
     @Deprecated
-    public static <T> Res ok(int code, String msg, T o) {
-        return Res.ofRes(code, msg, o);
-    }
-
-    /**
-     * 位置异常,携带信息
-     */
-    @NotNull
-    @Deprecated
-    public static Result<Object> error(@NotNull EnumMsg err) {
-        return Res.ofRes(500, "未知错误", err.toThrowable());
-    }
-
-    /**
-     * 失败返回,携带系统错误信息
-     */
-    @NotNull
-    @Deprecated
-    public static Result<Object> fail(@NotNull ResultEnum re, @NotNull Throwable throwable) {
-        return Res.ofRes(re.getCode(), re.getMsg(), throwable);
+    public static @NotNull Res ok(int code, String msg, Object o) {
+        return ofRes(code, msg, o);
     }
 
     /**
      * 失败返回
      */
-    @NotNull
     @Deprecated
-    public static Result<Object> fail(@NotNull ResultEnum re) {
-        return Res.ofRes(re.getCode(), re.getMsg(), re.toThrowable());
+    public static @NotNull Res fail(@NotNull EnumMsg msg) {
+        return ofRes(msg.getCode(), msg.getMsg(), msg.toThrowable());
+    }
+
+    /**
+     * 失败返回,携带系统错误信息
+     */
+    @Deprecated
+    public static @NotNull Res fail(@NotNull EnumMsg msg, @NotNull Throwable throwable) {
+        return ofRes(msg.getCode(), msg.getMsg(), throwable);
     }
 
     /**
      * 已处理失败返回
      */
-    @NotNull
     @Deprecated
-    public static Result<Object> fail(@NotNull ResultEnum re, @NotNull EnumMsg err) {
-        return Res.ofRes(re.getCode(), re.getMsg(), err.toThrowable());
-    }
-
-    @NotNull
-    @Deprecated
-    public static Builder build(String title, Object data) {
-        Builder builder = Builder.build();
-        builder.put(title, data);
-        return builder;
-    }
-
-    @NotNull
-    @Deprecated
-    public static Builder build() {
-        return Builder.build();
+    public static @NotNull Res fail(@NotNull EnumMsg msg, @NotNull EnumMsg em) {
+        return ofRes(msg.getCode(), msg.getMsg(), em.toThrowable());
     }
 
     /**
-     * build模式
+     * 位置异常,携带信息
      */
-    @Data
     @Deprecated
-    public static class Builder {
-        private Map<String, Object> data;
-
-        Builder() {
-            this.data = new HashMap<>(16);
-        }
-
-        @Deprecated
-        static @NotNull Builder build() {
-            return new Builder();
-        }
-
-        @Deprecated
-        public @NotNull Builder put(String title, Object data) {
-            this.data.put(title, data);
-            return this;
-        }
-
-        @Deprecated
-        public @NotNull Builder add(String title, Object data) {
-            this.data.put(title, data);
-            return this;
-        }
-
-        @NotNull
-        @Deprecated
-        public Maps<String, Object> ok() {
-            return Response.ok(this.data);
-        }
-
-        @Deprecated
-        public void set(Map<String, Object> data) {
-            this.data = data;
-        }
+    public static @NotNull Res err(@NotNull EnumMsg err) {
+        return ofRes(errorMsg, "未知错误", err.toThrowable());
     }
+
 }

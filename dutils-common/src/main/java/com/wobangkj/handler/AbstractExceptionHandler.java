@@ -1,6 +1,6 @@
 package com.wobangkj.handler;
 
-import com.wobangkj.bean.Result;
+import com.wobangkj.bean.Res;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,5 +22,5 @@ public interface AbstractExceptionHandler {
      * @param e        异常
      * @return 统一结果
      */
-    Result<Object> handler(HttpServletRequest request, HttpServletResponse response, Object handler, Throwable e);
+    Res handler(HttpServletRequest request, HttpServletResponse response, Object handler, Throwable e);
 }

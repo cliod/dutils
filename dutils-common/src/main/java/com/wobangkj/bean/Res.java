@@ -14,7 +14,6 @@ import java.util.Objects;
  * @author cliod
  * @since 2019/5/20 13:20
  */
-@SuppressWarnings("all")
 public class Res extends Result<Object> implements SessionSerializable {
 
 	private static final long serialVersionUID = -1884640212713045469L;
@@ -81,6 +80,11 @@ public class Res extends Result<Object> implements SessionSerializable {
 		result.setMsg(msg);
 		result.setErr(o.getMessage());
 		return result;
+	}
+
+	public Res addAll(Map<String, Object> map) {
+		putAll(map);
+		return this;
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.wobangkj.utils;
 
-import com.wobangkj.api.Format;
+import com.wobangkj.enums.Format;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
@@ -11,7 +11,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.wobangkj.api.Format.*;
+import static com.wobangkj.enums.Format.*;
 
 /**
  * 日期工具

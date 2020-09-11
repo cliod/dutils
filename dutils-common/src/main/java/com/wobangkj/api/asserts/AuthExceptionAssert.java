@@ -13,7 +13,7 @@ import java.text.MessageFormat;
  * @since 4/28/20 11:57 AM
  * package: com.wobangkj.api
  */
-public interface AuthExceptionAssert extends EnumMsg, Assert {
+public interface AuthExceptionAssert extends EnumMsg, ExceptionAssert {
 
     @Override
     default AppException newException(Object... args) {

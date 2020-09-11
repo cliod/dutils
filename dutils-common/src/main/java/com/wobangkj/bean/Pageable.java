@@ -13,10 +13,9 @@ import java.util.Objects;
  * package: com.wobangkj.bean
  */
 @Setter
-public abstract class Pageable {
+public abstract class Pageable implements com.wobangkj.api.Pageable {
 
 	private Integer size;
-
 	private Integer page;
 
 	/**
@@ -46,6 +45,18 @@ public abstract class Pageable {
 		return getPage() - 1;
 	}
 
+	public final @NotNull Integer getMybatisPage() {
+		return getSize() * (getPage() - 1);
+	}
+
+	public final @NotNull Integer getOffset() {
+		return getSize() * (getPage() - 1);
+	}
+
+	public final @NotNull Integer getLimit() {
+		return getSize();
+	}
+
 	public Integer getSize() {
 		return Objects.isNull(size) ? 5 : size;
 	}
@@ -54,7 +65,4 @@ public abstract class Pageable {
 		return Objects.isNull(page) ? 1 : page;
 	}
 
-	public final @NotNull Integer getMybatisPage() {
-		return getSize() * (getPage() - 1);
-	}
 }

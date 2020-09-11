@@ -1,7 +1,6 @@
 package com.wobangkj.bean;
 
 import com.wobangkj.utils.JsonUtils;
-import com.wobangkj.api.Maps;
 import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.BeanUtils;
 import lombok.Data;
