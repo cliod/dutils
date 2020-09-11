@@ -14,6 +14,9 @@ public interface ValueWrapper<T> extends SessionSerializable {
 
 	T value();
 
+	/**
+	 * 默认实现
+	 */
 	class SimpleValueWrapper implements ValueWrapper<Object> {
 		private final Object value;
 

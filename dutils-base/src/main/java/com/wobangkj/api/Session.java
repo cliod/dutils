@@ -1,5 +1,7 @@
 package com.wobangkj.api;
 
+import com.wobangkj.utils.JsonUtils;
+
 import java.io.Serializable;
 
 /**
@@ -12,29 +14,29 @@ import java.io.Serializable;
 @Deprecated
 public interface Session extends Serializable {
 
-    /**
-     * toString 方法,一定的重写toString()方法
-     *
-     * @return json
-     */
-    @Override
-    String toString();
+	/**
+	 * toString 方法,一定的重写toString()方法
+	 *
+	 * @return json
+	 */
+	@Override
+	String toString();
 
-    /**
-     * 转成对象
-     *
-     * @return obj
-     */
-    default Object toObject() {
-        return this;
-    }
+	/**
+	 * 转成对象
+	 *
+	 * @return obj
+	 */
+	default Object toObject() {
+		return this;
+	}
 
-    /**
-     * 对象转成json
-     *
-     * @return json
-     */
-    default String toJson() {
-        throw new UnsupportedOperationException();
-    }
+	/**
+	 * 对象转成json
+	 *
+	 * @return json
+	 */
+	default String toJson() {
+		return JsonUtils.toJson(this);
+	}
 }

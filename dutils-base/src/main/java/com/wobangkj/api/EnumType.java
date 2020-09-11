@@ -57,17 +57,4 @@ public interface EnumType extends SessionSerializable {
 		map.put("desc", this.getDesc());
 		return map;
 	}
-
-	/**
-	 * 序列化,转成Json
-	 *
-	 * @return Json
-	 */
-	@Override
-	default String toJson() {
-		return "{" +
-				"code: " + this.getCode() +
-				", desc: \"" + this.getDesc() + '\"' +
-				'}';
-	}
 }

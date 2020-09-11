@@ -59,6 +59,7 @@
             <optional>false</optional>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -70,21 +71,26 @@
             <version>1.18.12</version>
             <optional>true</optional>
         </dependency>
+
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>[4.4,)</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+            <optional>false</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>[3.6.1,)</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>[3.9,)</version>
-        </dependency>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -100,65 +106,7 @@
             <artifactId>joda-time</artifactId>
             <version>2.10.4</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
-            <scope>provided</scope>
-            <optional>false</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <!--二维码-->
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>core</artifactId>
-            <version>3.3.3</version>
-            <optional>true</optional>
-        </dependency>
-        <!--中文文字转拼音-->
-        <dependency>
-            <groupId>com.belerweb</groupId>
-            <artifactId>pinyin4j</artifactId>
-            <version>2.5.1</version>
-            <optional>true</optional>
-        </dependency>
-        <!-- jwt -->
-        <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>3.8.2</version>
-            <optional>true</optional>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -171,11 +119,61 @@
             <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-base</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-captcha</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-datetime</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-db</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-excel</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-pinyin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-qrcode</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-sms</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -197,16 +195,6 @@
                 <version>2.7</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.wobangkj</groupId>
-                <artifactId>dutils-base</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wobangkj</groupId>
-                <artifactId>dutils-common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <!--通用工具包-->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -397,6 +385,24 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>3.0.0</version>
                 </plugin>
+                <!--配置生成源码包-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <configuration>
+                        <attach>true</attach>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>nexus-release</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <!--配置生成Javadoc包-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -407,24 +413,6 @@
                             <phase>package</phase>
                             <goals>
                                 <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <sourcepath>target/generated-sources/delombok</sourcepath>
-                    </configuration>
-                </plugin>
-                <!--配置生成源码包-->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.2.1</version>
-                    <executions>
-                        <execution>
-                            <id>nexus-release</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar-no-fork</goal>
                             </goals>
                         </execution>
                     </executions>
