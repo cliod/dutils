@@ -67,6 +67,12 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 	/**
 	 * 接口未找到异常
 	 * <p>课接收参数: HttpServletRequest request, HttpServletResponse response</p>
+	 * <p>
+	 * 这个异常的捕抓需要配置:
+	 * <code>
+	 * spring.mvc.throw-exception-if-no-handler-found=true
+	 * spring.resources.add-mappings=false
+	 * </code>
 	 *
 	 * @param e 异常
 	 * @return 结果消息
