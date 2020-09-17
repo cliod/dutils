@@ -208,5 +208,5 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 	 */
 	@Override
 	@ExceptionHandler(Throwable.class)
-	public abstract Res handler(Throwable e, HttpServletRequest request, HttpServletResponse response);
+	public abstract Object handler(Throwable e, HttpServletRequest request, HttpServletResponse response);
 }

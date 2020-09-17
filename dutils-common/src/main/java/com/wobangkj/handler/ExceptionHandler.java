@@ -1,7 +1,5 @@
 package com.wobangkj.handler;
 
-import com.wobangkj.bean.Res;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,5 +18,5 @@ public interface ExceptionHandler {
 	 * @param e        异常
 	 * @return 结果消息
 	 */
-	Res handler(Throwable e, HttpServletRequest request, HttpServletResponse response);
+	Object handler(Throwable e, HttpServletRequest request, HttpServletResponse response);
 }
