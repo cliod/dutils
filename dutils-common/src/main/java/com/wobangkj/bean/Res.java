@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author cliod
  * @since 2019/5/20 13:20
  */
-public class Res extends Result<Object> implements SessionSerializable {
+public class Res extends Maps<String, Object> implements SessionSerializable {
 
 	private static final long serialVersionUID = -1884640212713045469L;
 
@@ -82,6 +82,15 @@ public class Res extends Result<Object> implements SessionSerializable {
 		return result;
 	}
 
+	/**
+	 * 空返回
+	 *
+	 * @return 空对象
+	 */
+	public static @NotNull Res empty() {
+		return new Res();
+	}
+
 	public Res addAll(Map<String, Object> map) {
 		putAll(map);
 		return this;
@@ -140,6 +149,7 @@ public class Res extends Result<Object> implements SessionSerializable {
 		return this.toJson();
 	}
 
+	@Override
 	public final @NotNull Object readResolve() throws Exception {
 		return this.getClass().getConstructor().newInstance();
 	}

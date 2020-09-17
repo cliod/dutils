@@ -37,6 +37,7 @@ public interface Coordinate<X, Y, Z> extends Dimension {
 	 *
 	 * @return 维度
 	 */
+	@Override
 	default int getDimension() {
 		return 2;
 	}

@@ -89,7 +89,7 @@ public class Result<T> extends Maps<String, Object> implements SessionSerializab
 	}
 
 	@Override
-	public Maps<String, Object> set(String k, Object v) {
+	public Result<T> set(String k, Object v) {
 		if (!Objects.isNull(v) && !Objects.isNull(k)) {
 			put(k, v);
 		}
@@ -123,6 +123,7 @@ public class Result<T> extends Maps<String, Object> implements SessionSerializab
 		return this.toJson();
 	}
 
+	@Override
 	public @NotNull Object readResolve() throws Exception {
 		return this.getClass().getConstructor().newInstance();
 	}

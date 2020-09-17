@@ -12,5 +12,6 @@ public interface DateFormat extends Format<String> {
      *
      * @return 样式
      */
+    @Override
     String getPattern();
 }

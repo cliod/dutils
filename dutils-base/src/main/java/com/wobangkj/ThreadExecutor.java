@@ -2,7 +2,6 @@ package com.wobangkj;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Timer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class ThreadExecutor {
 
-	public static final Timer delay;
+	public static final ScheduledExecutorService delay;
 	public static final ThreadPoolExecutor delete;
 	public static final ThreadPoolExecutor pay;
 	public static final ThreadPoolExecutor fork;
@@ -34,7 +33,7 @@ public final class ThreadExecutor {
 				new LinkedBlockingDeque<>(), new WorkThreadFactory("程序子线程处理"), new ThreadPoolExecutor.DiscardPolicy());
 		timer = new ScheduledThreadPoolExecutor(corePollSize, new WorkThreadFactory("自动任务"), new ThreadPoolExecutor.DiscardPolicy());
 		timing = new ScheduledThreadPoolExecutor(corePollSize, new WorkThreadFactory("缓存任务"), new ThreadPoolExecutor.DiscardPolicy());
-		delay = new Timer("延时任务");
+		delay = new ScheduledThreadPoolExecutor(corePollSize, new WorkThreadFactory("延迟任务"));
 	}
 
 	/**

@@ -280,11 +280,12 @@ public class CaptchaUtils {
 		// 绘制干扰线-粗线/贯穿线(两条)
 		drawCrudeLine(g, width, height);
 		// 绘制干扰线-细线(千分之一)
-		for (int i = 0, len = (int) (0.001 * width * height); i < len; i++) {
+		double thick = 0.001;
+		for (int i = 0, len = (int) (thick * width * height); i < len; i++) {
 			drawThinLine(g, width, height);
 		}
 		// 添加噪点(千分之五)
-		for (int i = 0, len = (int) (0.005 * width * height); i < len; i++) {
+		for (int i = 0, len = (int) (thick * 5 * width * height); i < len; i++) {
 			image.setRGB(RANDOM.nextInt(width), RANDOM.nextInt(height), RANDOM.nextInt(255));
 		}
 		// 绘制字符

@@ -23,8 +23,10 @@ import java.util.concurrent.TimeUnit;
  */
 public interface Cacheables extends Cache {
 
+	@Override
 	ValueWrapper get(@NotNull Object kry);
 
+	@Override
 	default void put(@NotNull Object key, Object value) {
 		this.set(key, value);
 	}
@@ -39,6 +41,7 @@ public interface Cacheables extends Cache {
 
 	void set(Object key, Object value, Timing timing);
 
+	@Override
 	@SneakyThrows
 	@SuppressWarnings("unchecked")
 	default <T> T get(@NotNull Object key, @NotNull Callable<T> valueLoader) {
@@ -48,6 +51,7 @@ public interface Cacheables extends Cache {
 		return (T) obj.get();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	default <T> T get(@NotNull Object key, @Nullable Class<T> clazz) {
 		ValueWrapper wrapper = get(key);
@@ -62,18 +66,44 @@ public interface Cacheables extends Cache {
 		return Optional.ofNullable(get(key)).orElse(new SimpleValueWrapper(null)).get();
 	}
 
+	/**
+	 * 删除
+	 *
+	 * @param key 键
+	 */
 	void del(Object key);
 
+	/**
+	 * 删除
+	 *
+	 * @param key 键
+	 */
+	@Override
 	default void evict(@NotNull Object key) {
 		this.del(key);
 	}
 
+	/**
+	 * 清空
+	 */
+	@Override
 	void clear();
 
+	/**
+	 * Return the underlying native cache provider.
+	 */
+	@Override
 	@NotNull Object getNativeCache();
 
+	/**
+	 * Return the cache name.
+	 */
+	@Override
 	@NotNull String getName();
 
+	/**
+	 * 时间单位
+	 */
 	@Getter
 	@Setter
 	class Timing {

@@ -78,4 +78,8 @@ public abstract class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
 	public V pop(K k) {
 		return remove(k);
 	}
+
+	public @NotNull Object readResolve() throws Exception {
+		return this.getClass().getConstructor().newInstance();
+	}
 }

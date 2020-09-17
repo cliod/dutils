@@ -19,6 +19,7 @@ public interface Format<T> extends ValueWrapper<T> {
 	 *
 	 * @return 值
 	 */
+	@Override
 	default T value() {
 		return getPattern();
 	}

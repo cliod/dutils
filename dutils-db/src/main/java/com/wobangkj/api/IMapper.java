@@ -19,6 +19,7 @@ public interface IMapper<T> extends IDao<T>, Mapper<T> {
 	 * @param id 主键
 	 * @return 实例对象
 	 */
+	@Override
 	default T queryById(Long id) {
 		return this.selectByPrimaryKey(id);
 	}
@@ -29,6 +30,7 @@ public interface IMapper<T> extends IDao<T>, Mapper<T> {
 	 * @param t 实例对象
 	 * @return 对象列表
 	 */
+	@Override
 	default T queryOne(T t) {
 		return this.selectOne(t);
 	}
@@ -39,6 +41,7 @@ public interface IMapper<T> extends IDao<T>, Mapper<T> {
 	 * @param t 实例对象
 	 * @return 对象列表
 	 */
+	@Override
 	default List<T> queryAllByEntity(T t) {
 		return this.select(t);
 	}
@@ -46,9 +49,12 @@ public interface IMapper<T> extends IDao<T>, Mapper<T> {
 	/**
 	 * 通过实体作为筛选条件查询
 	 *
-	 * @param t 实例对象
+	 * @param t      实例对象
+	 * @param limit  分页
+	 * @param offset 分页
 	 * @return 对象列表
 	 */
+	@Override
 	default List<T> queryAllByConditionLimit(T t, int offset, int limit) {
 		return this.selectByRowBounds(t, new RowBounds(offset, limit));
 	}
@@ -59,6 +65,7 @@ public interface IMapper<T> extends IDao<T>, Mapper<T> {
 	 * @param t 实例对象
 	 * @return 影响行数
 	 */
+	@Override
 	default int update(T t) {
 		return this.updateByPrimaryKeySelective(t);
 	}
@@ -79,6 +86,7 @@ public interface IMapper<T> extends IDao<T>, Mapper<T> {
 	 * @param t 对象
 	 * @return 行数
 	 */
+	@Override
 	default long count(T t) {
 		return this.selectCount(t);
 	}

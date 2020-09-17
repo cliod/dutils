@@ -81,10 +81,13 @@ public class ReqUtils {
 		String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (StringUtils.isBlank(token)) {
 			Cookie[] cookies = request.getCookies();
-			if (!ArrayUtils.isEmpty(cookies))
-				for (Cookie cookie : cookies)
-					if (cookie.getName().equals("token"))
+			if (!ArrayUtils.isEmpty(cookies)) {
+				for (Cookie cookie : cookies) {
+					if ("token".equals(cookie.getName())) {
 						token = cookie.getValue();
+					}
+				}
+			}
 		}
 		if (StringUtils.isBlank(token)) {
 			token = request.getHeader("token");

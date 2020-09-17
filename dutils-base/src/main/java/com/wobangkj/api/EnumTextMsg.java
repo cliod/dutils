@@ -14,6 +14,7 @@ public interface EnumTextMsg extends EnumMsg {
 	 *
 	 * @return code
 	 */
+	@Override
 	default Integer getCode() {
 		return 271;
 	}

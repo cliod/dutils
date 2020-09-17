@@ -57,10 +57,12 @@ public abstract class Pageable implements com.wobangkj.api.Pageable {
 		return getSize();
 	}
 
+	@Override
 	public Integer getSize() {
 		return Objects.isNull(size) ? 5 : size;
 	}
 
+	@Override
 	public Integer getPage() {
 		return Objects.isNull(page) ? 1 : page;
 	}
