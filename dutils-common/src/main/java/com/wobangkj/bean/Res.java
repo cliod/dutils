@@ -37,6 +37,16 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	}
 
 	/**
+	 * 从原有的对象copy
+	 *
+	 * @param map map
+	 * @return res
+	 */
+	public static @NotNull Res from(Map<String, Object> map) {
+		return new Res(map);
+	}
+
+	/**
 	 * 代替构造方法
 	 *
 	 * @param code 状态码
@@ -137,7 +147,6 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	public @NotNull Res toObject() {
 		return this;
 	}
-
 
 	/**
 	 * 转成字符串

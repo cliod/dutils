@@ -34,6 +34,11 @@ public abstract class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
 		}};
 	}
 
+	public static <K, V> @NotNull Maps<K, V> of(Map<K, V> map) {
+		return new Maps<K, V>(map) {
+		};
+	}
+
 	public static @NotNull Maps<String, Object> to(String k, Object v) {
 		Assert.notNull(k, "key对象不能为空");
 		return new Maps<String, Object>(16) {{
