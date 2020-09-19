@@ -87,4 +87,15 @@ public abstract class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
 	public @NotNull Object readResolve() throws Exception {
 		return this.getClass().getConstructor().newInstance();
 	}
+
+	/**
+	 * 克隆
+	 *
+	 * @return a shallow copy of this map
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public Maps<K, V> clone() {
+		return Maps.of((Map<K, V>) super.clone());
+	}
 }

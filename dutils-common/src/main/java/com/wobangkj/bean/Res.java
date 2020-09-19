@@ -18,6 +18,8 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 
 	private static final long serialVersionUID = -1884640212713045469L;
 
+	protected static Res EMPTY = new Res(4);
+
 	public Res(int initialCapacity) {
 		super(initialCapacity);
 	}
@@ -31,7 +33,7 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	}
 
 	public static @NotNull Res of(String k, Object v) {
-		Res map = new Res();
+		Res map = new Res(4);
 		map.put(k, v);
 		return map;
 	}
@@ -54,7 +56,7 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @return result
 	 */
 	public static @NotNull Res ofRes(int code, String msg) {
-		Res result = new Res();
+		Res result = new Res(4);
 		result.setCode(code);
 		result.setMsg(msg);
 		return result;
@@ -69,7 +71,7 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @return result
 	 */
 	public static @NotNull Res ofRes(int code, String msg, Object o) {
-		Res result = new Res();
+		Res result = new Res(4);
 		result.setCode(code);
 		result.setMsg(msg);
 		result.setData(o);
@@ -85,7 +87,7 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @return result
 	 */
 	public static @NotNull Res ofRes(int code, String msg, @NotNull Throwable o) {
-		Res result = new Res();
+		Res result = new Res(4);
 		result.setCode(code);
 		result.setMsg(msg);
 		result.setErr(o.getMessage());
@@ -98,7 +100,7 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @return 空对象
 	 */
 	public static @NotNull Res empty() {
-		return new Res();
+		return new Res(4);
 	}
 
 	public Res addAll(Map<String, Object> map) {
@@ -156,6 +158,16 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	@Override
 	public final @NotNull String toString() {
 		return this.toJson();
+	}
+
+	/**
+	 * 克隆
+	 *
+	 * @return a shallow copy of this map
+	 */
+	@Override
+	public Res clone() {
+		return Res.from(super.clone());
 	}
 
 	@Override

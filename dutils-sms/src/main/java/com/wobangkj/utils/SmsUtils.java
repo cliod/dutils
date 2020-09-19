@@ -2,10 +2,10 @@ package com.wobangkj.utils;
 
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.profile.DefaultProfile;
 import com.wobangkj.api.Sms;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 短信发送工具类
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class SmsUtils {
 
-	private static Sms sms = Sms.getInstance(DefaultProfile.getProfile());
+	private static Sms sms = null;
 
 	private SmsUtils() {
 	}
@@ -63,6 +63,9 @@ public class SmsUtils {
 	 * @throws ClientException 客户端异常
 	 */
 	public static AcsResponse send(String templateCode, String templateParamJson, String... phoneNumber) throws ClientException {
+		if (Objects.isNull(sms)) {
+			throw new ClientException("实例未初始化");
+		}
 		return sms.send(templateCode, templateParamJson, phoneNumber);
 	}
 }

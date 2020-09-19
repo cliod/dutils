@@ -16,6 +16,9 @@ import java.util.List;
  */
 @Data
 public final class Pager<T> implements SessionSerializable {
+
+	public static Pager<?> EMPTY = Pager.of(0, 1, 10, Collections.emptyList());
+
 	private static final long serialVersionUID = 7562274153136856700L;
 	/**
 	 * 总数量
@@ -84,6 +87,17 @@ public final class Pager<T> implements SessionSerializable {
 
 	public static <T> @NotNull Pager<T> of() {
 		return Pager.of(0, Pageable.of(), Collections.emptyList());
+	}
+
+	/**
+	 * 返回空数组
+	 *
+	 * @param <T> 泛型
+	 * @return 结果
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> @NotNull Pager<T> empty() {
+		return (Pager<T>) EMPTY;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package com.wobangkj.bean;
 
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -13,7 +14,12 @@ import java.util.Objects;
  * package: com.wobangkj.bean
  */
 @Setter
-public abstract class Pageable implements com.wobangkj.api.Pageable {
+public abstract class Pageable implements com.wobangkj.api.Pageable, Cloneable {
+
+	public static Pageable DEFAULT = new Pageable() {{
+		setPage(1);
+		setSize(10);
+	}};
 
 	private Integer size;
 	private Integer page;
@@ -24,7 +30,7 @@ public abstract class Pageable implements com.wobangkj.api.Pageable {
 	 * @return 结果
 	 */
 	public static @NotNull Pageable of() {
-		return of(1, 10);
+		return DEFAULT;
 	}
 
 	/**
@@ -34,11 +40,12 @@ public abstract class Pageable implements com.wobangkj.api.Pageable {
 	 * @param size 大小
 	 * @return 结果
 	 */
+	@SneakyThrows
 	public static @NotNull Pageable of(int page, int size) {
-		return new Pageable() {{
-			setPage(page);
-			setSize(size);
-		}};
+		Pageable pageable = DEFAULT.clone();
+		pageable.setPage(page);
+		pageable.setSize(size);
+		return pageable;
 	}
 
 	public final @NotNull Integer getJpaPage() {
@@ -59,7 +66,7 @@ public abstract class Pageable implements com.wobangkj.api.Pageable {
 
 	@Override
 	public Integer getSize() {
-		return Objects.isNull(size) ? 5 : size;
+		return Objects.isNull(size) ? 10 : size;
 	}
 
 	@Override
@@ -67,4 +74,13 @@ public abstract class Pageable implements com.wobangkj.api.Pageable {
 		return Objects.isNull(page) ? 1 : page;
 	}
 
+	/**
+	 * 克隆
+	 *
+	 * @return 结果
+	 */
+	@Override
+	protected Pageable clone() throws CloneNotSupportedException {
+		return (Pageable) super.clone();
+	}
 }
