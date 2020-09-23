@@ -2,6 +2,8 @@ package com.wobangkj.api;
 
 /**
  * 维度
+ *
+ * @author cliod
  */
 public interface Dimension extends SessionSerializable {
 	/**

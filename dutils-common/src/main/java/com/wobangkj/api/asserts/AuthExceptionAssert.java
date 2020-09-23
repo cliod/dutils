@@ -14,21 +14,28 @@ import java.text.MessageFormat;
  * package: com.wobangkj.api
  */
 public interface AuthExceptionAssert extends EnumMsg, ExceptionAssert {
+	/**
+	 * 新建异常
+	 *
+	 * @param args 参数
+	 * @return 异常
+	 */
+	@Override
+	default AppException newException(Object... args) {
+		String msg = MessageFormat.format(this.getMsg(), args);
+		return new AuthorizeException(this, msg);
+	}
 
-    @Override
-    default AppException newException(Object... args) {
-        String msg = MessageFormat.format(this.getMsg(), args);
-        return new AuthorizeException(this, msg);
-    }
-
-    @Override
-    default AppException newException(Throwable t, Object... args) {
-        String msg = MessageFormat.format(this.getMsg(), args);
-        return new AuthorizeException(this, t, msg);
-    }
-
-    @Override
-    default Integer getCode() {
-        return 271;
-    }
+	/**
+	 * 新建异常
+	 *
+	 * @param t    接收的异常
+	 * @param args 参数
+	 * @return 异常
+	 */
+	@Override
+	default AppException newException(Throwable t, Object... args) {
+		String msg = MessageFormat.format(this.getMsg(), args);
+		return new AuthorizeException(this, t, msg);
+	}
 }

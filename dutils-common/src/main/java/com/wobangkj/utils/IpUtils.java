@@ -15,20 +15,25 @@ import java.util.regex.Pattern;
  */
 public class IpUtils {
 
-    private static final String IS255 = "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
-    private static final Pattern PATTERN = Pattern.compile("^(?:" + IS255 + "\\.){3}" + IS255 + "$");
+	private static final String IS255 = "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+	private static final Pattern PATTERN = Pattern.compile("^(?:" + IS255 + "\\.){3}" + IS255 + "$");
 
-    public static @NotNull String longToIpV4(long longIp) {
-        int octet3 = (int) ((longIp >> 24) % 256);
-        int octet2 = (int) ((longIp >> 16) % 256);
-        int octet1 = (int) ((longIp >> 8) % 256);
-        int octet0 = (int) ((longIp) % 256);
-        return octet3 + "." + octet2 + "." + octet1 + "." + octet0;
-    }
+	public static @NotNull String longToIpV4(long longIp) {
+		return toString(longIp);
+	}
 
-    public static long ipV4ToLong(@NotNull String ip) {
-        String[] octets = ip.split("\\.");
-        return (Long.parseLong(octets[0]) << 24) + (Integer.parseInt(octets[1]) << 16)
+	@NotNull
+	public static String toString(long longIp) {
+		int octet3 = (int) ((longIp >> 24) % 256);
+		int octet2 = (int) ((longIp >> 16) % 256);
+		int octet1 = (int) ((longIp >> 8) % 256);
+		int octet0 = (int) ((longIp) % 256);
+		return octet3 + "." + octet2 + "." + octet1 + "." + octet0;
+	}
+
+	public static long ipV4ToLong(@NotNull String ip) {
+		String[] octets = ip.split("\\.");
+		return (Long.parseLong(octets[0]) << 24) + (Integer.parseInt(octets[1]) << 16)
                 + (Integer.parseInt(octets[2]) << 8) + Integer.parseInt(octets[3]);
     }
 
@@ -44,19 +49,20 @@ public class IpUtils {
     }
 
     public static String getIpFromRequest(@NotNull HttpServletRequest request) {
-        String ip;
-        boolean found = false;
-        if ((ip = request.getHeader("x-forwarded-for")) != null) {
-            StringTokenizer tokenizer = new StringTokenizer(ip, ",");
-            while (tokenizer.hasMoreTokens()) {
-                ip = tokenizer.nextToken().trim();
-                if (isIPv4Valid(ip) && !isIPv4Private(ip)) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-        if (!found) {
+	    String ip;
+	    boolean found = false;
+	    String xff = "x-forwarded-for";
+	    if ((ip = request.getHeader(xff)) != null) {
+		    StringTokenizer tokenizer = new StringTokenizer(ip, ",");
+		    while (tokenizer.hasMoreTokens()) {
+			    ip = tokenizer.nextToken().trim();
+			    if (isIPv4Valid(ip) && !isIPv4Private(ip)) {
+				    found = true;
+				    break;
+			    }
+		    }
+	    }
+	    if (!found) {
             ip = request.getRemoteAddr();
         }
         return ip;

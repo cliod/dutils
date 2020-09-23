@@ -48,23 +48,31 @@ public class ReqUtils {
 			paramValues = entry.getValue();
 			if (paramValues.length > 0) {
 				// 有参数值
-				if (paramValues.length == 1) {  // 一个参数值
+				// 一个参数值
+				if (paramValues.length == 1) {
 					String paramValue = paramValues[0];
 					// 参数值是否为空
-					if (paramValue.length() > 0)
-						// 参数不为空
+					// 参数不为空
+					if (paramValue.length() > 0) {
 						map.put(paramName, paramValue);
-					else
+					} else
 						// 参数为空
-						if (!rmEmpty) map.put(paramName, null);
+						if (!rmEmpty) {
+							map.put(paramName, null);
+						}
 				} else {  //多个参数值
 					// 接收数组
-					if (accArr) map.put(paramName, paramValues);
-					else map.put(paramName, paramValues[0]);
+					if (accArr) {
+						map.put(paramName, paramValues);
+					} else {
+						map.put(paramName, paramValues[0]);
+					}
 				}
 			} else {
 				// 无参数
-				if (!rmEmpty) map.put(paramName, null);
+				if (!rmEmpty) {
+					map.put(paramName, null);
+				}
 			}
 		}
 		return map;

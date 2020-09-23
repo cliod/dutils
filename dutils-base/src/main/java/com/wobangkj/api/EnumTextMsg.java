@@ -19,10 +19,23 @@ public interface EnumTextMsg extends EnumMsg {
 		return 271;
 	}
 
+	/**
+	 * 错误message
+	 *
+	 * @param msg  消息格式
+	 * @param args 参数
+	 * @return 消息
+	 */
 	default String getMsg(String msg, Object... args) {
 		return getMsg() + " " + String.format(msg, args);
 	}
 
+	/**
+	 * 错误message
+	 *
+	 * @param args 参数
+	 * @return 结果
+	 */
 	default String getMsg(Object... args) {
 		return String.format(getMsg(), args);
 	}

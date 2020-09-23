@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
  * @author cliod
  * @since 8/7/20 4:10 PM
  */
-public class SmsImpl implements Sms {
+public class SmsImpl implements Sms, Cloneable {
 
 	private final IClientProfile profile;
 	private final IAcsClient client;
@@ -81,6 +81,15 @@ public class SmsImpl implements Sms {
 		return this.client.getAcsResponse(this.sms);
 	}
 
+	/**
+	 * 批量发送短信(单个模板,但是不同签名和多个手机号)
+	 *
+	 * @param template     模板
+	 * @param params       模板参数
+	 * @param signNames    签名
+	 * @param phoneNumbers 手机号
+	 * @return 结果
+	 */
 	@Override
 	public AcsResponse batchSend(String template, String params, String signNames, String phoneNumbers) throws ClientException {
 		this.batch.setTemplateParamJson(params);
@@ -90,13 +99,23 @@ public class SmsImpl implements Sms {
 		return this.client.getAcsResponse(this.batch);
 	}
 
+	/**
+	 * 查看短信发送记录和发送状态
+	 *
+	 * @param phoneNumber 手机号
+	 * @param date        日期支持查询最近30天的记录。格式为yyyyMMdd
+	 * @param bizId       回执id
+	 * @param page        分页查看发送记录，指定发送记录的的当前页码
+	 * @param size        分页查看发送记录，指定每页显示的短信记录数量。取值范围为1~50
+	 * @return 结果
+	 */
 	@Override
-	public AcsResponse querySendDetails(String phoneNumber, LocalDate date, String bizId, Pageable pageable) throws ClientException {
+	public AcsResponse querySendDetails(String phoneNumber, LocalDate date, String bizId, Integer page, Integer size) throws ClientException {
 		QuerySendDetailsRequest query = new QuerySendDetailsRequest();
 		query.setPhoneNumber(phoneNumber);
 		query.setSendDate(date.format(this.formatter));
-		query.setPageSize(pageable.getSize().longValue());
-		query.setCurrentPage(pageable.getPage().longValue());
+		query.setPageSize(page.longValue());
+		query.setCurrentPage(size.longValue());
 		query.setBizId(bizId);
 		return this.client.getAcsResponse(query);
 	}
@@ -119,5 +138,17 @@ public class SmsImpl implements Sms {
 	@Override
 	public SmsTemplate getSmsTemplate() {
 		return SmsTemplate.getInstance(this.profile);
+	}
+
+	/**
+	 * 克隆, 返回一个新Sms对象
+	 *
+	 * @return a clone of this instance.
+	 * @throws CloneNotSupportedException 不会发生的异常.
+	 * @see Cloneable 需要实现Cloneable接口
+	 */
+	@Override
+	protected SmsImpl clone() throws CloneNotSupportedException {
+		return (SmsImpl) super.clone();
 	}
 }

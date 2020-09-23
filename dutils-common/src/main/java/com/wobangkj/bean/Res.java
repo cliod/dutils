@@ -100,7 +100,7 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @return 空对象
 	 */
 	public static @NotNull Res empty() {
-		return new Res(4);
+		return EMPTY;
 	}
 
 	public Res addAll(Map<String, Object> map) {

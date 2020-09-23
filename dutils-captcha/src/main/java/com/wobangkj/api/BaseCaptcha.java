@@ -12,8 +12,10 @@ import java.awt.*;
  * @since 9/14/20 11:20 AM
  */
 public abstract class BaseCaptcha extends AbstractCaptcha implements Captcha {
-
-	protected AbstractCaptcha delegate; //委托
+	/**
+	 * 委托
+	 */
+	protected AbstractCaptcha delegate;
 
 	/**
 	 * 构造，使用随机验证码生成器生成验证码
