@@ -52,7 +52,7 @@ public interface EnumType extends SessionSerializable {
 	 */
 	@Override
 	default Object toObject() {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>(4);
 		map.put("code", this.getCode());
 		map.put("desc", this.getDesc());
 		return map;

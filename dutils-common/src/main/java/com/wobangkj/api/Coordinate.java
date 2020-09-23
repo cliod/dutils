@@ -51,6 +51,11 @@ public interface Coordinate<X, Y, Z> extends Dimension {
 		return String.format("(%s,%s,%s)", getX(), getY(), getZ());
 	}
 
+	/**
+	 * 转成对象
+	 *
+	 * @return obj
+	 */
 	@Override
 	default Object toObject() {
 		return Maps.of("x", (Object) getX()).add("y", getY()).add("z", getZ());

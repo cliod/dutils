@@ -7,26 +7,6 @@ package com.wobangkj.api;
  * @since 9/11/20 4:22 PM
  */
 public interface Pageable {
-	/**
-	 * 静态方法
-	 *
-	 * @param page 分页
-	 * @param size 分页
-	 * @return 分页对象
-	 */
-	static Pageable of(Integer page, Integer size) {
-		return new Pageable() {
-			@Override
-			public Integer getPage() {
-				return page;
-			}
-
-			@Override
-			public Integer getSize() {
-				return size;
-			}
-		};
-	}
 
 	/**
 	 * 获取页码

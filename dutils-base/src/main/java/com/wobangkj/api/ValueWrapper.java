@@ -12,6 +12,11 @@ public interface ValueWrapper<T> extends SessionSerializable {
 		return new SimpleValueWrapper(obj);
 	}
 
+	/**
+	 * 获取对象
+	 *
+	 * @return 对象
+	 */
 	T value();
 
 	/**

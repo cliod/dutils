@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.time.temporal.Temporal;
 import java.util.*;
 
@@ -22,7 +21,6 @@ import static java.lang.reflect.Modifier.*;
  */
 public class BeanUtils {
 	private BeanUtils() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -245,11 +243,11 @@ public class BeanUtils {
 	 * @param obj 对象
 	 * @param key 字段
 	 * @return 值
+	 * @see RefUtils#getFieldValue(Object, String) 反射工具类
 	 */
+	@Deprecated
 	public static Object getFieldValue(@NotNull Object obj, String key) throws NoSuchFieldException, IllegalAccessException {
-		Field field = obj.getClass().getDeclaredField(key);
-		field.setAccessible(true);
-		return field.get(obj);
+		return RefUtils.getFieldValue(obj, key);
 	}
 
 	/**
@@ -257,15 +255,11 @@ public class BeanUtils {
 	 *
 	 * @param obj 对象
 	 * @return 值
+	 * @see RefUtils#getFieldValues(Object) 反射工具类
 	 */
+	@Deprecated
 	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj) throws IllegalAccessException {
-		Map<String, Object> map = new HashMap<>();
-		Field[] fields = obj.getClass().getDeclaredFields();
-		for (Field field : fields) {
-			field.setAccessible(true);
-			map.put(field.getName(), field.get(obj));
-		}
-		return map;
+		return RefUtils.getFieldValues(obj);
 	}
 
 	/**
@@ -275,34 +269,36 @@ public class BeanUtils {
 	 * @param key   字段名
 	 * @param value 字段值
 	 * @param obj   操作对象
-	 *              //     * @return 是否成功赋值
+	 *              //@return 是否成功赋值
+	 * @see RefUtils#setFieldValue(Object, String, Object) 反射工具类
 	 */
-	public static void setFieldValue(@NotNull Object obj, String key, Object value) throws NoSuchFieldException,
-			IllegalAccessException {
-		Field field = obj.getClass().getDeclaredField(key);
-		//设置对象的访问权限，保证对private的属性的访问
-		field.setAccessible(true);
-		field.set(obj, value);
+	@Deprecated
+	public static void setFieldValue(@NotNull Object obj, String key, Object value) throws NoSuchFieldException, IllegalAccessException {
+		RefUtils.setFieldValue(obj, key, value);
 	}
 
-	@NotNull
-	public static String[] getFieldNames(@NotNull Object obj) {
-		Field[] fields = obj.getClass().getDeclaredFields();
-		String[] result = new String[fields.length];
-		for (int i = 0; i < fields.length; i++) {
-			result[i] = fields[i].getName();
-		}
-		return result;
+	/**
+	 * 获取对象属性
+	 *
+	 * @param obj 对象
+	 * @return 属性数组
+	 * @see RefUtils#getFieldNames(Object) 反射工具类
+	 */
+	@Deprecated
+	public static @NotNull String[] getFieldNames(@NotNull Object obj) {
+		return RefUtils.getFieldNames(obj);
 	}
 
-	@NotNull
-	public static String[] getFieldNames(@NotNull Class<?> obj) {
-		Field[] fields = obj.getDeclaredFields();
-		String[] result = new String[fields.length];
-		for (int i = 0; i < fields.length; i++) {
-			result[i] = fields[i].getName();
-		}
-		return result;
+	/**
+	 * 获取对象属性
+	 *
+	 * @param obj 对象类型
+	 * @return 属性数组
+	 * @see RefUtils#getFieldNames(Class) 反射工具类
+	 */
+	@Deprecated
+	public static @NotNull String[] getFieldNames(@NotNull Class<?> obj) {
+		return RefUtils.getFieldNames(obj);
 	}
 
 	/**
@@ -311,17 +307,11 @@ public class BeanUtils {
 	 * @param obj 对象
 	 * @param var 分隔符
 	 * @return 字符串
+	 * @see RefUtils#getFieldNameStr(Class, CharSequence) 反射工具类
 	 */
-	@NotNull
-	public static String getFieldNames(@NotNull Class<?> obj, CharSequence var) {
-		Field[] fields = obj.getDeclaredFields();
-		StringBuilder sb = new StringBuilder();
-		for (Field field : fields) {
-			sb.append(field.getName());
-			sb.append(var);
-		}
-		sb.deleteCharAt(sb.length() - 1);
-		return sb.toString();
+	@Deprecated
+	public static @NotNull String getFieldNames(@NotNull Class<?> obj, CharSequence var) {
+		return RefUtils.getFieldNameStr(obj, var);
 	}
 
 	/**
@@ -330,57 +320,35 @@ public class BeanUtils {
 	 * @param obj 对象
 	 * @param var 分隔符
 	 * @return 字符串
+	 * @see RefUtils#getFieldNameStr(Object, CharSequence) 反射工具类
 	 */
-	@NotNull
-	public static String getFieldNames(@NotNull Object obj, CharSequence var) {
-		Field[] fields = obj.getClass().getDeclaredFields();
-		StringBuilder sb = new StringBuilder();
-		for (Field field : fields) {
-			sb.append(field.getName());
-			sb.append(var);
-		}
-		sb.deleteCharAt(sb.length() - 1);
-		return sb.toString();
+	@Deprecated
+	public static @NotNull String getFieldNames(@NotNull Object obj, CharSequence var) {
+		return RefUtils.getFieldNameStr(obj, var);
 	}
 
-	@NotNull
-	public static Map<String, Class<?>> getFieldNameAndType(@NotNull Object obj) {
-		Field[] fields = obj.getClass().getDeclaredFields();
-		Map<String, Class<?>> map = new HashMap<>();
-		for (Field field : fields) {
-			map.put(field.getName(), field.getType());
-		}
-		return map;
+	/**
+	 * 获取对象字段名和类型
+	 *
+	 * @param obj 对象
+	 * @return 字符串
+	 * @see RefUtils#getFieldNameAndType(Object) 反射工具类
+	 */
+	@Deprecated
+	public static @NotNull Map<String, Class<?>> getFieldNameAndType(@NotNull Object obj) {
+		return RefUtils.getFieldNameAndType(obj);
 	}
 
-	@NotNull
-	public static <T> T newInstance(@NotNull Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-		return clazz.getConstructor().newInstance();
-	}
-
-	@NotNull
-	@SuppressWarnings("unchecked")
-	public static Map<String, Object> extend(Object obj, Map<String, Object> extObj)
-			throws NoSuchFieldException, IllegalAccessException {
-		Map<String, Object> result;
-		if (obj instanceof Map) {
-			result = (Map<String, Object>) obj;
-			result.putAll(extObj);
-			return result;
-		}
-		result = new HashMap<>(16);
-		String[] titles = getFieldNames(obj);
-		for (String title : titles) {
-			result.put(title, getFieldValue(obj, title));
-			result.putAll(extObj);
-			result.remove("serialVersionUID");
-		}
-		return result;
-	}
-
-	@NotNull
-	public static List<Map<String, Object>> extend(List<Object> objs, List<Map<String, Object>> extObjs)
-			throws NoSuchFieldException, IllegalAccessException {
+	/**
+	 * 扩展字段
+	 *
+	 * @param objs    对象列表
+	 * @param extObjs 扩展字段列表
+	 * @return map对象列表
+	 * @throws IllegalAccessException 字段非法访问异常
+	 */
+	@Deprecated
+	public static @NotNull List<Map<String, Object>> extend(List<Object> objs, List<Map<String, Object>> extObjs) throws IllegalAccessException {
 		List<Map<String, Object>> result = new ArrayList<>();
 		if (CollectionUtils.isEmpty(objs)) {
 			return result;
@@ -396,9 +364,8 @@ public class BeanUtils {
 		return result;
 	}
 
-	@NotNull
-	public static List<Map<String, Object>> extend(Map<Object, Map<String, Object>> maps)
-			throws NoSuchFieldException, IllegalAccessException {
+	@Deprecated
+	public static @NotNull List<Map<String, Object>> extend(Map<Object, Map<String, Object>> maps) throws IllegalAccessException {
 		List<Map<String, Object>> result = new ArrayList<>();
 		if (isNull(maps) || CollectionUtils.isEmpty(maps.keySet())) {
 			return result;
@@ -409,29 +376,55 @@ public class BeanUtils {
 		return result;
 	}
 
-	@NotNull
-	@SuppressWarnings("unchecked")
-	public static Map<String, Object> convert(Object obj) throws NoSuchFieldException, IllegalAccessException {
-		if (obj instanceof Map) {
-			return (Map<String, Object>) obj;
-		}
-		String[] titles = getFieldNames(obj);
-		Map<String, Object> result = new HashMap<>(titles.length * 4 / 3 + 1);
-		for (String title : titles) {
-			result.put(title, getFieldValue(obj, title));
-		}
-		result.remove("serialVersionUID");
-		return result;
+	/**
+	 * 获取新实例
+	 *
+	 * @param clazz 类型对象
+	 * @param <T>   类型
+	 * @return 实例对象
+	 * @throws ReflectiveOperationException 反射异常
+	 * @see RefUtils#newInstance(Class) 反射工具类
+	 */
+	public static <T> @NotNull T newInstance(@NotNull Class<T> clazz) throws ReflectiveOperationException {
+		return RefUtils.newInstance(clazz);
 	}
 
-	@NotNull
-	public static <T> T convert(@NotNull Map<String, Object> map, @NotNull Class<T> clazz)
-			throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException,
-			InvocationTargetException, InstantiationException {
-		T t = clazz.getConstructor().newInstance();
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
-			setFieldValue(t, entry.getKey(), entry.getValue());
-		}
+	/**
+	 * 扩展字段
+	 *
+	 * @param obj    对象
+	 * @param extObj 扩展字段
+	 * @return map对象
+	 * @throws IllegalAccessException 字段非法访问异常
+	 * @see RefUtils#getFieldValues(Object) 反射工具类
+	 */
+	public static @NotNull Map<String, Object> extend(Object obj, Map<String, Object> extObj) throws IllegalAccessException {
+		extObj.putAll(RefUtils.getFieldValues(obj));
+		return extObj;
+	}
+
+	/**
+	 * 将对象转化为map
+	 *
+	 * @param obj 对象
+	 * @return map结果
+	 * @see RefUtils#getFieldValues(Object) 反射工具类
+	 */
+	public static @NotNull Map<String, Object> convert(Object obj) throws IllegalAccessException {
+		return RefUtils.getFieldValues(obj);
+	}
+
+	/**
+	 * 将map转化为对象
+	 *
+	 * @param map   map
+	 * @param clazz 对象类型
+	 * @param <T>   类型
+	 * @return 结果对象
+	 */
+	public static <T> @NotNull T convert(@NotNull Map<String, Object> map, @NotNull Class<T> clazz) throws ReflectiveOperationException {
+		T t = newInstance(clazz);
+		RefUtils.setFieldValues(t, map);
 		return t;
 	}
 }

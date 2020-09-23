@@ -25,8 +25,10 @@ public class LruCache<K, V> {
 	public LruCache(int size) {
 		this.maxSize = size;
 		cache = new HashMap<>(size);
-		first = new CacheNode<>(); // 虚拟头节点
-		last = new CacheNode<>(); //虚拟尾节点
+		// 虚拟头节点
+		first = new CacheNode<>();
+		//虚拟尾节点
+		last = new CacheNode<>();
 		// 虚拟节点用于帮助操作
 
 		// 构建成双向列表

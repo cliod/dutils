@@ -35,12 +35,17 @@ public interface EnumMsg extends SessionSerializable {
 	 */
 	@Override
 	default Object toObject() {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>(4);
 		map.put("code", this.getCode());
 		map.put("msg", this.getMsg());
 		return map;
 	}
 
+	/**
+	 * 转换为异常
+	 *
+	 * @return 可抛出的异常
+	 */
 	default Throwable toThrowable() {
 		return new AppException(getCode(), getMsg());
 	}

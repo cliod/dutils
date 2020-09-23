@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Single<T> extends Var<T> {
 
-	private static final String valueName = "value";
-	private final Maps<String, T> _data;
+	private static final String VALUE_NAME = "value";
+	private final Maps<String, T> data;
 
 	public Single(T t) {
-		_data = Maps.of(valueName, t);
+		data = Maps.of(VALUE_NAME, t);
 	}
 
 	/**
@@ -30,11 +30,11 @@ public class Single<T> extends Var<T> {
 
 	@Override
 	public T value() {
-		return _data.get(valueName);
+		return data.get(VALUE_NAME);
 	}
 
 	@Override
 	protected void value(T val) {
-		_data.put(valueName, val);
+		data.put(VALUE_NAME, val);
 	}
 }

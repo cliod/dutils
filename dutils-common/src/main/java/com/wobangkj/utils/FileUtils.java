@@ -27,9 +27,10 @@ import java.util.regex.Pattern;
 public class FileUtils {
 
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
-	private static final String osName = System.getProperty("os.name");
-	private static final Pattern winPathSrc = Pattern.compile("(^[A-Z]:(([\\\\/])([a-zA-Z0-9\\-_]){1,255}){1,255}|([A-Z]:([\\\\/])))");
-	private static final Pattern linuxPathSrc = Pattern.compile("(/([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255}/)*([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255})|/)");
+	public static final String WIN_NAME = "win";
+	private static final String OS_NAME = System.getProperty("os.name");
+	private static final Pattern WIN_PATH_SRC = Pattern.compile("(^[A-Z]:(([\\\\/])([a-zA-Z0-9\\-_]){1,255}){1,255}|([A-Z]:([\\\\/])))");
+	private static final Pattern LINUX_PATH_SRC = Pattern.compile("(/([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255}/)*([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255})|/)");
 
 	/**
 	 * 文件上传
@@ -62,10 +63,10 @@ public class FileUtils {
 	}
 
 	private static void checkPath(String path) throws IllegalArgumentException {
-		if (osName.toLowerCase().contains("win")) {
-			Assert.isTrue(!winPathSrc.matcher(path).matches(), "文件路径不正确");
+		if (OS_NAME.toLowerCase().contains(WIN_NAME)) {
+			Assert.isTrue(!WIN_PATH_SRC.matcher(path).matches(), "文件路径不正确");
 		} else {
-			Assert.isTrue(!linuxPathSrc.matcher(path).matches(), "文件路径不正确");
+			Assert.isTrue(!LINUX_PATH_SRC.matcher(path).matches(), "文件路径不正确");
 		}
 	}
 
@@ -78,8 +79,10 @@ public class FileUtils {
 	 */
 	public static void download(@NotNull HttpServletResponse response, @NotNull File file) throws Exception {
 		response.setHeader("content-type", "image/png");
-		response.setContentType("application/octet-stream"); // 文件流,(可能下载, 可能打开[浏览器有插件会先打开文件])
-		response.setContentType("application/force-download");// 强制下载文件，不打开
+		// 文件流,(可能下载, 可能打开[浏览器有插件会先打开文件])
+		response.setContentType("application/octet-stream");
+		// 强制下载文件，不打开
+		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
 		byte[] buff = new byte[1024];
 		//创建缓冲输入流
@@ -107,8 +110,10 @@ public class FileUtils {
 	 */
 	public static void download(@NotNull HttpServletResponse response, @NotNull InputStream is, String fileName) throws Exception {
 		response.setHeader("content-type", "image/png");
-		response.setContentType("application/octet-stream"); // 文件流,(可能下载, 可能打开[浏览器有插件会先打开文件])
-		response.setContentType("application/force-download");// 强制下载文件，不打开
+		// 文件流,(可能下载, 可能打开[浏览器有插件会先打开文件])
+		response.setContentType("application/octet-stream");
+		// 强制下载文件，不打开
+		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
 		parse(is, response.getOutputStream());
 	}

@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Pair<K, V> extends Var<Object> {
 
-	private static final String keyName = "key";
-	private static final String valueName = "value";
-	private final Maps<String, Object> _data;
+	private static final String KEY_NAME = "key";
+	private static final String VALUE_NAME = "value";
+	private final Maps<String, Object> data;
 
 	public Pair(K k, V v) {
-		_data = Maps.of(keyName, (Object) k).add(valueName, v);
+		data = Maps.of(KEY_NAME, (Object) k).add(VALUE_NAME, v);
 	}
 
 	/**
@@ -32,29 +32,29 @@ public class Pair<K, V> extends Var<Object> {
 
 	@SuppressWarnings("unchecked")
 	public K getKey() {
-		return (K) _data.get(keyName);
+		return (K) data.get(KEY_NAME);
 	}
 
 	public void setKey(K key) {
-		_data.put(keyName, key);
+		data.put(KEY_NAME, key);
 	}
 
 	@SuppressWarnings("unchecked")
 	public V getValue() {
-		return (V) _data.get(valueName);
+		return (V) data.get(VALUE_NAME);
 	}
 
 	public void setValue(V value) {
-		_data.put(valueName, value);
+		data.put(VALUE_NAME, value);
 	}
 
 	@Override
 	public Object value() {
-		return _data.get(keyName);
+		return data.get(KEY_NAME);
 	}
 
 	@Override
 	protected void value(Object val) {
-		_data.put(valueName, val);
+		data.put(VALUE_NAME, val);
 	}
 }

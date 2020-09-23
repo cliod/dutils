@@ -16,8 +16,10 @@ import java.util.function.Function;
  * package : com.wobangkj.util
  */
 public class CovUtils {
-	//因子
-	private static final Function<Integer, Integer> factor = size -> size * 4 / 3 + 1;
+	/**
+	 * 因子
+	 */
+	private static final Function<Integer, Integer> FACTOR = size -> size * 4 / 3 + 1;
 
 	/**
 	 * obj列表根据指定项进行map转化
@@ -46,10 +48,10 @@ public class CovUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> @NotNull Map<K, V> convert(@NotNull Collection<V> list, @NotNull String keyName) throws NoSuchFieldException, IllegalAccessException {
-		return new HashMap<K, V>() {{
+		return new HashMap<K, V>(FACTOR.apply(list.size())) {{
 			K key;
 			for (V obj : list) {
-				key = (K) BeanUtils.getFieldValue(obj, keyName);
+				key = (K) RefUtils.getFieldValue(obj, keyName);
 				if (Objects.nonNull(key)) {
 					put(key, obj);
 				}
@@ -69,11 +71,11 @@ public class CovUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, T, V> @NotNull Map<K, V> convert(@NotNull Collection<T> list, @NotNull String keyName, String valueName) throws NoSuchFieldException, IllegalAccessException {
-		return new HashMap<K, V>(factor.apply(list.size())) {{
+		return new HashMap<K, V>(FACTOR.apply(list.size())) {{
 			K obj;
 			for (Object t : list) {
-				obj = (K) BeanUtils.getFieldValue(t, keyName);
-				if (Objects.nonNull(obj)) {put(obj, (V) BeanUtils.getFieldValue(t, valueName));}
+				obj = (K) RefUtils.getFieldValue(t, keyName);
+				if (Objects.nonNull(obj)) {put(obj, (V) RefUtils.getFieldValue(t, valueName));}
 			}
 		}};
 	}
@@ -89,11 +91,11 @@ public class CovUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, T> @NotNull Map<K, Long> statistics(@NotNull Collection<T> list, String keyName) throws NoSuchFieldException, IllegalAccessException {
-		return new HashMap<K, Long>(factor.apply(list.size())) {{
+		return new HashMap<K, Long>(FACTOR.apply(list.size())) {{
 			K obj;
 			Long temp;
 			for (Object t : list) {
-				obj = (K) BeanUtils.getFieldValue(t, keyName);
+				obj = (K) RefUtils.getFieldValue(t, keyName);
 				if (Objects.isNull(obj)) {
 					continue;
 				}
