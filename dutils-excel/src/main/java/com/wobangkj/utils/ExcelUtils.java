@@ -184,7 +184,7 @@ public class ExcelUtils {
 	 * @throws Exception 异常
 	 */
 	public static void write(HttpServletResponse response, List<?> data, Class<?> head, String fileName, String sheetName, ExcelTypeEnum typeEnum) throws Exception {
-		EasyExcel.write(getOutputStream(fileName, response, "application/vnd.ms-excel"), head)
+		EasyExcel.write(getOutputStream(fileName, typeEnum.getValue(), response, "application/vnd.ms-excel"), head)
 				.excelType(typeEnum).sheet(sheetName).registerWriteHandler(getStyleStrategy()).doWrite(data);
 	}
 
@@ -257,11 +257,11 @@ public class ExcelUtils {
 	 * @return 结果
 	 * @throws Exception 异常
 	 */
-	public static OutputStream getOutputStream(String fileName, @NotNull HttpServletResponse response, String contentType) throws Exception {
+	public static OutputStream getOutputStream(String fileName, String fileExt, @NotNull HttpServletResponse response, String contentType) throws Exception {
 		fileName = URLEncoder.encode(fileName, "UTF-8");
 		response.setContentType(contentType);
 		response.setCharacterEncoding("utf8");
-		response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
+		response.setHeader("Content-Disposition", "attachment;filename=" + fileName + fileExt);
 		return response.getOutputStream();
 	}
 
