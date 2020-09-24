@@ -2,7 +2,9 @@ package com.wobangkj.utils;
 
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.profile.IClientProfile;
 import com.wobangkj.api.Sms;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Objects;
@@ -23,8 +25,18 @@ public class SmsUtils {
 	/**
 	 * 初始化
 	 */
+	@Deprecated
 	public static void init(String regionId, String accessKeyId, String secret, String signName) {
 		sms = Sms.getInstance(regionId, accessKeyId, secret);
+		sms.setSignName(signName);
+	}
+
+	/**
+	 * 初始化
+	 */
+	@Deprecated
+	public static void init(IClientProfile profile, String signName) {
+		sms = Sms.getInstance(profile);
 		sms.setSignName(signName);
 	}
 
@@ -36,8 +48,9 @@ public class SmsUtils {
 	 * @return 响应
 	 * @throws ClientException 客户端异常
 	 */
-	public static AcsResponse send(final String templateCode, String... phoneNumber) throws ClientException {
-		return send("", templateCode, phoneNumber);
+	@Deprecated
+	public static AcsResponse notify(final String templateCode, String... phoneNumber) throws ClientException {
+		return send(templateCode, "", phoneNumber);
 	}
 
 	/**
@@ -48,7 +61,8 @@ public class SmsUtils {
 	 * @return 响应
 	 * @throws ClientException 客户端异常
 	 */
-	public static AcsResponse send(final String templateCode, Map<String, Object> params, String... phoneNumber) throws ClientException {
+	@Deprecated
+	public static AcsResponse send(final String templateCode, @NotNull Map<String, Object> params, String... phoneNumber) throws ClientException {
 		final String templateParam = JsonUtils.toJson(params);
 		return send(templateCode, templateParam, phoneNumber);
 	}
@@ -62,10 +76,22 @@ public class SmsUtils {
 	 * @return 响应
 	 * @throws ClientException 客户端异常
 	 */
-	public static AcsResponse send(String templateCode, String templateParamJson, String... phoneNumber) throws ClientException {
+	protected static AcsResponse send(String templateCode, String templateParamJson, String... phoneNumber) throws ClientException {
 		if (Objects.isNull(sms)) {
 			throw new ClientException("实例未初始化");
 		}
 		return sms.send(templateCode, templateParamJson, phoneNumber);
+	}
+
+	public static AcsResponse send(IClientProfile profile, String signName, String templateCode, String templateParamJson, String... phoneNumber) throws ClientException {
+		sms = Sms.getInstance(profile);
+		sms.setSignName(signName);
+		return sms.send(templateCode, templateParamJson, phoneNumber);
+	}
+
+	public static AcsResponse send(IClientProfile profile, String signName, String templateCode, Map<String, Object> templateParam, String... phoneNumber) throws ClientException {
+		sms = Sms.getInstance(profile);
+		sms.setSignName(signName);
+		return sms.send(templateCode, templateParam, phoneNumber);
 	}
 }

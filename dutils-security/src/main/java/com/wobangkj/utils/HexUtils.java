@@ -34,7 +34,6 @@ public class HexUtils {
 			hex.append(HEXES[(b >> 4) & 0x0F]);
 			hex.append(HEXES[b & 0x0F]);
 		}
-
 		return hex.toString();
 	}
 
@@ -50,12 +49,12 @@ public class HexUtils {
 		}
 
 		char[] hexChars = hex.toCharArray();
-		byte[] bytes = new byte[hexChars.length / 2];   // 如果 hex 中的字符不是偶数个, 则忽略最后一个
+		// 如果 hex 中的字符不是偶数个, 则忽略最后一个
+		byte[] bytes = new byte[hexChars.length / 2];
 
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = (byte) Integer.parseInt("" + hexChars[i * 2] + hexChars[i * 2 + 1], 16);
 		}
-
 		return bytes;
 	}
 }

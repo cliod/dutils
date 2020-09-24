@@ -22,16 +22,16 @@ public class SmsTemplateImpl implements SmsTemplate {
 	private final IAcsClient client;
 	private final String regionId;
 
-	protected SmsTemplateImpl(String regionId, IAcsClient client) {
+	private SmsTemplateImpl(String regionId, IAcsClient client) {
 		this.client = client;
 		this.regionId = regionId;
 	}
 
-	public SmsTemplateImpl(IClientProfile profile) {
+	protected SmsTemplateImpl(IClientProfile profile) {
 		this(profile.getRegionId(), new DefaultAcsClient(profile));
 	}
 
-	public SmsTemplateImpl(String regionId, String accessKeyId, String accessSecret) {
+	protected SmsTemplateImpl(String regionId, String accessKeyId, String accessSecret) {
 		this(regionId, new DefaultAcsClient(DefaultProfile.getProfile(regionId, accessKeyId, accessSecret)));
 	}
 

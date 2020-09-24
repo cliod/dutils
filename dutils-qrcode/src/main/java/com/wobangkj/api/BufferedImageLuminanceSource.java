@@ -84,6 +84,7 @@ public class BufferedImageLuminanceSource extends LuminanceSource {
 	}
 
 	@Override
+	@SuppressWarnings("all")
 	public LuminanceSource rotateCounterClockwise() {
 		int sourceWidth = image.getWidth();
 		int sourceHeight = image.getHeight();

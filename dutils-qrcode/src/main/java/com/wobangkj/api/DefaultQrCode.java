@@ -1,6 +1,7 @@
 package com.wobangkj.api;
 
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.Reader;
 import com.google.zxing.Writer;
 
 import java.awt.*;
@@ -19,8 +20,8 @@ public class DefaultQrCode extends BaseQrCode {
 	public DefaultQrCode() {
 	}
 
-	public DefaultQrCode(int x, int y, Shape shape, Map<EncodeHintType, Object> hints, Stroke stroke, Writer writer) {
-		super(x, y, shape, hints, stroke, writer);
+	public DefaultQrCode(int x, int y, Shape shape, Map<EncodeHintType, Object> hints, Stroke stroke, Writer writer, Reader reader) {
+		super(x, y, shape, hints, stroke, writer, reader);
 	}
 
 	public DefaultQrCode(int x, int y, Shape shape, Stroke stroke) {
@@ -61,7 +62,7 @@ public class DefaultQrCode extends BaseQrCode {
 			}
 			src = src.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 			Graphics g = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB).getGraphics();
-			// Draw the reduced picture.
+			// Draw the reduced picture (Very time consuming).
 			g.drawImage(src, 0, 0, null);
 			g.dispose();
 		}
@@ -70,14 +71,14 @@ public class DefaultQrCode extends BaseQrCode {
 		int x = (this.size - width) / 2;
 		int y = (this.size - height) / 2;
 		graph.drawImage(src, x, y, width, height, null);
+		// The Stroke object used to draw the Shape during the rendering process.
+		graph.setStroke(stroke);
 		if (nc == 2) {
 			graph.draw(shape);
 		} else {
 			Shape shape = new RoundRectangle2D.Float(x, y, width, width, 6, 6);
 			graph.draw(shape);
 		}
-		// The Stroke object used to draw the Shape during the rendering process.
-		graph.setStroke(stroke);
 		graph.dispose();
 	}
 }

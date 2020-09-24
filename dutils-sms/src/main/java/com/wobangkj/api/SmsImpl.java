@@ -12,6 +12,7 @@ import com.aliyuncs.profile.IClientProfile;
 import com.wobangkj.utils.KeyUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -43,7 +44,7 @@ public class SmsImpl implements Sms, Cloneable {
 	@Getter
 	private String outId;
 
-	protected SmsImpl(IClientProfile profile, IAcsClient client) {
+	private SmsImpl(IClientProfile profile, IAcsClient client) {
 		this.profile = profile;
 		this.client = client;
 		String regionId = profile.getRegionId();
@@ -53,11 +54,11 @@ public class SmsImpl implements Sms, Cloneable {
 		batch.setSysRegionId(regionId);
 	}
 
-	public SmsImpl(IClientProfile profile) {
+	protected SmsImpl(IClientProfile profile) {
 		this(profile, new DefaultAcsClient(profile));
 	}
 
-	public SmsImpl(String regionId, String accessKeyId, String accessSecret) {
+	protected SmsImpl(String regionId, String accessKeyId, String accessSecret) {
 		this(DefaultProfile.getProfile(regionId, accessKeyId, accessSecret));
 	}
 
@@ -76,7 +77,7 @@ public class SmsImpl implements Sms, Cloneable {
 		this.sms.setSignName(signName);
 		this.sms.setTemplateCode(template);
 		this.sms.setTemplateParam(params);
-		this.outId = KeyUtils.get32uuid();
+		this.outId = Long.toString(KeyUtils.nextId());
 		this.sms.setOutId(this.outId);
 		return this.client.getAcsResponse(this.sms);
 	}
@@ -96,6 +97,7 @@ public class SmsImpl implements Sms, Cloneable {
 		this.batch.setSignNameJson(signNames);
 		this.batch.setTemplateCode(template);
 		this.batch.setPhoneNumberJson(phoneNumbers);
+		this.outId = Long.toString(KeyUtils.nextId());
 		return this.client.getAcsResponse(this.batch);
 	}
 
@@ -126,8 +128,9 @@ public class SmsImpl implements Sms, Cloneable {
 	 * @return 短信
 	 */
 	@Override
+	@SneakyThrows
 	public Sms getSms() {
-		return new SmsImpl(this.profile);
+		return this.clone();
 	}
 
 	@Override

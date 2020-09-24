@@ -61,6 +61,7 @@ public abstract class BaseQrCode implements QrCode {
 	 * The object for object which encode/generate a barcode image.
 	 */
 	protected final Writer writer;
+	protected final Reader reader;
 	/**
 	 * File format of QR code image.
 	 */
@@ -102,11 +103,21 @@ public abstract class BaseQrCode implements QrCode {
 	/**
 	 * The content string used to generate the QR code.
 	 */
+	@Getter
 	protected transient String content;
 	/**
 	 * LOGO image object.
 	 */
 	protected transient BufferedImage logo;
+	/**
+	 * LOGO image object.
+	 */
+	@Setter
+	private transient Object logoObj;
+	/**
+	 * Default color.
+	 */
+	private transient int[] colors = null;
 
 	/**
 	 * QR code initialization.
@@ -130,15 +141,17 @@ public abstract class BaseQrCode implements QrCode {
 		hints.put(EncodeHintType.MARGIN, 1);
 		stroke = new BasicStroke(3F);
 		writer = new MultiFormatWriter();
+		reader = new MultiFormatReader();
 	}
 
-	public BaseQrCode(int x, int y, Shape shape, Map<EncodeHintType, Object> hints, Stroke stroke, Writer writer) {
+	public BaseQrCode(int x, int y, Shape shape, Map<EncodeHintType, Object> hints, Stroke stroke, Writer writer, Reader reader) {
 		this.x = x;
 		this.y = y;
 		this.shape = shape;
 		this.hints = hints;
 		this.stroke = stroke;
 		this.writer = writer;
+		this.reader = reader;
 	}
 
 	public BaseQrCode(int x, int y, Shape shape, Stroke stroke) {
@@ -146,7 +159,7 @@ public abstract class BaseQrCode implements QrCode {
 			put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
 			put(EncodeHintType.CHARACTER_SET, charset);
 			put(EncodeHintType.MARGIN, 1);
-		}}, stroke, new MultiFormatWriter());
+		}}, stroke, new MultiFormatWriter(), new MultiFormatReader());
 	}
 
 	/**
@@ -157,20 +170,31 @@ public abstract class BaseQrCode implements QrCode {
 	 */
 	@Override
 	public @NotNull BufferedImage createImage() throws WriterException {
+		if (!isChange)
+			return image;
 		// 点阵
 		BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, size, size, hints);
 		int width = bitMatrix.getWidth();
 		int height = bitMatrix.getHeight();
 		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				image.setRGB(x, y, bitMatrix.get(x, y) ? foreground.getRGB() : background.getRGB());
+		if (Objects.isNull(colors) || colors.length == 0) {
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					image.setRGB(x, y, bitMatrix.get(x, y) ? foreground.getRGB() : background.getRGB());
+				}
 			}
-		}
+			colors = image.getRGB(0, 0, width, height, null, 0, width);
+		} else
+			image.setRGB(0, 0, width, height, colors, 0, width);
 		if (isNeedLogo && Objects.nonNull(this.logo))
 			insertLogo();
 		isChange = false;
 		return image;
+	}
+
+	@Override
+	public Object getLogo() {
+		return logoObj;
 	}
 
 	/**
@@ -181,7 +205,9 @@ public abstract class BaseQrCode implements QrCode {
 	@Override
 	public void setLogo(BufferedImage logo) {
 		if (Objects.isNull(logo)) return;
+		if (Objects.equals(logo, this.logo)) return;
 		this.logo = logo;
+		this.isChange = true;
 		this.setNeedLogo(true);
 	}
 
@@ -192,6 +218,8 @@ public abstract class BaseQrCode implements QrCode {
 	 */
 	@Override
 	public void setContent(String content) {
+		if (Objects.isNull(content)) return;
+		if (Objects.equals(content, this.content)) return;
 		this.isChange = true;
 		this.content = content;
 	}
@@ -205,7 +233,7 @@ public abstract class BaseQrCode implements QrCode {
 		if (isNeedCompress) {
 			src = src.getScaledInstance(this.logoWidth, this.logoHeight, Image.SCALE_SMOOTH);
 			Graphics g = new BufferedImage(this.logoWidth, this.logoHeight, BufferedImage.TYPE_INT_RGB).getGraphics();
-			// Draw the reduced picture.
+			// Draw the reduced picture (Very time consuming)..
 			g.drawImage(src, 0, 0, null);
 			g.dispose();
 		}

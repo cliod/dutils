@@ -22,16 +22,16 @@ public class SmsSignImpl implements SmsSign {
 	private final IAcsClient client;
 	private final String regionId;
 
-	protected SmsSignImpl(String regionId, IAcsClient client) {
+	private SmsSignImpl(String regionId, IAcsClient client) {
 		this.client = client;
 		this.regionId = regionId;
 	}
 
-	public SmsSignImpl(IClientProfile profile) {
+	protected SmsSignImpl(IClientProfile profile) {
 		this(profile.getRegionId(), new DefaultAcsClient(profile));
 	}
 
-	public SmsSignImpl(String regionId, String accessKeyId, String accessSecret) {
+	protected SmsSignImpl(String regionId, String accessKeyId, String accessSecret) {
 		this(regionId, new DefaultAcsClient(DefaultProfile.getProfile(regionId, accessKeyId, accessSecret)));
 	}
 

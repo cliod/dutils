@@ -50,7 +50,7 @@ public class MapCacheImpl implements Cacheables {
 	}
 
 	@Override
-	public ValueWrapper get(@NotNull Object key) {
+	public @NotNull ValueWrapper get(@NotNull Object key) {
 		return new SimpleValueWrapper(CACHE.get(key));
 	}
 

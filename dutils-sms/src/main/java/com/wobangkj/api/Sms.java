@@ -326,13 +326,12 @@ public interface Sms {
 	 * @param phoneNumber 手机号
 	 * @param date        日期支持查询最近30天的记录。格式为yyyyMMdd
 	 * @param bizId       回执id
-	 * @param pageable    分页查看发送记录
+	 * @param page        分页查看发送记录，指定发送记录的的当前页码
+	 * @param size        分页查看发送记录，指定每页显示的短信记录数量。取值范围为1~50
 	 * @return 结果
 	 * @throws ClientException 发送异常
 	 */
-	default AcsResponse querySendDetails(String phoneNumber, LocalDate date, String bizId, Pageable pageable) throws ClientException {
-		return querySendDetails(phoneNumber, date, bizId, pageable.getPage(), pageable.getSize());
-	}
+	AcsResponse querySendDetails(String phoneNumber, LocalDate date, String bizId, Integer page, Integer size) throws ClientException;
 
 	/**
 	 * 查看短信发送记录和发送状态
@@ -340,12 +339,13 @@ public interface Sms {
 	 * @param phoneNumber 手机号
 	 * @param date        日期支持查询最近30天的记录。格式为yyyyMMdd
 	 * @param bizId       回执id
-	 * @param page        分页查看发送记录，指定发送记录的的当前页码
-	 * @param size        分页查看发送记录，指定每页显示的短信记录数量。取值范围为1~50
+	 * @param pageable    分页查看发送记录
 	 * @return 结果
 	 * @throws ClientException 发送异常
 	 */
-	AcsResponse querySendDetails(String phoneNumber, LocalDate date, String bizId, Integer page, Integer size) throws ClientException;
+	default AcsResponse querySendDetails(String phoneNumber, LocalDate date, String bizId, Pageable pageable) throws ClientException {
+		return querySendDetails(phoneNumber, date, bizId, pageable.getPage(), pageable.getSize());
+	}
 
 	/**
 	 * 查看短信发送记录和发送状态
