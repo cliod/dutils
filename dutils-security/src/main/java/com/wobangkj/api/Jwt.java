@@ -56,7 +56,7 @@ public class Jwt {
     /**
      * 是否初始化
      */
-    private boolean isInitialize;
+    protected boolean isInitialize;
 
     @SneakyThrows
     protected Jwt() {
@@ -141,7 +141,7 @@ public class Jwt {
         return JsonUtils.fromJson(value.asString(), clazz);
     }
 
-    protected void initialize(KeyGenerator generator) throws NoSuchAlgorithmException {
+    public void initialize(KeyGenerator generator) throws NoSuchAlgorithmException {
         if (!BeanUtils.isNull(generator)) {
             this.keyGenerator = generator;
         }
@@ -151,7 +151,7 @@ public class Jwt {
         this.initialize();
     }
 
-    protected void initialize() {
+    public void initialize() {
         SecretKey secretKey = keyGenerator.generateKey();
         algorithm = Algorithm.HMAC256(secretKey.getEncoded());
         /*
