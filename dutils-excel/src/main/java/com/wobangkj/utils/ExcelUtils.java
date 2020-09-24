@@ -14,6 +14,7 @@ import com.wobangkj.api.SaveListener;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -206,6 +207,34 @@ public class ExcelUtils {
 		excelWriter.fill(data, fillConfig, writeSheet);
 		excelWriter.fill(attach, writeSheet);
 		excelWriter.finish();
+	}
+
+	/**
+	 * 读取数据进行操作
+	 *
+	 * @param file     文件流
+	 * @param type     模型
+	 * @param listener 监听并操作
+	 * @param <T>      模型类型
+	 */
+	@Deprecated
+	public static <T extends Model> void read(@NotNull MultipartFile file, @NotNull Class<T> type, ReadListener<T> listener) throws IOException {
+		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
+		EasyExcel.read(file.getInputStream(), type, listener).sheet().doRead();
+	}
+
+	/**
+	 * 读取excel内容并操作
+	 *
+	 * @param file 网络文件
+	 * @param type 存入类型
+	 * @param func 监听器将执行的操作
+	 * @param <T>  类型
+	 * @throws IOException io异常
+	 */
+	@Deprecated
+	public static <T> void read(@NotNull MultipartFile file, Class<T> type, Consumer<List<T>> func) throws IOException {
+		EasyExcel.read(file.getInputStream(), type, SaveListener.of(func));
 	}
 
 	/**
