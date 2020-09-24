@@ -318,7 +318,7 @@
                 </repository>
                 <repository>
                     <id>rdc-snapshots</id>
-                    <url>https://repo.rdc.aliyun.com/repository/79116-SNAPSHOT-nphODc/</url>
+                    <url>https://repo.rdc.aliyun.com/repository/79115-SNAPSHOT-nphODc/</url>
                 </repository>
             </repositories>
         </profile>
@@ -331,7 +331,7 @@
         </repository>
         <snapshotRepository>
             <id>rdc-snapshots</id>
-            <url>https://repo.rdc.aliyun.com/repository/79116-SNAPSHOT-nphODc/</url>
+            <url>https://repo.rdc.aliyun.com/repository/79115-SNAPSHOT-nphODc/</url>
         </snapshotRepository>
     </distributionManagement>
 
