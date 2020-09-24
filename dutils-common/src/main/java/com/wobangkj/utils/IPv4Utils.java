@@ -22,10 +22,14 @@ public class IPv4Utils {
 		return IpUtils.toString(longIp);
 	}
 
+	/**
+	 * 将IP地址转换为长整型
+	 *
+	 * @param ip ip地址
+	 * @return 长整型数值
+	 */
 	public static long ipV4ToLong(@NotNull String ip) {
-		String[] octets = ip.split("\\.");
-		return (Long.parseLong(octets[0]) << 24) + (Integer.parseInt(octets[1]) << 16)
-				+ (Integer.parseInt(octets[2]) << 8) + Integer.parseInt(octets[3]);
+		return IpUtils.ipV4ToLong(ip);
 	}
 
 	/**
@@ -35,10 +39,7 @@ public class IPv4Utils {
 	 * @return 是否私有ipv4地址
 	 */
 	public static boolean isIPv4Private(String ip) {
-		long longIp = ipV4ToLong(ip);
-		return (longIp >= ipV4ToLong("10.0.0.0") && longIp <= ipV4ToLong("10.255.255.255"))
-				|| (longIp >= ipV4ToLong("172.16.0.0") && longIp <= ipV4ToLong("172.31.255.255"))
-				|| longIp >= ipV4ToLong("192.168.0.0") && longIp <= ipV4ToLong("192.168.255.255");
+		return IpUtils.isIPv4Private(ip);
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class IPv4Utils {
 	 * @return 是否ipv4地址
 	 */
 	public static boolean isIPv4Valid(String ip) {
-		return PATTERN.matcher(ip).matches();
+		return IpUtils.isIPv4Valid(ip);
 	}
 
 	/**
@@ -61,7 +62,8 @@ public class IPv4Utils {
 	public static String getIpFromRequest(@NotNull HttpServletRequest request) {
 		String ip;
 		boolean found = false;
-		if ((ip = request.getHeader("x-forwarded-for")) != null) {
+		String xff = "x-forwarded-for";
+		if ((ip = request.getHeader(xff)) != null) {
 			StringTokenizer tokenizer = new StringTokenizer(ip, ",");
 			while (tokenizer.hasMoreTokens()) {
 				ip = tokenizer.nextToken().trim();

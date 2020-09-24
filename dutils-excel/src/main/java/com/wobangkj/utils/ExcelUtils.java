@@ -4,23 +4,21 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillConfig;
-import com.alibaba.excel.write.metadata.style.WriteCellStyle;
-import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.wobangkj.api.Model;
 import com.wobangkj.api.Name;
 import com.wobangkj.api.SaveListener;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,8 +39,6 @@ public class ExcelUtils {
 
 	private final static String DEFAULT_PATH = System.getProperty("user.home") + "/file/excel/";
 	private final static String FILE_DEFAULT_NAME_PRE = "data";
-	private static WriteCellStyle headWriteCellStyle;
-	private static WriteCellStyle contentWriteCellStyle;
 
 	private ExcelUtils() {
 	}
@@ -67,7 +63,7 @@ public class ExcelUtils {
 	 * @throws IOException io异常
 	 */
 	public static @NotNull File write(List<?> data, Class<?> head) throws IOException {
-		return write(data, head, null);
+		return write(data, head, ExcelTypeEnum.XLS);
 	}
 
 	/**
@@ -79,9 +75,8 @@ public class ExcelUtils {
 	 * @return 文件
 	 * @throws IOException io异常
 	 */
-	public static @NotNull File write(List<?> data, Class<?> head, ExcelTypeEnum fileType) throws IOException {
-		if (Objects.isNull(fileType)) fileType = ExcelTypeEnum.XLS;
-		String path = FORMATTER.format(LocalDate.now()) + "/" + getName(head) + "/";
+	public static @NotNull File write(List<?> data, Class<?> head, @NotNull ExcelTypeEnum fileType) throws IOException {
+		String path = LocalDate.now().format(FORMATTER) + "/" + getName(head) + "/";
 		String name = KeyUtils.get32uuid();
 		String filePath = DEFAULT_PATH + path;
 		String fileName = filePath + name + fileType.getValue();
@@ -100,7 +95,7 @@ public class ExcelUtils {
 	 * @param head excel标题
 	 */
 	public static void write(File file, List<?> data, Class<?> head) {
-		write(file, data, head, "Sheet1", null);
+		write(file, data, head, "Sheet1", ExcelTypeEnum.XLS);
 	}
 
 	/**
@@ -112,7 +107,7 @@ public class ExcelUtils {
 	 * @param fileType 文件类型
 	 * @param head     excel标题
 	 */
-	public static void write(File file, List<?> data, Class<?> head, ExcelTypeEnum fileType) {
+	public static void write(File file, List<?> data, Class<?> head, @NotNull ExcelTypeEnum fileType) {
 		write(file, data, head, "Sheet1", fileType);
 	}
 
@@ -126,8 +121,7 @@ public class ExcelUtils {
 	 * @param head      excel标题
 	 * @param sheetName 表格名
 	 */
-	public static void write(File file, List<?> data, Class<?> head, String sheetName, ExcelTypeEnum fileType) {
-		if (Objects.isNull(fileType)) fileType = ExcelTypeEnum.XLS;
+	public static void write(File file, List<?> data, Class<?> head, String sheetName, @NotNull ExcelTypeEnum fileType) {
 		EasyExcel.write(file, head)
 				.excelType(fileType).sheet(0, sheetName).registerWriteHandler(getStyleStrategy()).doWrite(data);
 	}
@@ -170,7 +164,7 @@ public class ExcelUtils {
 	 * @throws Exception 异常
 	 */
 	public static void write(HttpServletResponse response, List<?> data, Class<?> head) throws Exception {
-		write(response, data, head, KeyUtils.get32uuid(), "sheet1", ExcelTypeEnum.XLS);
+		write(response, data, head, KeyUtils.get32uuid(), "Sheet1", ExcelTypeEnum.XLS);
 	}
 
 	/**
@@ -184,7 +178,11 @@ public class ExcelUtils {
 	 * @throws Exception 异常
 	 */
 	public static void write(HttpServletResponse response, List<?> data, Class<?> head, String fileName, String sheetName, ExcelTypeEnum typeEnum) throws Exception {
-		EasyExcel.write(getOutputStream(fileName, typeEnum.getValue(), response, "application/vnd.ms-excel"), head)
+		fileName = URLEncoder.encode(fileName, "UTF-8");
+		response.setContentType("application/octet-stream");
+		response.setCharacterEncoding("utf8");
+		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName + typeEnum.getValue());
+		EasyExcel.write(response.getOutputStream(), head)
 				.excelType(typeEnum).sheet(sheetName).registerWriteHandler(getStyleStrategy()).doWrite(data);
 	}
 
@@ -213,19 +211,6 @@ public class ExcelUtils {
 	/**
 	 * 读取数据进行操作
 	 *
-	 * @param file     文件流
-	 * @param type     模型
-	 * @param listener 监听并操作
-	 * @param <T>      模型类型
-	 */
-	public static <T extends Model> void read(@NotNull MultipartFile file, @NotNull Class<T> type, ReadListener<T> listener) throws IOException {
-		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
-		EasyExcel.read(file.getInputStream(), type, listener).sheet().doRead();
-	}
-
-	/**
-	 * 读取数据进行操作
-	 *
 	 * @param is       文件流
 	 * @param type     模型
 	 * @param listener 监听并操作
@@ -234,35 +219,6 @@ public class ExcelUtils {
 	public static <T extends Model> void read(@NotNull InputStream is, @NotNull Class<T> type, ReadListener<T> listener) {
 		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
 		EasyExcel.read(is, type, listener).sheet().doRead();
-	}
-
-	/**
-	 * 读取excel内容并操作
-	 *
-	 * @param file 网络文件
-	 * @param type 存入类型
-	 * @param func 监听器将执行的操作
-	 * @param <T>  类型
-	 * @throws IOException io异常
-	 */
-	public static <T> void read(@NotNull MultipartFile file, Class<T> type, Consumer<List<T>> func) throws IOException {
-		EasyExcel.read(file.getInputStream(), type, SaveListener.of(func));
-	}
-
-	/**
-	 * 获取输出流响应
-	 *
-	 * @param fileName 文件名称
-	 * @param response 响应
-	 * @return 结果
-	 * @throws Exception 异常
-	 */
-	public static OutputStream getOutputStream(String fileName, String fileExt, @NotNull HttpServletResponse response, String contentType) throws Exception {
-		fileName = URLEncoder.encode(fileName, "UTF-8");
-		response.setContentType(contentType);
-		response.setCharacterEncoding("utf8");
-		response.setHeader("Content-Disposition", "attachment;filename=" + fileName + fileExt);
-		return response.getOutputStream();
 	}
 
 	/**
@@ -287,11 +243,17 @@ public class ExcelUtils {
 	 */
 	public static @NotNull File createFile(String filePath, String fileName) throws IOException {
 		File path = new File(filePath);
-		if (!path.exists())
-			if (!path.mkdirs()) throw new IOException("文件夹创建失败");
+		if (!path.exists()) {
+			if (!path.mkdirs()) {
+				throw new IOException("文件夹创建失败");
+			}
+		}
 		File file = new File(fileName);
-		if (!file.exists())
-			if (!file.createNewFile()) throw new IOException("文件创建失败");
+		if (!file.exists()) {
+			if (!file.createNewFile()) {
+				throw new IOException("文件创建失败");
+			}
+		}
 		return file;
 	}
 
@@ -312,42 +274,7 @@ public class ExcelUtils {
 		return StringUtils.isBlank(name.value()) ? FILE_DEFAULT_NAME_PRE : name.value();
 	}
 
-	/**
-	 * 获取excel样式(用户不定义则默认)
-	 *
-	 * @return 样式
-	 */
-	public static @NotNull HorizontalCellStyleStrategy getStyleStrategy() {
-		//表头样式
-		WriteCellStyle headStyle = headWriteCellStyle;
-		if (Objects.isNull(headStyle)) {
-			headStyle = new WriteCellStyle();
-			//设置表头居中对齐
-			headStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
-		}
-		WriteCellStyle contentStyle = contentWriteCellStyle;
-		if (Objects.isNull(contentStyle)) {
-			//内容样式
-			contentStyle = new WriteCellStyle();
-			//设置内容靠左对齐
-			contentStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
-		}
-		return new HorizontalCellStyleStrategy(headStyle, contentWriteCellStyle);
-	}
-
-	public static WriteCellStyle getHeadWriteCellStyle() {
-		return headWriteCellStyle;
-	}
-
-	public static void setHeadWriteCellStyle(WriteCellStyle headWriteCellStyle) {
-		ExcelUtils.headWriteCellStyle = headWriteCellStyle;
-	}
-
-	public static WriteCellStyle getContentWriteCellStyle() {
-		return contentWriteCellStyle;
-	}
-
-	public static void setContentWriteCellStyle(WriteCellStyle contentWriteCellStyle) {
-		ExcelUtils.contentWriteCellStyle = contentWriteCellStyle;
+	public static @NotNull CellWriteHandler getStyleStrategy() {
+		return new LongestMatchColumnWidthStyleStrategy();
 	}
 }

@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>4.0.5-SNAPSHOT</version>
+    <version>4.0.6-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -318,7 +318,7 @@
                 </repository>
                 <repository>
                     <id>rdc-snapshots</id>
-                    <url>https://repo.rdc.aliyun.com/repository/79115-snapshot-nphODc/</url>
+                    <url>https://repo.rdc.aliyun.com/repository/79116-SNAPSHOT-nphODc/</url>
                 </repository>
             </repositories>
         </profile>
@@ -331,7 +331,7 @@
         </repository>
         <snapshotRepository>
             <id>rdc-snapshots</id>
-            <url>https://repo.rdc.aliyun.com/repository/79115-snapshot-nphODc/</url>
+            <url>https://repo.rdc.aliyun.com/repository/79116-SNAPSHOT-nphODc/</url>
         </snapshotRepository>
     </distributionManagement>
 

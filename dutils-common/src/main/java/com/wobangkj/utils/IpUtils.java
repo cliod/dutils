@@ -31,42 +31,65 @@ public class IpUtils {
 		return octet3 + "." + octet2 + "." + octet1 + "." + octet0;
 	}
 
+	/**
+	 * 将IP地址转换为长整型
+	 *
+	 * @param ip ip地址
+	 * @return 长整型数值
+	 */
 	public static long ipV4ToLong(@NotNull String ip) {
 		String[] octets = ip.split("\\.");
 		return (Long.parseLong(octets[0]) << 24) + (Integer.parseInt(octets[1]) << 16)
-                + (Integer.parseInt(octets[2]) << 8) + Integer.parseInt(octets[3]);
-    }
+				+ (Integer.parseInt(octets[2]) << 8) + Integer.parseInt(octets[3]);
+	}
 
-    public static boolean isIPv4Private(String ip) {
-        long longIp = ipV4ToLong(ip);
-        return (longIp >= ipV4ToLong("10.0.0.0") && longIp <= ipV4ToLong("10.255.255.255"))
-                || (longIp >= ipV4ToLong("172.16.0.0") && longIp <= ipV4ToLong("172.31.255.255"))
-                || longIp >= ipV4ToLong("192.168.0.0") && longIp <= ipV4ToLong("192.168.255.255");
-    }
+	/**
+	 * 是否私有ipv4
+	 *
+	 * @param ip ip地址字符串
+	 * @return 是否私有ipv4地址
+	 */
+	public static boolean isIPv4Private(String ip) {
+		long longIp = ipV4ToLong(ip);
+		return (longIp >= ipV4ToLong("10.0.0.0") && longIp <= ipV4ToLong("10.255.255.255"))
+				|| (longIp >= ipV4ToLong("172.16.0.0") && longIp <= ipV4ToLong("172.31.255.255"))
+				|| longIp >= ipV4ToLong("192.168.0.0") && longIp <= ipV4ToLong("192.168.255.255");
+	}
 
-    public static boolean isIPv4Valid(String ip) {
-        return PATTERN.matcher(ip).matches();
-    }
+	/**
+	 * 是否有效ipv4
+	 *
+	 * @param ip 字符串
+	 * @return 是否ipv4地址
+	 */
+	public static boolean isIPv4Valid(String ip) {
+		return PATTERN.matcher(ip).matches();
+	}
 
-    public static String getIpFromRequest(@NotNull HttpServletRequest request) {
-	    String ip;
-	    boolean found = false;
-	    String xff = "x-forwarded-for";
-	    if ((ip = request.getHeader(xff)) != null) {
-		    StringTokenizer tokenizer = new StringTokenizer(ip, ",");
-		    while (tokenizer.hasMoreTokens()) {
-			    ip = tokenizer.nextToken().trim();
-			    if (isIPv4Valid(ip) && !isIPv4Private(ip)) {
-				    found = true;
-				    break;
-			    }
-		    }
-	    }
-	    if (!found) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
-    }
-
-    //proxy_set_header X-Forward-For $remote_addr ;
+	/**
+	 * 获取请求的ip地址
+	 * nginx转发需要设置 //proxy_set_header X-Forwarded-For $remote_addr;
+	 *
+	 * @param request 请求
+	 * @return ip地址
+	 */
+	public static String getIpFromRequest(@NotNull HttpServletRequest request) {
+		String ip;
+		boolean found = false;
+		String xff = "x-forwarded-for";
+		if ((ip = request.getHeader(xff)) != null) {
+			StringTokenizer tokenizer = new StringTokenizer(ip, ",");
+			while (tokenizer.hasMoreTokens()) {
+				ip = tokenizer.nextToken().trim();
+				if (isIPv4Valid(ip) && !isIPv4Private(ip)) {
+					found = true;
+					break;
+				}
+			}
+		}
+		if (!found) {
+			ip = request.getRemoteAddr();
+		}
+		return ip;
+	}
 }

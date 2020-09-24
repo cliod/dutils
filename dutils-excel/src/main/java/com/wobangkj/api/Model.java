@@ -13,5 +13,15 @@ public interface Model {
 	 *
 	 * @return 对象
 	 */
+	@Deprecated
 	Model newObj();
+
+	/**
+	 * 新建对象
+	 *
+	 * @return 对象
+	 */
+	default Model newInstance() {
+		return this;
+	}
 }

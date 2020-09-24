@@ -82,7 +82,7 @@ public class FileUtils {
 		// 文件流,(可能下载, 可能打开[浏览器有插件会先打开文件])
 		response.setContentType("application/octet-stream");
 		// 强制下载文件，不打开
-		response.setContentType("application/force-download");
+		// response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
 		byte[] buff = new byte[1024];
 		//创建缓冲输入流
@@ -113,7 +113,7 @@ public class FileUtils {
 		// 文件流,(可能下载, 可能打开[浏览器有插件会先打开文件])
 		response.setContentType("application/octet-stream");
 		// 强制下载文件，不打开
-		response.setContentType("application/force-download");
+		// response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
 		parse(is, response.getOutputStream());
 	}
@@ -210,10 +210,7 @@ public class FileUtils {
 	 * @return 输出流
 	 * @throws IOException io异常
 	 */
-	public static @Nullable ByteArrayOutputStream parse(InputStream in) throws IOException {
-		if (Objects.isNull(in)) {
-			return null;
-		}
+	public static @Nullable ByteArrayOutputStream parse(@NotNull InputStream in) throws IOException {
 		byte[] io = new byte[in.available()];
 		int ch = in.read(io);
 		if (ch > 0) {
