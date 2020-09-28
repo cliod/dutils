@@ -6,18 +6,13 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.Verification;
 import com.wobangkj.utils.BeanUtils;
 import com.wobangkj.utils.JsonUtils;
 import lombok.SneakyThrows;
-import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * jwt加密
@@ -26,138 +21,133 @@ import java.util.concurrent.TimeUnit;
  * @since 2019/11/9
  * package : com.wobangkj.util
  */
-public class Jwt {
+public abstract class Jwt implements Signable {
 
-    /**
-     * 发布者 后面一块去校验
-     */
-    protected static final String ISSUER = "_user";
-    /**
-     * 有效载荷
-     */
-    protected static final String PAYLOAD = "payload";
-    /**
-     * 加密算法 可以抽象到环境变量中配置
-     */
-    protected static final String MAC_NAME = "HMacSHA256";
-    protected static Jwt INSTANCE = new Jwt();
-    /**
-     * 校验类
-     */
-    protected JWTVerifier verifier;
-    /**
-     * 加密算法
-     */
-    protected Algorithm algorithm;
-    /**
-     * 秘钥生成器
-     */
-    protected KeyGenerator keyGenerator;
-    /**
-     * 是否初始化
-     */
-    protected boolean isInitialize;
+	/**
+	 * 发布者 后面一块去校验
+	 */
+	protected static final String ISSUER = "_user";
+	/**
+	 * 有效载荷
+	 */
+	protected static final String PAYLOAD = "payload";
+	/**
+	 * 加密算法 可以抽象到环境变量中配置
+	 */
+	protected static final String MAC_NAME = "HMacSHA256";
 
-    @SneakyThrows
-    protected Jwt() {
-        isInitialize = false;
-        keyGenerator = KeyGenerator.getInstance(MAC_NAME);
-    }
+	/**
+	 * 校验类
+	 */
+	protected JWTVerifier verifier;
+	/**
+	 * 加密算法
+	 */
+	protected Algorithm algorithm;
+	/**
+	 * 秘钥生成器
+	 */
+	protected KeyGenerator keyGenerator;
 
-    @SneakyThrows
-    public static @NotNull Jwt getInstance() {
-        Jwt jwt = INSTANCE;
-        jwt.initialize();
-        jwt.isInitialize = true;
-        return jwt;
-    }
+	@SneakyThrows
+	protected Jwt() {
+		keyGenerator = KeyGenerator.getInstance(MAC_NAME);
+	}
 
-    @Deprecated
-    public static @NotNull Jwt init() throws NoSuchAlgorithmException {
-        Jwt jwt = INSTANCE;
-        jwt.initialize(KeyGenerator.getInstance(MAC_NAME));
-        jwt.isInitialize = true;
-        return jwt;
-    }
+	/**
+	 * 加密，传入一个对象和有效期/毫秒
+	 *
+	 * @param obj      对象
+	 * @param duration 时长/秒
+	 * @return 签名字符串
+	 */
+	@Override
+	public String sign(final Object obj, long duration) {
+		JWTCreator.Builder builder = JWT.create();
+		long now = System.currentTimeMillis();
+		long accumulate = now + duration;
+		builder.withExpiresAt(new Date(accumulate));
+		return build(builder, obj, now);
+	}
 
-    /**
-     * 加密，传入一个对象和有效期
-     */
-    public <T> String sign(T obj, long duration, @NotNull TimeUnit unit) {
-        if (!isInitialize) {
-            throw new RuntimeException("未初始化");
-        }
-        JWTCreator.Builder builder = JWT.create();
-        long now = System.currentTimeMillis();
-        long accumulate = now + unit.toMillis(duration);
-        builder.withExpiresAt(new Date(accumulate));
-        builder.withIssuedAt(new Date(now));
-        builder.withIssuer(ISSUER);
-        builder.withClaim(PAYLOAD, JsonUtils.toJson(obj));
-        return builder.sign(algorithm);
-    }
+	/**
+	 * 加密，传入一个对象和有效期/毫秒
+	 *
+	 * @param obj  对象
+	 * @param date 时间/秒
+	 * @return 签名字符串
+	 */
+	@Override
+	public String sign(Object obj, Date date) {
+		JWTCreator.Builder builder = JWT.create();
+		long now = System.currentTimeMillis();
+		builder.withExpiresAt(date);
+		return build(builder, obj, now);
+	}
 
-    /**
-     * 加密，传入一个对象和有效期
-     */
-    public <T> String sign(T obj, long duration) {
-        return sign(obj, duration, TimeUnit.SECONDS);
-    }
+	protected String build(JWTCreator.Builder builder, Object obj, long now) {
+		builder.withIssuedAt(new Date(now));
+		builder.withIssuer(ISSUER);
+		if (BeanUtils.isBaseType(obj)) {
+			if (obj instanceof Integer || obj instanceof Short || obj instanceof Byte) {
+				// int
+				builder.withClaim(PAYLOAD, ((Number) obj).intValue());
+			} else if (obj instanceof Double || obj instanceof Float) {
+				// double
+				builder.withClaim(PAYLOAD, ((Number) obj).doubleValue());
+			} else if (obj instanceof Long) {
+				// long
+				builder.withClaim(PAYLOAD, ((Number) obj).longValue());
+			} else if (obj instanceof Boolean) {
+				// bool
+				builder.withClaim(PAYLOAD, (Boolean) obj);
+			} else {
+				// char
+				builder.withClaim(PAYLOAD, obj.toString());
+			}
+		} else if (obj.getClass().isInstance("")) {
+			// string
+			builder.withClaim(PAYLOAD, obj.toString());
+		} else if (obj instanceof Date) {
+			// date
+			builder.withClaim(PAYLOAD, (Date) obj);
+		} else {
+			// object
+			builder.withClaim(PAYLOAD, JsonUtils.toJson(obj));
+		}
+		return builder.sign(algorithm);
+	}
 
-    /**
-     * 解密，传入一个加密后的token字符串和解密后的类型
-     */
-    public Map<?, ?> unsign(String jwt) {
-        return this.unsign(jwt, Map.class);
-    }
+	/**
+	 * 解密，传入一个加密后的token字符串和解密后的类型
+	 *
+	 * @param jwt 签名字符串
+	 * @return 实例对象
+	 */
+	@Override
+	public Claim unsign(String jwt) {
+		final DecodedJWT claims = verifier.verify(jwt);
+		Date date = claims.getExpiresAt();
+		long exp = date.getTime();
+		long now = System.currentTimeMillis();
+		if (exp < now) {
+			return null;
+		}
+		return claims.getClaim(PAYLOAD);
+	}
 
-    /**
-     * 解密
-     *
-     * @param jwt   jwt密匙
-     * @param clazz 类
-     * @param <T>   类型
-     * @return 结果对象
-     */
-    public <T> T unsign(String jwt, Class<T> clazz) {
-        if (!isInitialize) {
-            throw new RuntimeException("未初始化");
-        }
-        final DecodedJWT claims = verifier.verify(jwt);
-        Date date = claims.getExpiresAt();
-        if (BeanUtils.isNull(date)) {
-            return null;
-        }
-        long exp = date.getTime();
-        long now = System.currentTimeMillis();
-        if (exp < now) {
-            return null;
-        }
-        Map<String, Claim> payload = claims.getClaims();
-        Claim value = payload.get(PAYLOAD);
-        if (BeanUtils.isNull(value)) {
-            return null;
-        }
-        return JsonUtils.fromJson(value.asString(), clazz);
-    }
+	protected void initialize(KeyGenerator generator) throws NoSuchAlgorithmException {
+		if (!BeanUtils.isNull(generator)) {
+			this.keyGenerator = generator;
+		}
+		if (null == this.keyGenerator) {
+			this.keyGenerator = KeyGenerator.getInstance(MAC_NAME);
+		}
+		this.initialize();
+	}
 
-    public void initialize(KeyGenerator generator) throws NoSuchAlgorithmException {
-        if (!BeanUtils.isNull(generator)) {
-            this.keyGenerator = generator;
-        }
-        if (null == this.keyGenerator) {
-            this.keyGenerator = KeyGenerator.getInstance(MAC_NAME);
-        }
-        this.initialize();
-    }
-
-    public void initialize() {
-        SecretKey secretKey = keyGenerator.generateKey();
-        algorithm = Algorithm.HMAC256(secretKey.getEncoded());
-        /*
-         * 校验器 用于生成 JWTVerifier 校验器
-         */
-        Verification verification = JWT.require(algorithm);
-        verifier = verification.build();
-    }
+	/**
+	 * 初始化
+	 */
+	protected abstract void initialize();
 }

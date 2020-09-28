@@ -76,6 +76,7 @@ public class SmsUtils {
 	 * @return 响应
 	 * @throws ClientException 客户端异常
 	 */
+	@Deprecated
 	protected static AcsResponse send(String templateCode, String templateParamJson, String... phoneNumber) throws ClientException {
 		if (Objects.isNull(sms)) {
 			throw new ClientException("实例未初始化");

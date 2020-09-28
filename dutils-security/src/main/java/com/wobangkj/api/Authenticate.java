@@ -68,7 +68,7 @@ public class Authenticate {
 		}
 		if (Objects.isNull(jwt)) {
 			try {
-				jwt = Jwt.init();
+				jwt = SimpleJwt.getInstance();
 			} catch (Exception e) {
 				throw new IllegalArgumentException("用户无法登录");
 			}
