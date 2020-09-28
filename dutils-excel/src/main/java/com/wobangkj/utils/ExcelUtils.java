@@ -2,6 +2,8 @@ package com.wobangkj.utils;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.read.builder.ExcelReaderBuilder;
+import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.handler.CellWriteHandler;
@@ -234,7 +236,7 @@ public class ExcelUtils {
 	 */
 	@Deprecated
 	public static <T> void read(@NotNull MultipartFile file, Class<T> type, Consumer<List<T>> func) throws IOException {
-		EasyExcel.read(file.getInputStream(), type, SaveListener.of(func));
+		EasyExcel.read(file.getInputStream(), type, SaveListener.of(func)).sheet().doRead();
 	}
 
 	/**
@@ -259,7 +261,46 @@ public class ExcelUtils {
 	 * @param <T>  类型
 	 */
 	public static <T> void read(@NotNull InputStream is, Class<T> type, Consumer<List<T>> func) {
-		EasyExcel.read(is, type, SaveListener.of(func));
+		EasyExcel.read(is, type, SaveListener.of(func)).sheet().doRead();
+	}
+
+	/**
+	 * 读取数据进行操作
+	 *
+	 * @param is       文件流
+	 * @param type     模型
+	 * @param listener 监听并操作
+	 * @param <T>      模型类型
+	 */
+	public static <T extends Model> void read(@NotNull InputStream is, @NotNull Class<T> type, Object sheet, ReadListener<T> listener) {
+		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
+		ExcelReaderBuilder builder = EasyExcel.read(is, type, listener);
+		ExcelReaderSheetBuilder sheetBuilder;
+		if (sheet instanceof Number) {
+			sheetBuilder = builder.sheet(((Number) sheet).intValue());
+		} else {
+			sheetBuilder = builder.sheet(sheet.toString());
+		}
+		sheetBuilder.doRead();
+	}
+
+	/**
+	 * 读取excel内容并操作
+	 *
+	 * @param is   文件流
+	 * @param type 存入类型
+	 * @param func 监听器将执行的操作
+	 * @param <T>  类型
+	 */
+	public static <T> void read(@NotNull InputStream is, Class<T> type, Object sheet, Consumer<List<T>> func) {
+		ExcelReaderBuilder builder = EasyExcel.read(is, type, SaveListener.of(func));
+		ExcelReaderSheetBuilder sheetBuilder;
+		if (sheet instanceof Number) {
+			sheetBuilder = builder.sheet(((Number) sheet).intValue());
+		} else {
+			sheetBuilder = builder.sheet(sheet.toString());
+		}
+		sheetBuilder.doRead();
 	}
 
 	/**

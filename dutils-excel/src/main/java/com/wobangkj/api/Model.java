@@ -14,7 +14,9 @@ public interface Model {
 	 * @return 对象
 	 */
 	@Deprecated
-	Model newObj();
+	default Model newObj() {
+		return this;
+	}
 
 	/**
 	 * 新建对象
@@ -24,4 +26,11 @@ public interface Model {
 	default Model newInstance() {
 		return this;
 	}
+
+	/**
+	 * 转换
+	 *
+	 * @return 对象实例
+	 */
+	Object to();
 }
