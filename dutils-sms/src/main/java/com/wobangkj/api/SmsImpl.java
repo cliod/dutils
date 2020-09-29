@@ -1,12 +1,11 @@
 package com.wobangkj.api;
 
-import com.aliyuncs.AcsResponse;
-import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.IAcsClient;
+import com.aliyuncs.*;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.SendBatchSmsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.wobangkj.utils.KeyUtils;
@@ -68,6 +67,30 @@ public class SmsImpl implements Sms, Cloneable {
 
 	public static SmsImpl getInstance(IClientProfile profile) {
 		return new SmsImpl(profile);
+	}
+
+	/**
+	 * 发送短信
+	 *
+	 * @param templateCode      短信模板ID
+	 * @param templateParamJson 短信模板参数
+	 * @param phoneNumber       手机号. 支持对多个手机号码发送短信，手机号码之间以英文逗号（,）分隔。上限为1000个手机号码。
+	 * @return 发送结果封装
+	 * @throws ClientException 短信发送异常
+	 */
+	@Override
+	public CommonResponse commonSend(String templateCode, String templateParamJson, String phoneNumber) throws ClientException {
+		final CommonRequest request = new CommonRequest();
+		request.setSysMethod(MethodType.POST);
+		request.setSysDomain("dysmsapi.aliyuncs.com");
+		request.setSysVersion("2017-05-25");
+		request.setSysAction("SendSms");
+		request.putQueryParameter("RegionId", this.profile.getRegionId());
+		request.putQueryParameter("PhoneNumbers", phoneNumber);
+		request.putQueryParameter("SignName", signName);
+		request.putQueryParameter("TemplateCode", templateCode);
+		request.putQueryParameter("TemplateParam", templateParamJson);
+		return client.getCommonResponse(request);
 	}
 
 	@Override

@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>4.0.11-SNAPSHOT</version>
+    <version>4.0.12-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -275,7 +275,7 @@
             <dependency>
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
-                <version>[3.8.2,)</version>
+                <version>3.10.3</version>
                 <optional>true</optional>
             </dependency>
             <!--excel操作-->

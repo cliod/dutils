@@ -1,6 +1,7 @@
 package com.wobangkj.api;
 
 import com.aliyuncs.AcsResponse;
+import com.aliyuncs.CommonResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.IClientProfile;
 import com.wobangkj.utils.JsonUtils;
@@ -60,6 +61,30 @@ public interface Sms {
 	 * @return 外部流水扩展字段
 	 */
 	String getOutId();
+
+	/**
+	 * 发送短信
+	 *
+	 * @param phoneNumber       手机号
+	 * @param templateCode      短信模板ID
+	 * @param templateParamJson 短信模板参数
+	 * @return 发送结果封装
+	 * @throws ClientException 短信发送异常
+	 */
+	CommonResponse commonSend(String templateCode, String templateParamJson, String phoneNumber) throws ClientException;
+
+	/**
+	 * 发送短信
+	 *
+	 * @param phoneNumbers      手机号
+	 * @param templateCode      短信模板ID
+	 * @param templateParamJson 短信模板参数
+	 * @return 发送结果封装
+	 * @throws ClientException 短信发送异常
+	 */
+	default CommonResponse commonSend(String templateCode, String templateParamJson, String... phoneNumbers) throws ClientException {
+		return this.commonSend(templateCode, templateParamJson, String.join(",", phoneNumbers));
+	}
 
 	/**
 	 * 发送单条短信(可以多个手机号)
