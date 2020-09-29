@@ -2,7 +2,6 @@ package com.wobangkj.api;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Verification;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -98,8 +97,7 @@ public class SimpleJwt extends Jwt implements Signable {
 		/*
 		 * 校验器 用于生成 JWTVerifier 校验器
 		 */
-		Verification verification = JWT.require(algorithm);
-		verifier = verification.build();
+		verifier = JWT.require(algorithm).build();
 		this.isInitialize = true;
 	}
 }
