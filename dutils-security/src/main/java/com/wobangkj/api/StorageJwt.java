@@ -13,7 +13,7 @@ import java.util.Objects;
  * @since 2019/11/9
  * package : com.wobangkj.util
  */
-public abstract class StorageJwt extends SimpleJwt implements Signable {
+public abstract class StorageJwt extends Jwt implements Signable {
 
 	protected StorageJwt() {
 		super();
@@ -32,7 +32,6 @@ public abstract class StorageJwt extends SimpleJwt implements Signable {
 		 * 校验器 用于生成 JWTVerifier 校验器
 		 */
 		verifier = JWT.require(algorithm).build();
-		isInitialize = true;
 	}
 
 

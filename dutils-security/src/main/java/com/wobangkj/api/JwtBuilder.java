@@ -67,7 +67,7 @@ public class JwtBuilder {
 	/**
 	 * The Builder class holds the Claims that defines the JWT to be created.
 	 */
-	public static class Builder {
+	public static class Builder implements Buildable {
 		private final Map<String, Object> payloadClaims;
 		private Map<String, Object> headerClaims;
 
@@ -82,6 +82,7 @@ public class JwtBuilder {
 		 * @param headerClaims the values to use as Claims in the token's Header.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withHeader(Map<String, Object> headerClaims) {
 			this.headerClaims = new HashMap<>(headerClaims);
 			return this;
@@ -94,6 +95,7 @@ public class JwtBuilder {
 		 * @param keyId the Key Id value.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withKeyId(String keyId) {
 			this.headerClaims.put(PublicClaims.KEY_ID, keyId);
 			return this;
@@ -105,6 +107,7 @@ public class JwtBuilder {
 		 * @param issuer the Issuer value.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withIssuer(String issuer) {
 			addClaim(PublicClaims.ISSUER, issuer);
 			return this;
@@ -116,6 +119,7 @@ public class JwtBuilder {
 		 * @param subject the Subject value.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withSubject(String subject) {
 			addClaim(PublicClaims.SUBJECT, subject);
 			return this;
@@ -127,6 +131,7 @@ public class JwtBuilder {
 		 * @param audience the Audience value.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withAudience(String... audience) {
 			addClaim(PublicClaims.AUDIENCE, audience);
 			return this;
@@ -138,6 +143,7 @@ public class JwtBuilder {
 		 * @param expiresAt the Expires At value.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withExpiresAt(Date expiresAt) {
 			addClaim(PublicClaims.EXPIRES_AT, expiresAt);
 			return this;
@@ -149,6 +155,7 @@ public class JwtBuilder {
 		 * @param notBefore the Not Before value.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withNotBefore(Date notBefore) {
 			addClaim(PublicClaims.NOT_BEFORE, notBefore);
 			return this;
@@ -160,6 +167,7 @@ public class JwtBuilder {
 		 * @param issuedAt the Issued At value.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withIssuedAt(Date issuedAt) {
 			addClaim(PublicClaims.ISSUED_AT, issuedAt);
 			return this;
@@ -171,6 +179,7 @@ public class JwtBuilder {
 		 * @param jwtId the Token Id value.
 		 * @return this same Builder instance.
 		 */
+		@Override
 		public Builder withJWTId(String jwtId) {
 			addClaim(PublicClaims.JWT_ID, jwtId);
 			return this;
@@ -184,6 +193,7 @@ public class JwtBuilder {
 		 * @return this same Builder instance.
 		 * @throws IllegalArgumentException if the name is null.
 		 */
+		@Override
 		public Builder withClaim(String name, Object value) throws IllegalArgumentException {
 			assertNonNull(name);
 			addClaim(name, value);
@@ -198,6 +208,7 @@ public class JwtBuilder {
 		 * @throws IllegalArgumentException if the provided algorithm is null.
 		 * @throws JWTCreationException     if the claims could not be converted to a valid JSON or there was a problem with the signing key.
 		 */
+		@Override
 		public String sign(Algorithm algorithm) throws IllegalArgumentException, JWTCreationException {
 			if (algorithm == null) {
 				throw new IllegalArgumentException("The Algorithm cannot be null.");

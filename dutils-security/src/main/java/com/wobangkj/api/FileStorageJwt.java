@@ -31,14 +31,14 @@ public class FileStorageJwt extends StorageJwt implements Signable {
 	}
 
 	@SneakyThrows
-	public static @NotNull SimpleJwt getInstance() {
+	public static @NotNull FileStorageJwt getInstance() {
 		FileStorageJwt jwt = INSTANCE;
 		jwt.initialize();
 		return jwt;
 	}
 
 	@SneakyThrows
-	public static @NotNull SimpleJwt getInstance(String filename) {
+	public static @NotNull FileStorageJwt getInstance(String filename) {
 		FileStorageJwt jwt = INSTANCE;
 		jwt.setFilename(filename);
 		jwt.initialize();
@@ -46,7 +46,7 @@ public class FileStorageJwt extends StorageJwt implements Signable {
 	}
 
 	@Deprecated
-	public static @NotNull SimpleJwt init() throws NoSuchAlgorithmException {
+	public static @NotNull FileStorageJwt init() throws NoSuchAlgorithmException {
 		FileStorageJwt jwt = INSTANCE;
 		jwt.initialize(KeyGenerator.getInstance(MAC_NAME));
 		return jwt;

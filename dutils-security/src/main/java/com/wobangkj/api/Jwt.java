@@ -1,14 +1,13 @@
 package com.wobangkj.api;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.impl.NullClaim;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.wobangkj.utils.BeanUtils;
-import com.wobangkj.utils.JsonUtils;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -24,18 +23,17 @@ import java.util.Date;
 public abstract class Jwt implements Signable {
 
 	/**
-	 * 发布者 后面一块去校验
-	 */
-	protected static final String ISSUER = "_user";
-	/**
-	 * 有效载荷
-	 */
-	protected static final String PAYLOAD = "payload";
-	/**
 	 * 加密算法 可以抽象到环境变量中配置
 	 */
 	protected static final String MAC_NAME = "HMacSHA256";
-
+	/**
+	 * 发布者 后面一块去校验
+	 */
+	protected static String ISSUER = "_user";
+	/**
+	 * 有效载荷
+	 */
+	protected static String PAYLOAD = "payload";
 	/**
 	 * 校验类
 	 */
@@ -62,12 +60,11 @@ public abstract class Jwt implements Signable {
 	 * @return 签名字符串
 	 */
 	@Override
-	public String sign(final Object obj, long duration) {
-		JWTCreator.Builder builder = JWT.create();
+	public String sign(Object obj, long duration) {
+		JwtBuilder.Builder builder = JwtBuilder.init();
 		long now = System.currentTimeMillis();
 		long accumulate = now + duration;
-		builder.withExpiresAt(new Date(accumulate));
-		return build(builder, obj, now);
+		return build(builder.withExpiresAt(new Date(accumulate)), obj, now);
 	}
 
 	/**
@@ -79,43 +76,9 @@ public abstract class Jwt implements Signable {
 	 */
 	@Override
 	public String sign(Object obj, Date date) {
-		JWTCreator.Builder builder = JWT.create();
+		JwtBuilder.Builder builder = JwtBuilder.init();
 		long now = System.currentTimeMillis();
-		builder.withExpiresAt(date);
-		return build(builder, obj, now);
-	}
-
-	protected String build(JWTCreator.Builder builder, Object obj, long now) {
-		builder.withIssuedAt(new Date(now));
-		builder.withIssuer(ISSUER);
-		if (BeanUtils.isBaseType(obj)) {
-			if (obj instanceof Integer || obj instanceof Short || obj instanceof Byte) {
-				// int
-				builder.withClaim(PAYLOAD, ((Number) obj).intValue());
-			} else if (obj instanceof Double || obj instanceof Float) {
-				// double
-				builder.withClaim(PAYLOAD, ((Number) obj).doubleValue());
-			} else if (obj instanceof Long) {
-				// long
-				builder.withClaim(PAYLOAD, ((Number) obj).longValue());
-			} else if (obj instanceof Boolean) {
-				// bool
-				builder.withClaim(PAYLOAD, (Boolean) obj);
-			} else {
-				// char
-				builder.withClaim(PAYLOAD, obj.toString());
-			}
-		} else if (obj.getClass().isInstance("")) {
-			// string
-			builder.withClaim(PAYLOAD, obj.toString());
-		} else if (obj instanceof Date) {
-			// date
-			builder.withClaim(PAYLOAD, (Date) obj);
-		} else {
-			// object
-			builder.withClaim(PAYLOAD, JsonUtils.toJson(obj));
-		}
-		return builder.sign(algorithm);
+		return build(builder.withExpiresAt(date), obj, now);
 	}
 
 	/**
@@ -125,15 +88,21 @@ public abstract class Jwt implements Signable {
 	 * @return 实例对象
 	 */
 	@Override
-	public Claim unsign(String jwt) {
+	public @NotNull Claim unsign(String jwt) {
 		final DecodedJWT claims = verifier.verify(jwt);
 		Date date = claims.getExpiresAt();
 		long exp = date.getTime();
 		long now = System.currentTimeMillis();
 		if (exp < now) {
-			return null;
+			return new NullClaim();
 		}
 		return claims.getClaim(PAYLOAD);
+	}
+
+	protected String build(Buildable builder, Object obj, long now) {
+		return builder.withIssuedAt(new Date(now))
+				.withIssuer(ISSUER)
+				.withClaim(PAYLOAD, obj).sign(algorithm);
 	}
 
 	protected void initialize(KeyGenerator generator) throws NoSuchAlgorithmException {

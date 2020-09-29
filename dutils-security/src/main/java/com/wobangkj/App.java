@@ -1,7 +1,7 @@
 package com.wobangkj;
 
 import com.wobangkj.api.Jwt;
-import com.wobangkj.api.SimpleFluxJwt;
+import com.wobangkj.api.SimpleJwt;
 
 import java.util.HashMap;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class App {
 
 	public static void main(String[] args) {
-		Jwt jwt = SimpleFluxJwt.getInstance();
+		Jwt jwt = SimpleJwt.getInstance();
 		String a = jwt.sign("1", 10000);
 		System.out.println(a);
 		System.out.println(jwt.unsign(a).asString());
@@ -26,5 +26,4 @@ public class App {
 		System.out.println(d);
 		System.out.println(jwt.unsignToMap(d));
 	}
-
 }
