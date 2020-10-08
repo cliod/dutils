@@ -290,14 +290,24 @@
 
     <distributionManagement>
         <repository>
-            <id>rdc-releases</id>
+            <id>lu-rdc-releases</id>
             <url>https://repo.rdc.aliyun.com/repository/79115-release-8qAEIB/</url>
         </repository>
         <snapshotRepository>
-            <id>rdc-snapshots</id>
+            <id>lu-rdc-snapshots</id>
             <url>https://repo.rdc.aliyun.com/repository/79115-SNAPSHOT-nphODc/</url>
         </snapshotRepository>
     </distributionManagement>
+    <!--    <distributionManagement>-->
+    <!--        <repository>-->
+    <!--            <id>cliod-rdc-releases</id>-->
+    <!--            <url>https://repo.rdc.aliyun.com/repository/134223-release-08Oyns/</url>-->
+    <!--        </repository>-->
+    <!--        <snapshotRepository>-->
+    <!--            <id>cliod-rdc-snapshots</id>-->
+    <!--            <url>https://repo.rdc.aliyun.com/repository/134223-snapshot-KTjEgP/</url>-->
+    <!--        </snapshotRepository>-->
+    <!--    </distributionManagement>-->
 
     <build>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
