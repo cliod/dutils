@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>4.0.12-SNAPSHOT</version>
+    <version>4.0.13-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -287,23 +287,26 @@
         </dependencies>
     </dependencyManagement>
 
+    <!--lu-->
     <distributionManagement>
         <repository>
-            <id>lu-rdc-releases</id>
+            <id>rdc-releases</id>
             <url>https://repo.rdc.aliyun.com/repository/79115-release-8qAEIB/</url>
         </repository>
         <snapshotRepository>
-            <id>lu-rdc-snapshots</id>
+            <id>rdc-snapshots</id>
             <url>https://repo.rdc.aliyun.com/repository/79115-SNAPSHOT-nphODc/</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <!--cliod-->
     <!--    <distributionManagement>-->
     <!--        <repository>-->
-    <!--            <id>cliod-rdc-releases</id>-->
+    <!--            <id>rdc-releases</id>-->
     <!--            <url>https://repo.rdc.aliyun.com/repository/134223-release-08Oyns/</url>-->
     <!--        </repository>-->
     <!--        <snapshotRepository>-->
-    <!--            <id>cliod-rdc-snapshots</id>-->
+    <!--            <id>rdc-snapshots</id>-->
     <!--            <url>https://repo.rdc.aliyun.com/repository/134223-snapshot-KTjEgP/</url>-->
     <!--        </snapshotRepository>-->
     <!--    </distributionManagement>-->

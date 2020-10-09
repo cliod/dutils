@@ -1,11 +1,11 @@
 package com.wobangkj.api;
 
 import com.auth0.jwt.interfaces.Claim;
-import com.wobangkj.utils.BeanUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -63,7 +63,7 @@ public interface Signable {
 	 */
 	default <T> T unsign(String jwt, Class<T> clazz) {
 		Claim value = this.unsign(jwt);
-		if (BeanUtils.isNull(value)) {
+		if (Objects.isNull(value)) {
 			return null;
 		}
 		return value.as(clazz);
@@ -77,7 +77,7 @@ public interface Signable {
 	 */
 	default Map<String, Object> unsignToMap(String jwt) {
 		Claim value = this.unsign(jwt);
-		if (BeanUtils.isNull(value)) {
+		if (Objects.isNull(value)) {
 			return null;
 		}
 		return value.asMap();
