@@ -5,13 +5,14 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>4.0.14-SNAPSHOT</version>
+    <version>4.1.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
     <modules>
         <module>dutils-base</module>
         <module>dutils-common</module>
+        <module>dutils-cache</module>
         <module>dutils-datetime</module>
         <module>dutils-security</module>
         <module>dutils-pinyin</module>
@@ -21,6 +22,7 @@
         <module>dutils-captcha</module>
         <module>dutils-excel</module>
         <module>dutils-sms</module>
+        <module>dutils-cache</module>
     </modules>
 
     <name>dutils</name>
@@ -91,25 +93,6 @@
             <version>${slf4j.version}</version>
         </dependency>
 
-        <!--Spring Web-WebMvc-Context-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -283,6 +266,14 @@
                 <artifactId>easyexcel</artifactId>
                 <version>[2.1.6,)</version>
                 <optional>true</optional>
+            </dependency>
+
+            <!--Spring WebMvc-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

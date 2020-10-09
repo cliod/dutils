@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -21,8 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @since 9/21/20 5:00 PM
  */
 @Slf4j
-@Component
-public class Authenticate {
+public abstract class Authenticate {
 
 	private static Cacheables CACHE;
 	private static Jwt jwt;
