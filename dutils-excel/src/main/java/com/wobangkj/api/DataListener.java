@@ -1,5 +1,6 @@
 package com.wobangkj.api;
 
+import com.alibaba.excel.context.AnalysisContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -10,5 +11,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Deprecated
-public abstract class DataListener<T extends Model> extends SyncDataReadListener<T> {
+public abstract class DataListener<T extends Model> extends SyncReadProcessListener<T> {
+	/**
+	 * 真正处理
+	 *
+	 * @param context 参数
+	 */
+	@Override
+	protected void doProcess(AnalysisContext context) {
+
+	}
 }

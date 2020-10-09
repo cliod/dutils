@@ -10,9 +10,8 @@ import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
-import com.wobangkj.api.Model;
 import com.wobangkj.api.Name;
-import com.wobangkj.api.SaveListener;
+import com.wobangkj.api.SyncSaveListener;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
@@ -54,7 +53,11 @@ public class ExcelUtils {
 	 * @throws IOException io异常
 	 */
 	public static @NotNull File write(List<?> data) throws IOException {
-		return write(data, null);
+		Class<?> type;
+		if (data.isEmpty()) {type = null; } else {
+			type = data.get(0).getClass();
+		}
+		return write(data, type);
 	}
 
 	/**
@@ -180,13 +183,13 @@ public class ExcelUtils {
 	 * @param head      导出对象类型
 	 * @throws Exception 异常
 	 */
-	public static void write(HttpServletResponse response, List<?> data, Class<?> head, String fileName, String sheetName, ExcelTypeEnum typeEnum) throws Exception {
+	public static void write(HttpServletResponse response, List<?> data, Class<?> head, String fileName, String sheetName, ExcelTypeEnum fileType) throws Exception {
 		fileName = URLEncoder.encode(fileName, "UTF-8");
 		response.setContentType("application/octet-stream");
 		response.setCharacterEncoding("utf8");
-		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName + typeEnum.getValue());
+		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName + fileType.getValue());
 		EasyExcel.write(response.getOutputStream(), head)
-				.excelType(typeEnum).sheet(sheetName).registerWriteHandler(getStyleStrategy()).doWrite(data);
+				.excelType(fileType).sheet(sheetName).registerWriteHandler(getStyleStrategy()).doWrite(data);
 	}
 
 	/**
@@ -220,7 +223,7 @@ public class ExcelUtils {
 	 * @param <T>      模型类型
 	 */
 	@Deprecated
-	public static <T extends Model> void read(@NotNull MultipartFile file, @NotNull Class<T> type, ReadListener<T> listener) throws IOException {
+	public static <T> void read(@NotNull MultipartFile file, @NotNull Class<T> type, ReadListener<T> listener) throws IOException {
 		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
 		EasyExcel.read(file.getInputStream(), type, listener).sheet().doRead();
 	}
@@ -236,7 +239,7 @@ public class ExcelUtils {
 	 */
 	@Deprecated
 	public static <T> void read(@NotNull MultipartFile file, Class<T> type, Consumer<List<T>> func) throws IOException {
-		EasyExcel.read(file.getInputStream(), type, SaveListener.of(func)).sheet().doRead();
+		EasyExcel.read(file.getInputStream(), type, SyncSaveListener.of(func)).sheet().doRead();
 	}
 
 	/**
@@ -247,7 +250,7 @@ public class ExcelUtils {
 	 * @param listener 监听并操作
 	 * @param <T>      模型类型
 	 */
-	public static <T extends Model> void read(@NotNull InputStream is, @NotNull Class<T> type, ReadListener<T> listener) {
+	public static <T> void read(@NotNull InputStream is, @NotNull Class<T> type, ReadListener<T> listener) {
 		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
 		EasyExcel.read(is, type, listener).sheet().doRead();
 	}
@@ -261,7 +264,7 @@ public class ExcelUtils {
 	 * @param <T>  类型
 	 */
 	public static <T> void read(@NotNull InputStream is, Class<T> type, Consumer<List<T>> func) {
-		EasyExcel.read(is, type, SaveListener.of(func)).sheet().doRead();
+		EasyExcel.read(is, type, SyncSaveListener.of(func)).sheet().doRead();
 	}
 
 	/**
@@ -272,7 +275,7 @@ public class ExcelUtils {
 	 * @param listener 监听并操作
 	 * @param <T>      模型类型
 	 */
-	public static <T extends Model> void read(@NotNull InputStream is, @NotNull Class<T> type, Object sheet, ReadListener<T> listener) {
+	public static <T> void read(@NotNull InputStream is, @NotNull Class<T> type, Object sheet, ReadListener<T> listener) {
 		// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
 		ExcelReaderBuilder builder = EasyExcel.read(is, type, listener);
 		ExcelReaderSheetBuilder sheetBuilder;
@@ -293,7 +296,7 @@ public class ExcelUtils {
 	 * @param <T>  类型
 	 */
 	public static <T> void read(@NotNull InputStream is, Class<T> type, Object sheet, Consumer<List<T>> func) {
-		ExcelReaderBuilder builder = EasyExcel.read(is, type, SaveListener.of(func));
+		ExcelReaderBuilder builder = EasyExcel.read(is, type, SyncSaveListener.of(func));
 		ExcelReaderSheetBuilder sheetBuilder;
 		if (sheet instanceof Number) {
 			sheetBuilder = builder.sheet(((Number) sheet).intValue());

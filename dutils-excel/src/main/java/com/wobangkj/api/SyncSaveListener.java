@@ -4,7 +4,6 @@ import com.alibaba.excel.context.AnalysisContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -13,36 +12,39 @@ import java.util.function.Consumer;
  * @author cliod
  * @since 7/9/20 5:03 PM
  */
-public class SyncSaveListener<T> extends SyncReadListener<T> {
+public class SyncSaveListener<T> extends SyncReadProcessListener<T> {
 
-	final long count = 1000;
+	final int count = 1000;
 	/**
 	 * 处理
 	 */
-	private final Consumer<List<T>> process;
+	private final Consumer<List<T>> processor;
 
-	protected SyncSaveListener(Consumer<List<T>> process) {
-		this.process = process;
+	protected SyncSaveListener(Consumer<List<T>> processor) {
+		this.processor = processor;
 	}
 
-	public static <T> @NotNull SyncSaveListener<T> of(Consumer<List<T>> process) {
-		return new SyncSaveListener<>(process);
+	public static <T> @NotNull SyncSaveListener<T> of(Consumer<List<T>> processor) {
+		return new SyncSaveListener<>(processor);
 	}
 
+	/**
+	 * 最大存储数量
+	 *
+	 * @return 数量
+	 */
 	@Override
-	public void invoke(T data, AnalysisContext context) {
-		if (Objects.nonNull(data)) {
-			super.invoke(data, context);
-		}
-		if (this.data.size() >= count) {
-			this.process.accept(this.data);
-			this.data.clear();
-		}
+	protected int getMax() {
+		return count;
 	}
 
+	/**
+	 * 真正处理
+	 *
+	 * @param context 参数
+	 */
 	@Override
-	public void doAfterAllAnalysed(AnalysisContext context) {
-		this.process.accept(this.data);
-		super.doAfterAllAnalysed(context);
+	protected void doProcess(AnalysisContext context) {
+		this.processor.accept(this.cache);
 	}
 }

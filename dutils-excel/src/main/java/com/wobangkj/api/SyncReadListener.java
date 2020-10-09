@@ -14,7 +14,7 @@ import java.util.List;
  */
 public abstract class SyncReadListener<T> extends AnalysisEventListener<T> {
 
-	protected List<T> data = new ArrayList<>();
+	protected List<T> cache = new ArrayList<>();
 
 	/**
 	 * When analysis one row trigger invoke function.
@@ -24,7 +24,7 @@ public abstract class SyncReadListener<T> extends AnalysisEventListener<T> {
 	 */
 	@Override
 	public void invoke(T data, AnalysisContext context) {
-		this.data.add(data);
+		this.cache.add(data);
 	}
 
 	/**

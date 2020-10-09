@@ -11,6 +11,7 @@ import java.util.function.Consumer;
  * @author cliod
  * @since 7/9/20 5:03 PM
  */
+@Deprecated
 public final class SaveListener<T> extends SyncSaveListener<T> {
 	protected SaveListener(Consumer<List<T>> process) {
 		super(process);

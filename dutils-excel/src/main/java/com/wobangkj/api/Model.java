@@ -7,6 +7,7 @@ package com.wobangkj.api;
  * @since 5/6/20 2:28 PM
  * package: com.wobangkj.jzlw.utils.excel
  */
+@Deprecated
 public interface Model {
 	/**
 	 * 新建对象
