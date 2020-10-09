@@ -392,6 +392,21 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>3.0.0</version>
                 </plugin>
+                <!--配置生成源码包-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <executions>
+                        <execution>
+                            <id>nexus-release</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <!--配置生成Javadoc包-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -409,20 +424,15 @@
                         <sourcepath>target/generated-sources/delombok</sourcepath>
                     </configuration>
                 </plugin>
-                <!--配置生成源码包-->
+                <!--lombok源码插件-->
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.2.1</version>
-                    <executions>
-                        <execution>
-                            <id>nexus-release</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok-maven-plugin</artifactId>
+                    <version>1.19.0.0</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <sourceDirectory>src/main/java</sourceDirectory>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
