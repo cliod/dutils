@@ -1,8 +1,8 @@
 package com.wobangkj.enums;
 
+import com.wobangkj.api.EnumMsg;
 import com.wobangkj.api.EnumTextMsg;
 import com.wobangkj.utils.JsonUtils;
-import com.wobangkj.api.EnumMsg;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;

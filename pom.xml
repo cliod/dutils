@@ -24,7 +24,6 @@
     </modules>
 
     <name>dutils</name>
-
     <url>https://blog.wobangkj.com</url>
 
     <licenses>
@@ -382,6 +381,19 @@
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <sourcepath>target/generated-sources/delombok</sourcepath>
+                    </configuration>
+                </plugin>
+                <!--lombok源码插件-->
+                <plugin>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok-maven-plugin</artifactId>
+                    <version>1.19.0.0</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <sourceDirectory>src/main/java</sourceDirectory>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

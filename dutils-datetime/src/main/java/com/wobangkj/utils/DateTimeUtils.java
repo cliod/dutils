@@ -120,8 +120,6 @@ public class DateTimeUtils extends org.apache.commons.lang3.time.DateUtils {
 		return getDaySub(datetime, getNow(FORMAT_DATETIME_DEFAULT.getPattern()));
 	}
 
-	;
-
 	/**
 	 * 获取指定时间到当前的周数
 	 * 注: 以周一结算
@@ -579,7 +577,6 @@ public class DateTimeUtils extends org.apache.commons.lang3.time.DateUtils {
 	public static Date addSecond(Date date, int second) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		;
 		calendar.add(Calendar.SECOND, second);
 		return calendar.getTime();
 	}

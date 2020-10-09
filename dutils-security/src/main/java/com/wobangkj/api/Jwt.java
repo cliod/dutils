@@ -5,13 +5,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.impl.NullClaim;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.wobangkj.utils.BeanUtils;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * jwt加密
@@ -88,7 +88,8 @@ public abstract class Jwt implements Signable {
 	 * @return 实例对象
 	 */
 	@Override
-	public @NotNull Claim unsign(String jwt) {
+	public @NotNull
+	Claim unsign(String jwt) {
 		final DecodedJWT claims = verifier.verify(jwt);
 		Date date = claims.getExpiresAt();
 		long exp = date.getTime();
@@ -106,7 +107,7 @@ public abstract class Jwt implements Signable {
 	}
 
 	protected void initialize(KeyGenerator generator) throws NoSuchAlgorithmException {
-		if (!BeanUtils.isNull(generator)) {
+		if (!Objects.isNull(generator)) {
 			this.keyGenerator = generator;
 		}
 		if (null == this.keyGenerator) {

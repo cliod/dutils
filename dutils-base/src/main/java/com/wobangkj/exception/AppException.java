@@ -18,23 +18,23 @@ public class AppException extends RuntimeException {
      */
     private final Integer code;
 
-    public AppException(@NotNull EnumMsg re) {
-        super(re.getMsg());
-        this.code = re.getCode();
-    }
+	public AppException(@NotNull EnumMsg re) {
+		super(re.getMsg());
+		this.code = re.getCode();
+	}
 
-    public AppException(Integer code, String s) {
-        super(s);
-        this.code = code;
-    }
+	public AppException(Integer code, String s) {
+		super(s);
+		this.code = code;
+	}
 
-    public AppException(Throwable cause, Integer code) {
-        super(cause);
-        this.code = code;
-    }
+	public AppException(Throwable cause, Integer code) {
+		super(cause);
+		this.code = code;
+	}
 
-    public AppException(@NotNull EnumMsg re, Throwable cause) {
-        super(re.getMsg(), cause);
-        this.code = re.getCode();
-    }
+	public AppException(@NotNull EnumMsg re, Throwable cause) {
+		super(re.getMsg(), cause);
+		this.code = re.getCode();
+	}
 }

@@ -38,4 +38,14 @@ public interface AuthExceptionAssert extends EnumMsg, ExceptionAssert {
 		String msg = MessageFormat.format(this.getMsg(), args);
 		return new AuthorizeException(this, t, msg);
 	}
+
+	/**
+	 * 获取code
+	 *
+	 * @return code
+	 */
+	@Override
+	default Integer getCode() {
+		return 271;
+	}
 }

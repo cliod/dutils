@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjuster;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.wobangkj.enums.Format.values;
+import static com.wobangkj.enums.Format.*;
 
 /**
  * 日期工具
@@ -27,8 +28,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	/**
 	 * 格式转化器
 	 */
-	public static final Map<Format, SimpleDateFormat> DATA_FORMAT;
-	public static final Map<Format, DateTimeFormatter> FORMATTER;
+	public static final Map<Object, SimpleDateFormat> DATA_FORMAT;
+	public static final Map<Object, DateTimeFormatter> FORMATTER;
 
 	/**
 	 * 一天的MilliSecond
@@ -56,18 +57,38 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	static final String EMPTY = "";
 
 	static {
-		DATA_FORMAT = new HashMap<Format, SimpleDateFormat>(16) {{
-			for (Format value : Format.values()) {
-				put(value, new SimpleDateFormat(value.getPattern()));
-			}
-		}};
+		DATA_FORMAT = new HashMap<>(16);
+		SimpleDateFormat date_format;
+		for (Format value : Format.values()) {
+			date_format = new SimpleDateFormat(value.getPattern());
+			DATA_FORMAT.put(value, date_format);
+			DATA_FORMAT.put(value.getPattern(), date_format);
+		}
 
-		FORMATTER = new HashMap<>();
+		FORMATTER = new HashMap<>(16);
+		DateTimeFormatter formatter;
 		for (Format format : values()) {
-			FORMATTER.put(format, DateTimeFormatter.ofPattern(format.getPattern()));
+			formatter = DateTimeFormatter.ofPattern(format.getPattern());
+			FORMATTER.put(format, formatter);
+			FORMATTER.put(format.getPattern(), formatter);
 		}
 	}
 
+	public static String getNow() {
+		return LocalDate.now().format(FORMATTER.get(DATE_DEFAULT));
+	}
+
+	public static String getNowTime() {
+		return LocalDateTime.now().format(FORMATTER.get(DATETIME_DEFAULT));
+	}
+
+	public static String getNow(String format) {
+		return FORMATTER.get(format).format(LocalDateTime.now());
+	}
+
+	public static String getNow(Format format) {
+		return FORMATTER.get(format).format(LocalDateTime.now());
+	}
 
 	/**
 	 * 获取当前时间的周一

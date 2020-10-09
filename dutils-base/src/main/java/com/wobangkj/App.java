@@ -8,36 +8,36 @@ import org.jetbrains.annotations.NotNull;
  * Hello world!
  */
 public class App {
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
-        test();
-    }
+	public static void main(String[] args) {
+		System.out.println("Hello World!");
+		test();
+	}
 
-    public static void test() {
-	    SessionSerializable sessionSerializable = new SessionSerializable() {
-		    @Getter
-		    private String name = "Lihua";
-		    @Getter
-		    private String love = "I love Chinese";
+	public static void test() {
+		SessionSerializable sessionSerializable = new SessionSerializable() {
+			@Getter
+			private final String name = "Lihua";
+			@Getter
+			private final String love = "I love Chinese";
 
-		    @NotNull
-		    @Override
-		    public String toString() {
-			    return this.toJson();
+			@NotNull
+			@Override
+			public String toString() {
+				return this.toJson();
 
-            }
+			}
 
-		    @NotNull
-		    @Override
-		    public String toJson() {
-			    return "{" +
-					    "name:\"" + this.getName() + '\"' +
-					    ", love:\"" + this.getLove() + '\"' +
-					    '}';
-		    }
-	    };
+			@NotNull
+			@Override
+			public String toJson() {
+				return "{" +
+						"name:\"" + this.getName() + '\"' +
+						", love:\"" + this.getLove() + '\"' +
+						'}';
+			}
+		};
 
-	    System.out.println(sessionSerializable.toJson());
-	    System.out.println(sessionSerializable.toObject());
-    }
+		System.out.println(sessionSerializable.toJson());
+		System.out.println(sessionSerializable.toObject());
+	}
 }

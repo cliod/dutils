@@ -16,22 +16,22 @@ import java.util.Optional;
 @Deprecated
 public class ObjPageable<T> extends Pageable {
 
-    private T param;
+	private T param;
 
-    public @NotNull
-    final Optional<T> getParam() {
-        return Optional.of(get());
-    }
+	public static <T> @NotNull ObjPageable<T> of(int page, int size, T obj) {
+		ObjPageable<T> pageable = new ObjPageable<>();
+		pageable.setParam(obj);
+		pageable.setPage(page);
+		pageable.setSize(size);
+		return pageable;
+	}
 
-    public static <T> @NotNull ObjPageable<T> of(int page, int size, T obj) {
-        ObjPageable<T> pageable = new ObjPageable<>();
-        pageable.setParam(obj);
-        pageable.setPage(page);
-        pageable.setSize(size);
-        return pageable;
-    }
+	public @NotNull
+	final Optional<T> getParam() {
+		return Optional.of(get());
+	}
 
-    public T get() {
-        return param;
-    }
+	public T get() {
+		return param;
+	}
 }

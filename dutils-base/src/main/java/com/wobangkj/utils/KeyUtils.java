@@ -3,6 +3,7 @@ package com.wobangkj.utils;
 import com.wobangkj.uuid.SnowflakeIdWorker;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +35,7 @@ public class KeyUtils {
 	 * @return 解密字符
 	 */
 	public static @NotNull String decode(String value) {
-		if (BeanUtils.isEmpty(value)) {
+		if (StringUtils.isEmpty(value)) {
 			return "";
 		}
 		return new String(Base64.decodeBase64(value), StandardCharsets.UTF_8);
@@ -60,7 +61,7 @@ public class KeyUtils {
 	 * @return 加密字符
 	 */
 	public static @NotNull String encode(String value) {
-		if (BeanUtils.isEmpty(value)) {
+		if (StringUtils.isEmpty(value)) {
 			return "";
 		}
 		return new String(Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
@@ -73,7 +74,7 @@ public class KeyUtils {
 	 * @return 加密字符
 	 */
 	public static @NotNull String encode(byte[] value) {
-		if (BeanUtils.isEmpty(value)) {
+		if (ArrayUtils.isEmpty(value)) {
 			return "";
 		}
 		return new String(Base64.encodeBase64(value), StandardCharsets.UTF_8);
@@ -88,7 +89,7 @@ public class KeyUtils {
 	 */
 	public static @NotNull String encrypt(String value) {
 		String encodeStr = "";
-		if (BeanUtils.isEmpty(value)) {
+		if (StringUtils.isEmpty(value)) {
 			return encodeStr;
 		}
 		MessageDigest messageDigest;

@@ -539,10 +539,11 @@ public class QrCodeUtils {
 		if (StringUtils.isEmpty(path)) {
 			return null;
 		}
-		if (path.startsWith("http"))
+		if (path.startsWith("http")) {
 			return decode(new URL(path));
-		else
+		} else {
 			return decode(new File(path));
+		}
 	}
 
 	/**
@@ -637,8 +638,9 @@ public class QrCodeUtils {
 	}
 
 	public static @NotNull File createFile(String destPath, String fileName) {
-		if (!StringUtils.isEmpty(destPath))
+		if (!StringUtils.isEmpty(destPath)) {
 			mkdirs(destPath, 0);
+		}
 		if (StringUtils.isEmpty(fileName)) {
 			fileName = UUID.randomUUID().toString() + "." + FORMAT.toLowerCase();
 		}
