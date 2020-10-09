@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>3.3.3-FIX</version>
+    <version>4.0.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>dutils-base</module>
+        <module>dutils-common</module>
+        <module>dutils-datetime</module>
+        <module>dutils-security</module>
+        <module>dutils-pinyin</module>
+        <module>dutils-qrcode</module>
+        <module>dutils-db</module>
+        <module>dutils-all</module>
+        <module>dutils-captcha</module>
+        <module>dutils-excel</module>
+        <module>dutils-sms</module>
+    </modules>
 
     <name>dutils</name>
     <url>https://blog.wobangkj.com</url>
-
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -47,14 +61,12 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>[19.0.0,)</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>[1.18.12,)</version>
+            <version>1.18.12</version>
             <optional>true</optional>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -146,12 +158,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>easyexcel</artifactId>
-            <version>2.1.6</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
@@ -162,20 +168,6 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!--短信sdk-->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>[4.5.6,)</version>
-            <optional>true</optional>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-dysmsapi -->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
-            <version>2.1.0</version>
         </dependency>
 
     </dependencies>
@@ -200,7 +192,18 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>[2.7,)</version>
+                <version>2.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-base</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-common</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <!--通用工具包-->
             <dependency>
@@ -302,42 +305,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <repositories>
-        <repository>
-            <id>aliyun-repos</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aliyun-plugin</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <profiles>
-        <profile>
-            <id>rdc-private-repo</id>
-            <repositories>
-                <repository>
-                    <id>rdc-releases</id>
-                    <url>https://repo.rdc.aliyun.com/repository/79115-release-8qAEIB/</url>
-                </repository>
-                <repository>
-                    <id>rdc-snapshots</id>
-                    <url>https://repo.rdc.aliyun.com/repository/79115-snapshot-nphODc/</url>
-                </repository>
-            </repositories>
-        </profile>
-    </profiles>
 
     <distributionManagement>
         <repository>
