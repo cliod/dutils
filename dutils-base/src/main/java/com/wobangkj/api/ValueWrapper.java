@@ -7,7 +7,12 @@ package com.wobangkj.api;
  * @since 7/9/20 3:55 PM
  */
 public interface ValueWrapper<T> extends SessionSerializable {
-
+	/**
+	 * 静态方法
+	 *
+	 * @param obj 对象
+	 * @return 包装对象
+	 */
 	static ValueWrapper<Object> of(Object obj) {
 		return new SimpleValueWrapper(obj);
 	}

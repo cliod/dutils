@@ -6,7 +6,6 @@ import com.wobangkj.bean.Res;
 import com.wobangkj.enums.ResultEnum;
 import org.jetbrains.annotations.NotNull;
 
-import static com.wobangkj.bean.Res.of;
 import static com.wobangkj.bean.Res.ofRes;
 
 /**
@@ -64,10 +63,7 @@ public final class Response {
 	 * @return 结果
 	 */
 	public static @NotNull <T> Res ok(@NotNull Pager<T> pager) {
-		return ok(pager.getData())
-				.add("pager", of("client_page", pager.getClientPage())
-						.set("every_page", pager.getEveryPage())
-						.set("total_num", pager.getTotalNum()));
+		return ok().addAll(pager.toObject());
 	}
 
 	/**
