@@ -66,12 +66,36 @@ public abstract class Pageable implements com.wobangkj.api.Pageable, Cloneable {
 
 	@Override
 	public Integer getSize() {
-		return Objects.isNull(size) ? 10 : size;
+		return Objects.isNull(size) ? 5 : size;
 	}
 
 	@Override
 	public Integer getPage() {
-		return Objects.isNull(page) ? 1 : page;
+		if (Objects.isNull(page)) {
+			return 1;
+		} else if (page < this.minPageSize()) {
+			return this.minPageSize();
+		} else {
+			return page;
+		}
+	}
+
+	/**
+	 * 最大分页
+	 *
+	 * @return 条数
+	 */
+	protected int getSizeMax() {
+		return 200;
+	}
+
+	/**
+	 * 最小分页
+	 *
+	 * @return 页数
+	 */
+	protected int minPageSize() {
+		return 1;
 	}
 
 	/**
