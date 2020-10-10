@@ -16,21 +16,21 @@ import static com.wobangkj.bean.Res.ofRes;
  * @since 2019/9/14
  * package : com.wobangkj.bean
  */
-public interface Response {
-    public static final int showMsg = 271;
-    public static final int successMsg = 200;
-    public static final int errorMsg = 500;
+public final class Response {
+    public static final int SHOW_CODE = 271;
+    public static final int SUCCESS_CODE = 200;
+    public static final int ERROR_CODE = 500;
     public static Maps<String, Object> OK = ok();
     public static Maps<String, Object> ERR = err("未知异常");
-    public static Maps<String, Object> DELETE = ofRes(successMsg, ResultEnum.SUCCESS_DELETE.getMsg());
-    public static Maps<String, Object> UPDATE = ofRes(successMsg, ResultEnum.SUCCESS_EDIT.getMsg());
-    public static Maps<String, Object> INSERT = ofRes(successMsg, ResultEnum.SUCCESS_ADD.getMsg());
+    public static Maps<String, Object> DELETE = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_DELETE.getMsg());
+    public static Maps<String, Object> UPDATE = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_EDIT.getMsg());
+    public static Maps<String, Object> INSERT = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_ADD.getMsg());
 
     /**
      * 无返回(请求成功)
      */
     public static @NotNull Res ok() {
-        return ofRes(successMsg, "请求成功");
+        return ofRes(SUCCESS_CODE, "请求成功");
     }
 
     /**
@@ -74,21 +74,21 @@ public interface Response {
      * @return 结果
      */
     public static @NotNull Res fail(String msg) {
-        return ofRes(showMsg, msg);
+        return ofRes(SHOW_CODE, msg);
     }
 
     /**
      * 已处理失败返回
      */
     public static @NotNull Res fail(String msg, @NotNull EnumMsg em) {
-        return ofRes(showMsg, msg, em.toThrowable());
+        return ofRes(SHOW_CODE, msg, em.toThrowable());
     }
 
     /**
      * 失败返回,携带系统错误信息
      */
     public static @NotNull Res fail(String msg, @NotNull Throwable throwable) {
-        return ofRes(showMsg, msg, throwable);
+        return ofRes(SHOW_CODE, msg, throwable);
     }
 
     /**
@@ -118,7 +118,7 @@ public interface Response {
      * @return 结果
      */
     public static @NotNull Res err() {
-        return ofRes(errorMsg, "未知异常");
+        return ofRes(ERROR_CODE, "未知异常");
     }
 
     /**
@@ -128,7 +128,7 @@ public interface Response {
      * @return 结果
      */
     public static @NotNull Res err(String msg) {
-        return ofRes(errorMsg, msg);
+        return ofRes(ERROR_CODE, msg);
     }
 
     /**
@@ -138,7 +138,7 @@ public interface Response {
      * @return 结果
      */
     public static @NotNull Res err(Throwable throwable) {
-        return ofRes(errorMsg, "系统异常", throwable);
+        return ofRes(ERROR_CODE, "系统异常", throwable);
     }
 
     /**
@@ -186,7 +186,7 @@ public interface Response {
      */
     @Deprecated
     public static @NotNull Res err(@NotNull EnumMsg err) {
-        return ofRes(errorMsg, "未知错误", err.toThrowable());
+        return ofRes(ERROR_CODE, "未知错误", err.toThrowable());
     }
 
 }

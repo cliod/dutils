@@ -59,12 +59,41 @@ public abstract class Pageable implements com.wobangkj.api.Pageable {
 
 	@Override
 	public Integer getSize() {
-		return Objects.isNull(size) ? 5 : size;
+		if (Objects.isNull(size)) {
+			return 5;
+		} else if (size > this.getSizeMax()) {
+			return this.getSizeMax();
+		} else {
+			return size;
+		}
 	}
 
 	@Override
 	public Integer getPage() {
-		return Objects.isNull(page) ? 1 : page;
+		if (Objects.isNull(page)) {
+			return 1;
+		} else if (page < this.minPageSize()) {
+			return this.minPageSize();
+		} else {
+			return page;
+		}
 	}
 
+	/**
+	 * 最大分页
+	 *
+	 * @return 条数
+	 */
+	protected int getSizeMax() {
+		return 200;
+	}
+
+	/**
+	 * 最小分页
+	 *
+	 * @return 页数
+	 */
+	protected int minPageSize() {
+		return 1;
+	}
 }
