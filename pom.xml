@@ -22,7 +22,6 @@
         <module>dutils-captcha</module>
         <module>dutils-excel</module>
         <module>dutils-sms</module>
-        <module>dutils-cache</module>
     </modules>
 
     <name>dutils</name>
