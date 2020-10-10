@@ -66,7 +66,13 @@ public abstract class Pageable implements com.wobangkj.api.Pageable, Cloneable {
 
 	@Override
 	public Integer getSize() {
-		return Objects.isNull(size) ? 5 : size;
+		if (Objects.isNull(size)) {
+			return 5;
+		} else if (size > this.getSizeMax()) {
+			return this.getSizeMax();
+		} else {
+			return size;
+		}
 	}
 
 	@Override
