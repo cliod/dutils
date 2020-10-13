@@ -14,13 +14,14 @@ import java.util.function.Consumer;
  */
 public class SyncSaveListener<T> extends SyncReadProcessListener<T> {
 
-	final int count = 1000;
+	static final int COUNT = 1000;
 	/**
 	 * 处理
 	 */
 	private final Consumer<List<T>> processor;
 
 	protected SyncSaveListener(Consumer<List<T>> processor) {
+		super(COUNT);
 		this.processor = processor;
 	}
 
@@ -35,7 +36,7 @@ public class SyncSaveListener<T> extends SyncReadProcessListener<T> {
 	 */
 	@Override
 	protected int getMax() {
-		return count;
+		return COUNT;
 	}
 
 	/**

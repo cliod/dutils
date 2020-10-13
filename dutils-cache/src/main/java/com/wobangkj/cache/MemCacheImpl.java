@@ -87,14 +87,14 @@ public class MemCacheImpl implements Cacheables {
 	 */
 	protected void timing() {
 		this.shutdown = false;
-		ThreadExecutor.timing.scheduleWithFixedDelay(this::autoDelete, 1, 5, TimeUnit.MINUTES);
+		ThreadExecutor.TIMER.scheduleWithFixedDelay(this::autoDelete, 1, 5, TimeUnit.MINUTES);
 	}
 
 	/**
 	 * 关掉自动任务
 	 */
 	protected void shutdown() {
-		ThreadExecutor.timing.shutdown();
+		ThreadExecutor.TIMER.shutdown();
 	}
 
 	/**

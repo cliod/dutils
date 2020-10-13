@@ -9,7 +9,7 @@
     <parent>
         <artifactId>dutils</artifactId>
         <groupId>com.wobangkj</groupId>
-        <version>4.1.3</version>
+        <version>4.1.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>dutils-cache</artifactId>
@@ -23,6 +23,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.wobangkj</groupId>
+            <artifactId>dutils-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
