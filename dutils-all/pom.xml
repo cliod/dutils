@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>4.2.0-SNAPSHOT</version>
+        <version>4.2.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>dutils-all</artifactId>
@@ -61,6 +61,11 @@
         <dependency>
             <groupId>com.wobangkj</groupId>
             <artifactId>dutils-captcha</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wobangkj</groupId>
+            <artifactId>dutils-storage</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

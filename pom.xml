@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>4.2.0-SNAPSHOT</version>
+    <version>4.2.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -22,6 +22,7 @@
         <module>dutils-captcha</module>
         <module>dutils-excel</module>
         <module>dutils-sms</module>
+        <module>dutils-storage</module>
     </modules>
 
     <name>dutils</name>
@@ -144,6 +145,11 @@
             <dependency>
                 <groupId>com.wobangkj</groupId>
                 <artifactId>dutils-sms</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-storage</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
