@@ -24,6 +24,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.wobangkj</groupId>
+            <artifactId>dutils-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
