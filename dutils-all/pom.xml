@@ -58,6 +58,11 @@
             <artifactId>dutils-sms</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.wobangkj</groupId>
+            <artifactId>dutils-captcha</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
