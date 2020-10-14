@@ -12,6 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class SyncReadSimpleListener<T> extends SyncReadListener<T> {
 
+	protected static transient int maxSize = 500;
+
+	public SyncReadSimpleListener() {
+		super(maxSize);
+	}
+
+	public SyncReadSimpleListener(int initCapacity) {
+		super(initCapacity);
+	}
+
 	@Override
 	public final void invoke(T data, AnalysisContext context) {
 		if (!this.filter(data)) {
@@ -57,7 +67,7 @@ public abstract class SyncReadSimpleListener<T> extends SyncReadListener<T> {
 	 * @return 数量
 	 */
 	protected int getMax() {
-		return 500;
+		return maxSize;
 	}
 
 	/**
