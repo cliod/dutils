@@ -4,16 +4,16 @@ import com.wobangkj.enums.Format;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
+import java.time.temporal.*;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.wobangkj.enums.Format.*;
 
@@ -35,10 +35,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	 * 一天的MilliSecond
 	 */
 	public final static long DAY_MILLI = 24 * 60 * 60 * 1000;
-	public final static int LEFT_OPEN_RIGHT_OPEN = 1;
-	public final static int LEFT_CLOSE_RIGHT_OPEN = 2;
-	public final static int LEFT_OPEN_RIGHT_CLOSE = 3;
-	public final static int LEFT_CLOSE_RIGHT_CLOSE = 4;
+	public final static int ONE = 1;
+	public final static int TWO = 2;
+	public final static int THREE = 3;
+	public final static int FOUR = 4;
 	/**
 	 * 比较日期的模式 --只比较日期，不比较时间
 	 */
@@ -58,11 +58,11 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
 	static {
 		DATA_FORMAT = new HashMap<>(16);
-		SimpleDateFormat date_format;
+		SimpleDateFormat dateFormat;
 		for (Format value : Format.values()) {
-			date_format = new SimpleDateFormat(value.getPattern());
-			DATA_FORMAT.put(value, date_format);
-			DATA_FORMAT.put(value.getPattern(), date_format);
+			dateFormat = new SimpleDateFormat(value.getPattern());
+			DATA_FORMAT.put(value, dateFormat);
+			DATA_FORMAT.put(value.getPattern(), dateFormat);
 		}
 
 		FORMATTER = new HashMap<>(16);
@@ -83,7 +83,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	}
 
 	public static String getNow(String format) {
-		return FORMATTER.get(format).format(LocalDateTime.now());
+		return Optional.ofNullable(FORMATTER.get(format)).orElse(DateTimeFormatter.ofPattern(format)).format(LocalDateTime.now());
 	}
 
 	public static String getNow(Format format) {
@@ -149,5 +149,90 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	 */
 	public static Temporal getFirstDayOf(@NotNull Temporal date, TemporalAdjuster of) {
 		return date.with(of);
+	}
+
+	/**
+	 * 指定时间是否在今天
+	 *
+	 * @param datetime 时间,正常时间或者Long类型时间
+	 * @return 是否
+	 */
+	public static boolean isDatetimeInToday(@NotNull Temporal datetime) {
+		return LocalDate.now().isEqual(LocalDate.from(checkDate(datetime, ONE)));
+	}
+
+	/**
+	 * 指定时间是否在这周
+	 *
+	 * @param datetime 时间,正常时间或者Long类型时间
+	 * @return 是否
+	 */
+	public static boolean isDatetimeInThisWeek(@NotNull Temporal datetime) {
+		LocalDate date = LocalDate.from(checkDate(datetime, ONE));
+		LocalDate s = getFirstDayOfWeek(date);
+		return s.isBefore(date) && s.plus(7, ChronoUnit.DAYS).isAfter(date);
+	}
+
+	/**
+	 * 指定时间是否在这周
+	 *
+	 * @param datetime 时间,正常时间或者Long类型时间
+	 * @return 是否
+	 */
+	public static boolean isDatetimeInThisMonth(@NotNull Temporal datetime) {
+		LocalDate date = LocalDate.from(checkDate(datetime, TWO));
+		LocalDate now = LocalDate.now();
+		LocalDate s = getFirstDayOfMonth(now);
+		LocalDate e = now.with(TemporalAdjusters.lastDayOfMonth());
+		return s.isBefore(date) && e.isAfter(date);
+	}
+
+	/**
+	 * 检查并返回日期
+	 *
+	 * @param temporal 日期
+	 * @param code     需要到日1, 只需要到月2,只需要到年3
+	 * @return 结果
+	 */
+	public static Temporal checkDate(Temporal temporal, int code) {
+		Temporal res;
+		if (temporal instanceof ChronoLocalDate) {
+			res = temporal;
+		} else if (temporal instanceof ChronoZonedDateTime) {
+			res = temporal;
+		} else if (temporal instanceof ChronoLocalDateTime) {
+			res = temporal;
+		} else if (temporal instanceof Instant) {
+			res = LocalDateTime.ofInstant((Instant) temporal, ZoneId.systemDefault());
+		} else if (temporal instanceof YearMonth) {
+			if (code <= ONE) {
+				throw new DateTimeException("不支持没有日期的时间");
+			} else {
+				YearMonth ym = (YearMonth) temporal;
+				res = LocalDate.of(ym.getYear(), ym.getMonth(), 1);
+			}
+		} else if (temporal instanceof Year) {
+			if (code <= TWO) {
+				throw new DateTimeException("不支持没有日期的时间");
+			} else {
+				Year y = (Year) temporal;
+				res = LocalDate.of(y.getValue(), 1, 1);
+			}
+		} else {
+			throw new DateTimeException("不支持没有日期的时间");
+		}
+		return res;
+	}
+
+	public static String parse(LocalDate localDate, String pattern) {
+		return Optional.ofNullable(FORMATTER.get(pattern)).orElse(DateTimeFormatter.ofPattern(pattern)).format(localDate);
+	}
+
+	public static String parse(LocalDateTime localDateTime, String pattern) {
+		return Optional.ofNullable(FORMATTER.get(pattern)).orElse(DateTimeFormatter.ofPattern(pattern)).format(localDateTime);
+	}
+
+	public static String parse(LocalTime localTime, String pattern) {
+		return Optional.ofNullable(FORMATTER.get(pattern)).orElse(DateTimeFormatter.ofPattern(pattern)).format(localTime);
 	}
 }

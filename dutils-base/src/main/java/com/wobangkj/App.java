@@ -1,11 +1,14 @@
 package com.wobangkj;
 
 import com.wobangkj.api.SessionSerializable;
+import com.wobangkj.utils.JsonUtils;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Hello world!
+ *
+ * @author cliod
  */
 public class App {
 	public static void main(String[] args) {
@@ -14,7 +17,7 @@ public class App {
 	}
 
 	public static void test() {
-		SessionSerializable sessionSerializable = new SessionSerializable() {
+		SessionSerializable serializable = new SessionSerializable() {
 			@Getter
 			private final String name = "Lihua";
 			@Getter
@@ -24,20 +27,16 @@ public class App {
 			@Override
 			public String toString() {
 				return this.toJson();
-
 			}
 
 			@NotNull
 			@Override
 			public String toJson() {
-				return "{" +
-						"name:\"" + this.getName() + '\"' +
-						", love:\"" + this.getLove() + '\"' +
-						'}';
+				return JsonUtils.toJson(this);
 			}
 		};
 
-		System.out.println(sessionSerializable.toJson());
-		System.out.println(sessionSerializable.toObject());
+		System.out.println(serializable.toJson());
+		System.out.println(serializable.toObject());
 	}
 }
