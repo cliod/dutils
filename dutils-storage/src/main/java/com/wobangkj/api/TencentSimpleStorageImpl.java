@@ -1,10 +1,12 @@
 package com.wobangkj.api;
 
-import com.aliyun.oss.ClientBuilderConfiguration;
-import com.aliyun.oss.ClientException;
-import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.common.auth.DefaultCredentialProvider;
-import com.aliyun.oss.model.*;
+import com.qcloud.cos.COSClient;
+import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.auth.BasicCOSCredentials;
+import com.qcloud.cos.auth.COSCredentials;
+import com.qcloud.cos.exception.CosClientException;
+import com.qcloud.cos.model.*;
+import com.qcloud.cos.region.Region;
 import com.wobangkj.bean.Summary;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,32 +28,32 @@ import java.util.stream.Collectors;
  * @since 9/11/20 11:03 AM
  */
 @Slf4j
-public class AliSimpleStorageImpl implements CloudStorage {
+public class TencentSimpleStorageImpl implements CloudStorage {
 
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-	private final Map<String, OSSClient> cache = new HashMap<>();
+	private final Map<String, COSClient> cache = new HashMap<>();
 
-	private final String endpoint;
-	private final String accessKeyId;
-	private final String accessKeySecret;
+	private final String region;
+	private final String secretId;
+	private final String secretKey;
 	@Getter
 	private String bucketName;
 	private String preUrl;
-	private OSSClient client;
+	private COSClient client;
 
-	public AliSimpleStorageImpl(String endpoint, String accessKeyId, String accessKeySecret, String bucketName) {
-		this.accessKeyId = accessKeyId;
-		this.accessKeySecret = accessKeySecret;
-		this.endpoint = endpoint;
+	public TencentSimpleStorageImpl(String region, String secretId, String secretKey, String bucketName) {
+		this.secretId = secretId;
+		this.secretKey = secretKey;
+		this.region = region;
 		this.bucketName = bucketName;
-		this.preUrl = bucketName + "." + endpoint;
+		this.preUrl = bucketName + "." + region;
 		init(true);
 	}
 
 	public void setBucketName(String bucketName) {
 		this.bucketName = bucketName;
-		this.preUrl = bucketName + "." + endpoint;
+		this.preUrl = bucketName + "." + region;
 	}
 
 	/**
@@ -60,7 +62,15 @@ public class AliSimpleStorageImpl implements CloudStorage {
 	public void init(boolean isCreate) {
 		client = this.cache.get(bucketName);
 		if (Objects.isNull(client)) {
-			client = new OSSClient(endpoint, new DefaultCredentialProvider(accessKeyId, accessKeySecret), new ClientBuilderConfiguration());
+			// 1 初始化用户身份信息（secretId, secretKey）。
+			COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
+			// 2 设置 bucket 的区域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
+			// clientConfig 中包含了设置 region, https(默认 http), 超时, 代理等 set 方法, 使用可参见源码或者常见问题 Java SDK 部分。
+			Region region = new Region(this.region);
+			ClientConfig clientConfig = new ClientConfig(region);
+			// 3 生成 cos 客户端。
+			client = new COSClient(cred, clientConfig);
+
 			// 判断Bucket是否存在。
 			if (!client.doesBucketExist(bucketName)) {
 				log.info("您的Bucket不存在，创建Bucket：" + bucketName + "。");
@@ -68,7 +78,7 @@ public class AliSimpleStorageImpl implements CloudStorage {
 				if (isCreate) {
 					client.createBucket(bucketName);
 				} else {
-					throw new ClientException("存储空间不存在: " + bucketName);
+					throw new CosClientException("存储空间不存在: " + bucketName);
 				}
 			}
 			//设置权限 这里是公开读
@@ -86,10 +96,25 @@ public class AliSimpleStorageImpl implements CloudStorage {
 	@Override
 	public String upload(InputStream is, String fileName) {
 		// 日期划分文件夹
-		String suffix = LocalDate.now().format(formatter) + File.separator + fileName;
-		PutObjectResult result = client.putObject(this.bucketName, suffix, is);
+		String key = LocalDate.now().format(formatter) + File.separator + fileName;
+		PutObjectResult result = client.putObject(this.bucketName, key, is, new ObjectMetadata());
 		log.debug("[OSS文件存入成功]: {}", result.getETag());
-		return this.preUrl + suffix;
+		return this.preUrl + key;
+	}
+
+	/**
+	 * 从文件中上传
+	 *
+	 * @param file 文件
+	 * @return 文件url
+	 */
+	@Override
+	public String upload(File file) {
+		// 日期划分文件夹
+		String key = LocalDate.now().format(formatter) + File.separator + file.getName();
+		PutObjectResult result = client.putObject(this.bucketName, key, file);
+		log.debug("[OSS文件存入成功]: {}", result.getETag());
+		return this.preUrl + key;
 	}
 
 	/**
@@ -99,8 +124,8 @@ public class AliSimpleStorageImpl implements CloudStorage {
 	 */
 	@Override
 	public InputStream download(String fileName) {
-		OSSObject ossObject = client.getObject(bucketName, fileName);
-		return ossObject.getObjectContent();
+		COSObject cosObject = client.getObject(bucketName, fileName);
+		return cosObject.getObjectContent();
 	}
 
 	/**
@@ -123,8 +148,9 @@ public class AliSimpleStorageImpl implements CloudStorage {
 	 * @return 对象信息
 	 */
 	@Override
-	public BucketInfo getBucketInfo() {// 查看Bucket信息。
-		return client.getBucketInfo(bucketName);
+	public Bucket getBucketInfo() {// 查看Bucket信息。
+		List<Bucket> buckets = client.listBuckets();
+		return buckets.stream().filter(e -> Objects.equals(e.getName(), this.getBucketName())).findFirst().orElse(null);
 	}
 
 	/**

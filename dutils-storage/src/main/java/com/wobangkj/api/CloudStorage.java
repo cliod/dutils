@@ -1,6 +1,5 @@
 package com.wobangkj.api;
 
-import com.aliyun.oss.model.BucketInfo;
 import com.wobangkj.bean.Summary;
 
 import java.io.*;
@@ -86,7 +85,7 @@ public interface CloudStorage {
 	 *
 	 * @return 对象信息
 	 */
-	BucketInfo getBucketInfo();
+	Object getBucketInfo();
 
 	/**
 	 * 删除对象

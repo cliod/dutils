@@ -1,8 +1,10 @@
 package com.wobangkj.bean;
 
-import com.aliyun.oss.model.Owner;
+import com.wobangkj.utils.RefUtils;
 import lombok.Data;
+import lombok.SneakyThrows;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -34,5 +36,23 @@ public class Summary {
 		this.storage = storage;
 		this.owner = owner;
 		this.lastModified = lastModified;
+	}
+
+	/**
+	 * owner兼容对象
+	 */
+	@Data
+	public static class Owner implements Serializable {
+		private static final long serialVersionUID = -627349170629705388L;
+		private String displayName;
+		private String id;
+
+		@SneakyThrows
+		public static Owner of(Object obj) {
+			Owner owner = new Owner();
+			owner.setDisplayName(RefUtils.getFieldValue(obj, "displayName", String.class));
+			owner.setId(RefUtils.getFieldValue(obj, "id", String.class));
+			return owner;
+		}
 	}
 }
