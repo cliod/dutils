@@ -1,4 +1,9 @@
-package com.wobangkj.api;
+package com.wobangkj.api.ali;
+
+import com.aliyuncs.AcsResponse;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.profile.IClientProfile;
+import com.wobangkj.api.SmsSign;
 
 /**
  * 短信签名
@@ -6,7 +11,31 @@ package com.wobangkj.api;
  * @author cliod
  * @since 8/7/20 3:00 PM
  */
-public interface SmsSign {
+public interface AcsSmsSign extends SmsSign {
+
+	/**
+	 * 获取默认对象(初始化对象)
+	 *
+	 * @param regionId    区域id
+	 * @param accessKeyId 访问密钥
+	 * @param secret      访问密钥
+	 * @return Sms对象
+	 * @see AcsSmsImpl 默认实现
+	 */
+	static AcsSmsSign getInstance(String regionId, String accessKeyId, String secret) {
+		return AcsSmsSignImpl.getInstance(regionId, accessKeyId, secret);
+	}
+
+	/**
+	 * 获取默认对象(初始化对象)
+	 *
+	 * @param profile 访问参数
+	 * @return Sms对象
+	 * @see AcsSmsImpl 默认实现
+	 */
+	static AcsSmsSign getInstance(IClientProfile profile) {
+		return AcsSmsSignImpl.getInstance(profile);
+	}
 
 	/**
 	 * 添加短信签名
@@ -23,18 +52,20 @@ public interface SmsSign {
 	 *                   </p>
 	 * @param remark     短信签名申请说明。请在申请说明中详细描述您的业务使用场景，申请工信部备案网站的全称或简称请在此处填写域名，长度不超过200个字符
 	 * @return 结果
-	 * @throws Exception 异常
+	 * @throws ClientException 发送异常
 	 */
-	Object add(String signName, Integer signSource, String remark) throws Exception;
+	@Override
+	AcsResponse add(String signName, Integer signSource, String remark) throws ClientException;
 
 	/**
 	 * 添加短信签名
 	 *
 	 * @param signName 签名名称
 	 * @return 结果
-	 * @throws Exception 异常
+	 * @throws ClientException 发送异常
 	 */
-	Object delete(String signName) throws Exception;
+	@Override
+	AcsResponse delete(String signName) throws ClientException;
 
 	/**
 	 * 添加短信签名
@@ -51,16 +82,18 @@ public interface SmsSign {
 	 *                   </p>
 	 * @param remark     短信签名申请说明。请在申请说明中详细描述您的业务使用场景，申请工信部备案网站的全称或简称请在此处填写域名，长度不超过200个字符
 	 * @return 结果
-	 * @throws Exception 异常
+	 * @throws ClientException 发送异常
 	 */
-	Object modify(String signName, Integer signSource, String remark) throws Exception;
+	@Override
+	AcsResponse modify(String signName, Integer signSource, String remark) throws ClientException;
 
 	/**
 	 * 添加短信签名
 	 *
 	 * @param signName 签名名称
 	 * @return 结果
-	 * @throws Exception 异常
+	 * @throws ClientException 发送异常
 	 */
-	Object query(String signName) throws Exception;
+	@Override
+	AcsResponse query(String signName) throws ClientException;
 }

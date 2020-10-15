@@ -1,4 +1,4 @@
-package com.wobangkj.api;
+package com.wobangkj.api.ali;
 
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -17,30 +17,30 @@ import com.aliyuncs.profile.IClientProfile;
  * @author cliod
  * @since 8/7/20 4:10 PM
  */
-public class SmsTemplateImpl implements SmsTemplate {
+public class AcsSmsTemplateImpl implements AcsSmsTemplate {
 
 	private final IAcsClient client;
 	private final String regionId;
 
-	private SmsTemplateImpl(String regionId, IAcsClient client) {
+	private AcsSmsTemplateImpl(String regionId, IAcsClient client) {
 		this.client = client;
 		this.regionId = regionId;
 	}
 
-	protected SmsTemplateImpl(IClientProfile profile) {
+	protected AcsSmsTemplateImpl(IClientProfile profile) {
 		this(profile.getRegionId(), new DefaultAcsClient(profile));
 	}
 
-	protected SmsTemplateImpl(String regionId, String accessKeyId, String accessSecret) {
+	protected AcsSmsTemplateImpl(String regionId, String accessKeyId, String accessSecret) {
 		this(regionId, new DefaultAcsClient(DefaultProfile.getProfile(regionId, accessKeyId, accessSecret)));
 	}
 
-	public static SmsTemplateImpl getInstance(String regionId, String accessKeyId, String accessSecret) {
-		return new SmsTemplateImpl(regionId, accessKeyId, accessSecret);
+	public static AcsSmsTemplateImpl getInstance(String regionId, String accessKeyId, String accessSecret) {
+		return new AcsSmsTemplateImpl(regionId, accessKeyId, accessSecret);
 	}
 
-	public static SmsTemplateImpl getInstance(IClientProfile profile) {
-		return new SmsTemplateImpl(profile);
+	public static AcsSmsTemplateImpl getInstance(IClientProfile profile) {
+		return new AcsSmsTemplateImpl(profile);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.wobangkj.api;
+package com.wobangkj.api.ali;
 
 import com.aliyuncs.*;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsRequest;
@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
  * @author cliod
  * @since 8/7/20 4:10 PM
  */
-public class SmsImpl implements Sms, Cloneable {
+public class AcsSmsImpl implements AcsSms, Cloneable {
 
 	private final IClientProfile profile;
 	private final IAcsClient client;
@@ -43,7 +43,7 @@ public class SmsImpl implements Sms, Cloneable {
 	@Getter
 	private String outId;
 
-	private SmsImpl(IClientProfile profile, IAcsClient client) {
+	private AcsSmsImpl(IClientProfile profile, IAcsClient client) {
 		this.profile = profile;
 		this.client = client;
 		String regionId = profile.getRegionId();
@@ -53,20 +53,20 @@ public class SmsImpl implements Sms, Cloneable {
 		batch.setSysRegionId(regionId);
 	}
 
-	protected SmsImpl(IClientProfile profile) {
+	protected AcsSmsImpl(IClientProfile profile) {
 		this(profile, new DefaultAcsClient(profile));
 	}
 
-	protected SmsImpl(String regionId, String accessKeyId, String accessSecret) {
+	protected AcsSmsImpl(String regionId, String accessKeyId, String accessSecret) {
 		this(DefaultProfile.getProfile(regionId, accessKeyId, accessSecret));
 	}
 
-	public static SmsImpl getInstance(String regionId, String accessKeyId, String secret) {
-		return new SmsImpl(regionId, accessKeyId, secret);
+	public static AcsSmsImpl getInstance(String regionId, String accessKeyId, String secret) {
+		return new AcsSmsImpl(regionId, accessKeyId, secret);
 	}
 
-	public static SmsImpl getInstance(IClientProfile profile) {
-		return new SmsImpl(profile);
+	public static AcsSmsImpl getInstance(IClientProfile profile) {
+		return new AcsSmsImpl(profile);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class SmsImpl implements Sms, Cloneable {
 	 * @throws ClientException 短信发送异常
 	 */
 	@Override
-	public CommonResponse commonSend(String templateCode, String templateParamJson, String phoneNumber) throws ClientException {
+	public CommonResponse commonSend(String templateCode, String templateParamJson, String signName, String phoneNumber) throws ClientException {
 		final CommonRequest request = new CommonRequest();
 		request.setSysMethod(MethodType.POST);
 		request.setSysDomain("dysmsapi.aliyuncs.com");
@@ -152,18 +152,18 @@ public class SmsImpl implements Sms, Cloneable {
 	 */
 	@Override
 	@SneakyThrows
-	public Sms getSms() {
+	public AcsSmsImpl getSms() {
 		return this.clone();
 	}
 
 	@Override
-	public SmsSign getSmsSign() {
-		return SmsSign.getInstance(this.profile);
+	public AcsSmsSign getSmsSign() {
+		return AcsSmsSign.getInstance(this.profile);
 	}
 
 	@Override
-	public SmsTemplate getSmsTemplate() {
-		return SmsTemplate.getInstance(this.profile);
+	public AcsSmsTemplate getSmsTemplate() {
+		return AcsSmsTemplate.getInstance(this.profile);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class SmsImpl implements Sms, Cloneable {
 	 * @see Cloneable 需要实现Cloneable接口
 	 */
 	@Override
-	protected SmsImpl clone() throws CloneNotSupportedException {
-		return (SmsImpl) super.clone();
+	protected AcsSmsImpl clone() throws CloneNotSupportedException {
+		return (AcsSmsImpl) super.clone();
 	}
 }

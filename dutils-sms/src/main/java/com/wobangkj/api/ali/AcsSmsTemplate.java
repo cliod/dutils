@@ -1,4 +1,9 @@
-package com.wobangkj.api;
+package com.wobangkj.api.ali;
+
+import com.aliyuncs.AcsResponse;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.profile.IClientProfile;
+import com.wobangkj.api.SmsTemplate;
 
 /**
  * 短信模板操作
@@ -6,7 +11,31 @@ package com.wobangkj.api;
  * @author cliod
  * @since 8/7/20 3:03 PM
  */
-public interface SmsTemplate {
+public interface AcsSmsTemplate extends SmsTemplate {
+
+	/**
+	 * 获取默认对象(初始化对象)
+	 *
+	 * @param regionId    区域id
+	 * @param accessKeyId 访问密钥
+	 * @param secret      访问密钥
+	 * @return Sms对象
+	 * @see AcsSmsImpl 默认实现
+	 */
+	static AcsSmsTemplate getInstance(String regionId, String accessKeyId, String secret) {
+		return AcsSmsTemplateImpl.getInstance(regionId, accessKeyId, secret);
+	}
+
+	/**
+	 * 获取默认对象(初始化对象)
+	 *
+	 * @param profile 访问参数
+	 * @return Sms对象
+	 * @see AcsSmsImpl 默认实现
+	 */
+	static AcsSmsTemplate getInstance(IClientProfile profile) {
+		return AcsSmsTemplateImpl.getInstance(profile);
+	}
 
 	/**
 	 * 添加短信模板
@@ -22,18 +51,20 @@ public interface SmsTemplate {
 	 * @param content 模板内容，长度为1~500个字符.
 	 * @param remark  短信模板申请说明。请在申请说明中描述您的业务使用场景，长度为1~100个字符
 	 * @return 结果
-	 * @throws Exception 发送异常
+	 * @throws ClientException 发送异常
 	 */
-	Object add(Integer type, String name, String content, String remark) throws Exception;
+	@Override
+	AcsResponse add(Integer type, String name, String content, String remark) throws ClientException;
 
 	/**
 	 * 删除短息模板
 	 *
 	 * @param templateCode 短信模板CODE.
 	 * @return 结果
-	 * @throws Exception 发送异常
+	 * @throws ClientException 发送异常
 	 */
-	Object delete(String templateCode) throws Exception;
+	@Override
+	AcsResponse delete(String templateCode) throws ClientException;
 
 	/**
 	 * 修改短信模板
@@ -50,16 +81,18 @@ public interface SmsTemplate {
 	 * @param content      模板内容，长度为1~500个字符.
 	 * @param remark       短信模板申请说明。请在申请说明中描述您的业务使用场景，长度为1~100个字符
 	 * @return 结果
-	 * @throws Exception 发送异常
+	 * @throws ClientException 发送异常
 	 */
-	Object modify(String templateCode, Integer type, String name, String content, String remark) throws Exception;
+	@Override
+	AcsResponse modify(String templateCode, Integer type, String name, String content, String remark) throws ClientException;
 
 	/**
 	 * 查询短息模板信息和状态
 	 *
 	 * @param templateCode 短信模板CODE.
 	 * @return 结果
-	 * @throws Exception 发送异常
+	 * @throws ClientException 发送异常
 	 */
-	Object query(String templateCode) throws Exception;
+	@Override
+	AcsResponse query(String templateCode) throws ClientException;
 }

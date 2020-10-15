@@ -1,4 +1,4 @@
-package com.wobangkj.api;
+package com.wobangkj.api.ali;
 
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -17,30 +17,30 @@ import com.aliyuncs.profile.IClientProfile;
  * @author cliod
  * @since 8/7/20 4:10 PM
  */
-public class SmsSignImpl implements SmsSign {
+public class AcsSmsSignImpl implements AcsSmsSign {
 
 	private final IAcsClient client;
 	private final String regionId;
 
-	private SmsSignImpl(String regionId, IAcsClient client) {
+	private AcsSmsSignImpl(String regionId, IAcsClient client) {
 		this.client = client;
 		this.regionId = regionId;
 	}
 
-	protected SmsSignImpl(IClientProfile profile) {
+	protected AcsSmsSignImpl(IClientProfile profile) {
 		this(profile.getRegionId(), new DefaultAcsClient(profile));
 	}
 
-	protected SmsSignImpl(String regionId, String accessKeyId, String accessSecret) {
+	protected AcsSmsSignImpl(String regionId, String accessKeyId, String accessSecret) {
 		this(regionId, new DefaultAcsClient(DefaultProfile.getProfile(regionId, accessKeyId, accessSecret)));
 	}
 
-	public static SmsSignImpl getInstance(String regionId, String accessKeyId, String accessSecret) {
-		return new SmsSignImpl(regionId, accessKeyId, accessSecret);
+	public static AcsSmsSignImpl getInstance(String regionId, String accessKeyId, String accessSecret) {
+		return new AcsSmsSignImpl(regionId, accessKeyId, accessSecret);
 	}
 
-	public static SmsSignImpl getInstance(IClientProfile profile) {
-		return new SmsSignImpl(profile);
+	public static AcsSmsSignImpl getInstance(IClientProfile profile) {
+		return new AcsSmsSignImpl(profile);
 	}
 
 	@Override

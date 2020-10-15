@@ -3,7 +3,8 @@ package com.wobangkj.utils;
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.IClientProfile;
-import com.wobangkj.api.Sms;
+import com.wobangkj.api.ali.AcsSms;
+import com.wobangkj.api.ali.AcsSmsImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.Objects;
  */
 public class SmsUtils {
 
-	private static Sms sms = null;
+	private static AcsSms sms = null;
 
 	private SmsUtils() {
 	}
@@ -27,7 +28,7 @@ public class SmsUtils {
 	 */
 	@Deprecated
 	public static void init(String regionId, String accessKeyId, String secret, String signName) {
-		sms = Sms.getInstance(regionId, accessKeyId, secret);
+		sms = AcsSmsImpl.getInstance(regionId, accessKeyId, secret);
 		sms.setSignName(signName);
 	}
 
@@ -36,7 +37,7 @@ public class SmsUtils {
 	 */
 	@Deprecated
 	public static void init(IClientProfile profile, String signName) {
-		sms = Sms.getInstance(profile);
+		sms = AcsSmsImpl.getInstance(profile);
 		sms.setSignName(signName);
 	}
 
@@ -85,13 +86,13 @@ public class SmsUtils {
 	}
 
 	public static AcsResponse send(IClientProfile profile, String signName, String templateCode, String templateParamJson, String... phoneNumber) throws ClientException {
-		sms = Sms.getInstance(profile);
+		sms = AcsSmsImpl.getInstance(profile);
 		sms.setSignName(signName);
 		return sms.send(templateCode, templateParamJson, phoneNumber);
 	}
 
 	public static AcsResponse send(IClientProfile profile, String signName, String templateCode, Map<String, Object> templateParam, String... phoneNumber) throws ClientException {
-		sms = Sms.getInstance(profile);
+		sms = AcsSmsImpl.getInstance(profile);
 		sms.setSignName(signName);
 		return sms.send(templateCode, templateParam, phoneNumber);
 	}
