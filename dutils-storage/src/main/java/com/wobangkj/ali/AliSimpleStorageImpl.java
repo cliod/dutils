@@ -1,10 +1,11 @@
-package com.wobangkj.api;
+package com.wobangkj.ali;
 
 import com.aliyun.oss.ClientBuilderConfiguration;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.model.*;
+import com.wobangkj.api.CloudStorage;
 import com.wobangkj.bean.Summary;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
