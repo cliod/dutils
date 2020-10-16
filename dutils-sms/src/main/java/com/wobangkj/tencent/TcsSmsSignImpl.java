@@ -1,4 +1,4 @@
-package com.wobangkj.api.tencent;
+package com.wobangkj.tencent;
 
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
@@ -36,18 +36,16 @@ public class TcsSmsSignImpl implements TcsSmsSign {
 	}
 
 	@Override
-	public AddSmsSignResponse add(String signName, Integer signType, String remark) throws TencentCloudSDKException {
+	public AddSmsSignResponse add(String signName, Integer signType, Long documentType, Long international, Long usedMethod, String remark, String image) throws TencentCloudSDKException {
 		AddSmsSignRequest request = new AddSmsSignRequest();
 		request.setSignName(signName);
 		request.setSignType(signType.longValue());
-		request.setDocumentType(0L);
-		request.setInternational(0L);
-		request.setUsedMethod(0L);
-		request.setProofImage("");
+		request.setDocumentType(documentType);
+		request.setInternational(international);
+		request.setUsedMethod(usedMethod);
+		request.setProofImage(image);
 		request.setCommissionImage("");
-		request.setRemark("");
-		request.set("", new Object());
-
+		request.setRemark(remark);
 		return this.client.AddSmsSign(request);
 	}
 
@@ -59,15 +57,15 @@ public class TcsSmsSignImpl implements TcsSmsSign {
 	}
 
 	@Override
-	public ModifySmsSignResponse modify(String signName, Integer signType, String remark) throws TencentCloudSDKException {
+	public ModifySmsSignResponse modify(Long id, String signName, Integer signType, Long documentType, Long international, Long usedMethod, String remark, String image) throws TencentCloudSDKException {
 		ModifySmsSignRequest request = new ModifySmsSignRequest();
-		request.setSignId(0L);
+		request.setSignId(id);
 		request.setSignName(signName);
 		request.setSignType(signType.longValue());
-		request.setDocumentType(0L);
-		request.setInternational(0L);
-		request.setUsedMethod(0L);
-		request.setProofImage("");
+		request.setDocumentType(documentType);
+		request.setInternational(international);
+		request.setUsedMethod(usedMethod);
+		request.setProofImage(image);
 		request.setCommissionImage("");
 		request.setRemark(remark);
 		return this.client.ModifySmsSign(request);

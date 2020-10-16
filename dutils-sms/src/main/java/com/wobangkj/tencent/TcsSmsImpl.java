@@ -1,18 +1,17 @@
-package com.wobangkj.api.tencent;
+package com.wobangkj.tencent;
 
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.sms.v20190711.SmsClient;
-import com.tencentcloudapi.sms.v20190711.models.PullSmsSendStatusByPhoneNumberRequest;
-import com.tencentcloudapi.sms.v20190711.models.PullSmsSendStatusByPhoneNumberResponse;
-import com.tencentcloudapi.sms.v20190711.models.SendSmsRequest;
-import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
+import com.tencentcloudapi.sms.v20190711.models.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 
 /**
  * 发送短信
@@ -53,6 +52,14 @@ public class TcsSmsImpl implements TcsSms, Cloneable {
 		return new TcsSmsImpl(cred, region, appId);
 	}
 
+	public static TcsSmsImpl getInstance(String accessKeyId, String secret, String appId) {
+		return new TcsSmsImpl(accessKeyId, secret, "", appId);
+	}
+
+	public static TcsSmsImpl getInstance(Credential cred, String appId) {
+		return new TcsSmsImpl(cred, "", appId);
+	}
+
 	@Override
 	public SendSmsResponse send(String template, String[] params, String signName, String... phoneNumbers) throws TencentCloudSDKException {
 		// 支持对多个手机号码发送短信，手机号码之间以英文逗号（,）分隔。上限为1000个手机号码。
@@ -78,7 +85,7 @@ public class TcsSmsImpl implements TcsSms, Cloneable {
 	 * @return 结果
 	 */
 	@Override
-	public PullSmsSendStatusByPhoneNumberResponse querySendDetails(String phoneNumber, LocalDate date, Integer page, Integer size) throws TencentCloudSDKException {
+	public PullSmsSendStatusByPhoneNumberResponse query(String phoneNumber, LocalDate date, Integer page, Integer size) throws TencentCloudSDKException {
 		PullSmsSendStatusByPhoneNumberRequest query = new PullSmsSendStatusByPhoneNumberRequest();
 		query.setLimit(page.longValue());
 		query.setOffset(size.longValue());
@@ -87,6 +94,36 @@ public class TcsSmsImpl implements TcsSms, Cloneable {
 		query.setSendDateTime(date.plusDays(-7).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli());
 		query.setEndDateTime(date.atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli());
 		return this.client.PullSmsSendStatusByPhoneNumber(query);
+	}
+
+	/**
+	 * 套餐包信息统计
+	 *
+	 * @return 结果
+	 */
+	@Override
+	public SmsPackagesStatisticsResponse statistics(Integer page, Integer size) throws TencentCloudSDKException {
+		SmsPackagesStatisticsRequest request = new SmsPackagesStatisticsRequest();
+		request.setSmsSdkAppid(this.appId);
+		request.setLimit(size.longValue());
+		request.setOffset(page.longValue());
+		return this.client.SmsPackagesStatistics(request);
+	}
+
+	/**
+	 * 套餐包信息统计
+	 *
+	 * @return 结果
+	 */
+	@Override
+	public SendStatusStatisticsResponse statistics(LocalDateTime startTime, LocalDateTime endTime, Integer page, Integer size) throws TencentCloudSDKException {
+		SendStatusStatisticsRequest request = new SendStatusStatisticsRequest();
+		request.setStartDateTime(startTime.getLong(ChronoField.MILLI_OF_DAY));
+		request.setEndDataTime(endTime.getLong(ChronoField.MILLI_OF_DAY));
+		request.setSmsSdkAppid(this.appId);
+		request.setLimit(size.longValue());
+		request.setOffset(page.longValue());
+		return this.client.SendStatusStatistics(request);
 	}
 
 	/**

@@ -22,10 +22,11 @@ public interface SmsSign {
 	 *                   5：商标名的全称或简称
 	 *                   </p>
 	 * @param remark     短信签名申请说明。请在申请说明中详细描述您的业务使用场景，申请工信部备案网站的全称或简称请在此处填写域名，长度不超过200个字符
+	 * @param image      证明
 	 * @return 结果
 	 * @throws Exception 异常
 	 */
-	Object add(String signName, Integer signSource, String remark) throws Exception;
+	Object add(String signName, Integer signSource, String remark, String image) throws Exception;
 
 	/**
 	 * 添加短信签名
@@ -50,10 +51,11 @@ public interface SmsSign {
 	 *                   5：商标名的全称或简称
 	 *                   </p>
 	 * @param remark     短信签名申请说明。请在申请说明中详细描述您的业务使用场景，申请工信部备案网站的全称或简称请在此处填写域名，长度不超过200个字符
+	 * @param image      证明
 	 * @return 结果
 	 * @throws Exception 异常
 	 */
-	Object modify(String signName, Integer signSource, String remark) throws Exception;
+	Object modify(String signName, Integer signSource, String remark, String image) throws Exception;
 
 	/**
 	 * 添加短信签名

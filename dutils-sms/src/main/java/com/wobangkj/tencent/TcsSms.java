@@ -1,13 +1,17 @@
-package com.wobangkj.api.tencent;
+package com.wobangkj.tencent;
 
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.sms.v20190711.models.PullSmsSendStatusByPhoneNumberResponse;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
+import com.tencentcloudapi.sms.v20190711.models.SendStatusStatisticsResponse;
+import com.tencentcloudapi.sms.v20190711.models.SmsPackagesStatisticsResponse;
 import com.wobangkj.api.Pageable;
 import com.wobangkj.api.Sms;
+import com.wobangkj.api.SmsExt;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,30 +20,30 @@ import java.util.List;
  * @author cliod
  * @since 8/7/20 2:43 PM
  */
-public interface TcsSms extends Sms {
+public interface TcsSms extends Sms, SmsExt {
 	/**
 	 * 获取默认对象(初始化对象)
 	 *
-	 * @param regionId    区域
 	 * @param accessKeyId 访问密钥
 	 * @param secret      访问密钥
+	 * @param appId       sdk-app-id
 	 * @return Sms对象
 	 * @see TcsSmsImpl 默认实现
 	 */
-	static TcsSmsImpl getInstance(String regionId, String accessKeyId, String secret, String appId) {
-		return new TcsSmsImpl(regionId, accessKeyId, secret, appId);
+	static TcsSmsImpl getInstance(String accessKeyId, String secret, String appId) {
+		return TcsSmsImpl.getInstance(accessKeyId, secret, appId);
 	}
 
 	/**
 	 * 获取默认对象(初始化对象)
 	 *
-	 * @param cred   访问参数
-	 * @param region 区域
+	 * @param cred  访问参数
+	 * @param appId sdk-app-id
 	 * @return Sms对象
 	 * @see TcsSmsImpl 默认实现
 	 */
-	static TcsSmsImpl getInstance(Credential cred, String region, String appId) {
-		return new TcsSmsImpl(cred, region, appId);
+	static TcsSmsImpl getInstance(Credential cred, String appId) {
+		return TcsSmsImpl.getInstance(cred, appId);
 	}
 
 	/**
@@ -204,6 +208,35 @@ public interface TcsSms extends Sms {
 	}
 
 	/**
+	 * 批量发送短信(单个模板,多个手机号)
+	 *
+	 * @param template     模板
+	 * @param params       模板参数
+	 * @param signName     签名
+	 * @param phoneNumbers 手机号
+	 * @return 结果
+	 * @throws Exception 发送异常
+	 */
+	@Override
+	default Object batchSend(final String template, String params, String signName, List<String> phoneNumbers) throws Exception {
+		return this.send(template, params, signName, String.join(",", phoneNumbers));
+	}
+
+	/**
+	 * 批量发送短信(单个模板,但是不同签名和多个手机号)
+	 *
+	 * @param template     模板
+	 * @param params       模板参数
+	 * @param signName     签名
+	 * @param phoneNumbers 手机号
+	 * @return 结果
+	 * @throws Exception 发送异常
+	 */
+	default Object batchSend(final String template, String[] params, String signName, String... phoneNumbers) throws Exception {
+		return this.send(template, params, signName, phoneNumbers);
+	}
+
+	/**
 	 * 查看短信发送记录和发送状态
 	 *
 	 * @param phoneNumber 手机号
@@ -214,7 +247,7 @@ public interface TcsSms extends Sms {
 	 * @throws TencentCloudSDKException 发送异常
 	 */
 	@Override
-	PullSmsSendStatusByPhoneNumberResponse querySendDetails(String phoneNumber, LocalDate date, Integer page, Integer size) throws TencentCloudSDKException;
+	PullSmsSendStatusByPhoneNumberResponse query(String phoneNumber, LocalDate date, Integer page, Integer size) throws TencentCloudSDKException;
 
 	/**
 	 * 查看短信发送记录和发送状态
@@ -225,8 +258,54 @@ public interface TcsSms extends Sms {
 	 * @return 结果
 	 * @throws TencentCloudSDKException 发送异常
 	 */
-	default PullSmsSendStatusByPhoneNumberResponse querySendDetails(String phoneNumber, LocalDate date, Pageable pageable) throws TencentCloudSDKException {
-		return this.querySendDetails(phoneNumber, date, pageable.getPage(), pageable.getSize());
+	default PullSmsSendStatusByPhoneNumberResponse query(String phoneNumber, LocalDate date, Pageable pageable) throws TencentCloudSDKException {
+		return this.query(phoneNumber, date, pageable.getPage(), pageable.getSize());
+	}
+
+	/**
+	 * 套餐包信息统计
+	 *
+	 * @param size 分页
+	 * @param page 分页
+	 * @return 结果
+	 * @throws TencentCloudSDKException 短息发送异常
+	 */
+	SmsPackagesStatisticsResponse statistics(Integer page, Integer size) throws TencentCloudSDKException;
+
+	/**
+	 * 套餐包信息统计
+	 *
+	 * @param pageable 分页
+	 * @return 结果
+	 * @throws TencentCloudSDKException 异常
+	 */
+	default SmsPackagesStatisticsResponse statistics(Pageable pageable) throws TencentCloudSDKException {
+		return this.statistics(pageable.getPage(), pageable.getSize());
+	}
+
+	/**
+	 * 发送短信数据统计
+	 *
+	 * @param startTime 时间段
+	 * @param endTime   时间段
+	 * @param page      分页
+	 * @param size      分页
+	 * @return 结果
+	 * @throws TencentCloudSDKException 异常
+	 */
+	SendStatusStatisticsResponse statistics(LocalDateTime startTime, LocalDateTime endTime, Integer page, Integer size) throws TencentCloudSDKException;
+
+	/**
+	 * 发送短信数据统计
+	 *
+	 * @param startTime 时间段
+	 * @param endTime   时间段
+	 * @param pageable  分页
+	 * @return 结果
+	 * @throws TencentCloudSDKException 异常
+	 */
+	default SendStatusStatisticsResponse statistics(LocalDateTime startTime, LocalDateTime endTime, Pageable pageable) throws TencentCloudSDKException {
+		return this.statistics(startTime, endTime, pageable.getPage(), pageable.getSize());
 	}
 
 	/**

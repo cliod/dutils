@@ -1,6 +1,5 @@
-package com.wobangkj.api.tencent;
+package com.wobangkj.tencent;
 
-import com.tencentcloudapi.common.AbstractModel;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.sms.v20190711.SmsClient;
@@ -37,39 +36,41 @@ public class TcsSmsTemplateImpl implements TcsSmsTemplate {
 	}
 
 	@Override
-	public AddSmsTemplateResponse add(Integer type, String name, String content, String remark) throws TencentCloudSDKException {
+	public AddSmsTemplateResponse add(Integer type, Long international, String name, String content, String remark) throws TencentCloudSDKException {
 		AddSmsTemplateRequest request = new AddSmsTemplateRequest();
 		request.setSmsType(type.longValue());
 		request.setTemplateName(name);
 		request.setTemplateContent(content);
 		request.setRemark(remark);
+		request.setInternational(international);
 		return this.client.AddSmsTemplate(request);
 	}
 
 	@Override
-	public DeleteSmsTemplateResponse delete(String templateCode) throws TencentCloudSDKException {
+	public DeleteSmsTemplateResponse delete(Long templateCode) throws TencentCloudSDKException {
 		DeleteSmsTemplateRequest request = new DeleteSmsTemplateRequest();
-		request.setTemplateId(Long.parseLong(templateCode));
+		request.setTemplateId(templateCode);
 		return this.client.DeleteSmsTemplate(request);
 	}
 
 	@Override
-	public ModifySmsTemplateResponse modify(String templateCode, Integer type, String name, String content, String remark) throws TencentCloudSDKException {
+	public ModifySmsTemplateResponse modify(Long templateId, Integer type, Long international, String name, String content,
+	                                        String remark) throws TencentCloudSDKException {
 		ModifySmsTemplateRequest request = new ModifySmsTemplateRequest();
-		request.setTemplateId(0L);
-		request.setTemplateName("");
-		request.setTemplateContent("");
-		request.setSmsType(0L);
-		request.setInternational(0L);
-		request.setRemark("");
+		request.setTemplateId(templateId);
+		request.setTemplateName(name);
+		request.setTemplateContent(content);
+		request.setSmsType(type.longValue());
+		request.setInternational(international);
+		request.setRemark(remark);
 		return this.client.ModifySmsTemplate(request);
 	}
 
 	@Override
-	public AbstractModel query(String templateCode) throws TencentCloudSDKException {
+	public DescribeSmsTemplateListResponse query(Long[] templateCode, Long international) throws TencentCloudSDKException {
 		DescribeSmsTemplateListRequest request = new DescribeSmsTemplateListRequest();
-		request.setTemplateIdSet(new Long[0]);
-		request.setInternational(0L);
+		request.setTemplateIdSet(templateCode);
+		request.setInternational(international);
 		return this.client.DescribeSmsTemplateList(request);
 	}
 }

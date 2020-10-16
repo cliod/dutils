@@ -1,4 +1,4 @@
-package com.wobangkj.api.tencent;
+package com.wobangkj.tencent;
 
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;

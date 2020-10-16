@@ -1,9 +1,13 @@
-package com.wobangkj.api.ali;
+package com.wobangkj.ali;
 
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.IClientProfile;
 import com.wobangkj.api.SmsSign;
+import com.wobangkj.utils.JsonUtils;
+import lombok.Data;
+
+import java.util.List;
 
 /**
  * 短信签名
@@ -51,11 +55,34 @@ public interface AcsSmsSign extends SmsSign {
 	 *                   5：商标名的全称或简称
 	 *                   </p>
 	 * @param remark     短信签名申请说明。请在申请说明中详细描述您的业务使用场景，申请工信部备案网站的全称或简称请在此处填写域名，长度不超过200个字符
+	 * @param image      证明
 	 * @return 结果
 	 * @throws ClientException 发送异常
 	 */
 	@Override
-	AcsResponse add(String signName, Integer signSource, String remark) throws ClientException;
+	default AcsResponse add(String signName, Integer signSource, String remark, String image) throws ClientException {
+		return this.add(signName, signSource, remark, JsonUtils.toList(image));
+	}
+
+	/**
+	 * 添加短信签名
+	 *
+	 * @param signName   签名名称
+	 * @param signSource 签名来源。其中：
+	 *                   <p>
+	 *                   0：企事业单位的全称或简称
+	 *                   1：工信部备案网站的全称或简称
+	 *                   2：APP应用的全称或简称
+	 *                   3：公众号或小程序的全称或简称
+	 *                   4：电商平台店铺名的全称或简称
+	 *                   5：商标名的全称或简称
+	 *                   </p>
+	 * @param remark     短信签名申请说明。请在申请说明中详细描述您的业务使用场景，申请工信部备案网站的全称或简称请在此处填写域名，长度不超过200个字符
+	 * @param signFiles  证明
+	 * @return 结果
+	 * @throws ClientException 发送异常
+	 */
+	AcsResponse add(String signName, Integer signSource, String remark, List<SignFile> signFiles) throws ClientException;
 
 	/**
 	 * 添加短信签名
@@ -81,11 +108,35 @@ public interface AcsSmsSign extends SmsSign {
 	 *                   5：商标名的全称或简称
 	 *                   </p>
 	 * @param remark     短信签名申请说明。请在申请说明中详细描述您的业务使用场景，申请工信部备案网站的全称或简称请在此处填写域名，长度不超过200个字符
+	 * @param image      证明
 	 * @return 结果
 	 * @throws ClientException 发送异常
 	 */
 	@Override
-	AcsResponse modify(String signName, Integer signSource, String remark) throws ClientException;
+	default AcsResponse modify(String signName, Integer signSource, String remark, String image) throws ClientException {
+
+		return this.modify(signName, signSource, remark, JsonUtils.toList(image));
+	}
+
+	/**
+	 * 添加短信签名
+	 *
+	 * @param signName   签名名称
+	 * @param signSource 签名来源。其中：
+	 *                   <p>
+	 *                   0：企事业单位的全称或简称
+	 *                   1：工信部备案网站的全称或简称
+	 *                   2：APP应用的全称或简称
+	 *                   3：公众号或小程序的全称或简称
+	 *                   4：电商平台店铺名的全称或简称
+	 *                   5：商标名的全称或简称
+	 *                   </p>
+	 * @param remark     短信签名申请说明。请在申请说明中详细描述您的业务使用场景，申请工信部备案网站的全称或简称请在此处填写域名，长度不超过200个字符
+	 * @param signFiles  证明
+	 * @return 结果
+	 * @throws ClientException 发送异常
+	 */
+	AcsResponse modify(String signName, Integer signSource, String remark, List<SignFile> signFiles) throws ClientException;
 
 	/**
 	 * 添加短信签名
@@ -96,4 +147,19 @@ public interface AcsSmsSign extends SmsSign {
 	 */
 	@Override
 	AcsResponse query(String signName) throws ClientException;
+
+	/**
+	 * 签名证明
+	 */
+	@Data
+	public static class SignFile {
+		/**
+		 * 文件Base64编码
+		 */
+		private String fileContents;
+		/**
+		 * 文件后缀名
+		 */
+		private String fileSuffix;
+	}
 }

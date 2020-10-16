@@ -1,4 +1,4 @@
-package com.wobangkj.api.ali;
+package com.wobangkj.ali;
 
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.exceptions.ClientException;

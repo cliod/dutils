@@ -1,4 +1,4 @@
-package com.wobangkj.api.ali;
+package com.wobangkj.ali;
 
 import com.aliyuncs.*;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsRequest;
@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * 发送短信
@@ -74,19 +75,19 @@ public class AcsSmsImpl implements AcsSms, Cloneable {
 	 *
 	 * @param templateCode      短信模板ID
 	 * @param templateParamJson 短信模板参数
-	 * @param phoneNumber       手机号. 支持对多个手机号码发送短信，手机号码之间以英文逗号（,）分隔。上限为1000个手机号码。
+	 * @param phoneNumbers      手机号. 支持对多个手机号码发送短信，手机号码之间以英文逗号（,）分隔。上限为1000个手机号码。
 	 * @return 发送结果封装
 	 * @throws ClientException 短信发送异常
 	 */
 	@Override
-	public CommonResponse commonSend(String templateCode, String templateParamJson, String signName, String phoneNumber) throws ClientException {
+	public CommonResponse commonSend(String templateCode, String templateParamJson, String signName, String phoneNumbers) throws ClientException {
 		final CommonRequest request = new CommonRequest();
 		request.setSysMethod(MethodType.POST);
 		request.setSysDomain("dysmsapi.aliyuncs.com");
 		request.setSysVersion("2017-05-25");
 		request.setSysAction("SendSms");
 		request.putQueryParameter("RegionId", this.profile.getRegionId());
-		request.putQueryParameter("PhoneNumbers", phoneNumber);
+		request.putQueryParameter("PhoneNumbers", phoneNumbers);
 		request.putQueryParameter("SignName", signName);
 		request.putQueryParameter("TemplateCode", templateCode);
 		request.putQueryParameter("TemplateParam", templateParamJson);
@@ -94,9 +95,9 @@ public class AcsSmsImpl implements AcsSms, Cloneable {
 	}
 
 	@Override
-	public AcsResponse send(String template, String params, String signName, String phoneNumbers) throws ClientException {
+	public AcsResponse send(String template, String params, String signName, List<String> phoneNumbers) throws ClientException {
 		// 支持对多个手机号码发送短信，手机号码之间以英文逗号（,）分隔。上限为1000个手机号码。
-		this.sms.setPhoneNumbers(phoneNumbers);
+		this.sms.setPhoneNumbers(String.join(",", phoneNumbers));
 		this.sms.setSignName(signName);
 		this.sms.setTemplateCode(template);
 		this.sms.setTemplateParam(params);
@@ -135,7 +136,7 @@ public class AcsSmsImpl implements AcsSms, Cloneable {
 	 * @return 结果
 	 */
 	@Override
-	public AcsResponse querySendDetails(String phoneNumber, LocalDate date, String bizId, Integer page, Integer size) throws ClientException {
+	public AcsResponse query(String phoneNumber, LocalDate date, String bizId, Integer page, Integer size) throws ClientException {
 		QuerySendDetailsRequest query = new QuerySendDetailsRequest();
 		query.setPhoneNumber(phoneNumber);
 		query.setSendDate(date.format(this.formatter));

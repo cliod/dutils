@@ -1,4 +1,4 @@
-package com.wobangkj.api.ali;
+package com.wobangkj.ali;
 
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -10,6 +10,9 @@ import com.aliyuncs.dysmsapi.model.v20170525.QuerySmsSignRequest;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 短信签名操作
@@ -44,12 +47,20 @@ public class AcsSmsSignImpl implements AcsSmsSign {
 	}
 
 	@Override
-	public AcsResponse add(String signName, Integer signSource, String remark) throws ClientException {
+	public AcsResponse add(String signName, Integer signSource, String remark, List<SignFile> signFiles) throws ClientException {
 		AddSmsSignRequest request = new AddSmsSignRequest();
 		request.setSignName(signName);
 		request.setSignSource(signSource);
 		request.setRemark(remark);
 		request.setSysRegionId(this.regionId);
+		List<AddSmsSignRequest.SignFileList> signFileLists = new ArrayList<>();
+		for (SignFile signFile : signFiles) {
+			signFileLists.add(new AddSmsSignRequest.SignFileList() {{
+				setFileContents(signFile.getFileContents());
+				setFileSuffix(signFile.getFileSuffix());
+			}});
+		}
+		request.setSignFileLists(signFileLists);
 		return this.client.getAcsResponse(request);
 	}
 
@@ -62,12 +73,20 @@ public class AcsSmsSignImpl implements AcsSmsSign {
 	}
 
 	@Override
-	public AcsResponse modify(String signName, Integer signSource, String remark) throws ClientException {
+	public AcsResponse modify(String signName, Integer signSource, String remark, List<SignFile> signFiles) throws ClientException {
 		ModifySmsSignRequest request = new ModifySmsSignRequest();
 		request.setSignName(signName);
 		request.setSignSource(signSource);
 		request.setRemark(remark);
 		request.setSysRegionId(this.regionId);
+		List<ModifySmsSignRequest.SignFileList> signFileLists = new ArrayList<>();
+		for (SignFile signFile : signFiles) {
+			signFileLists.add(new ModifySmsSignRequest.SignFileList() {{
+				setFileContents(signFile.getFileContents());
+				setFileSuffix(signFile.getFileSuffix());
+			}});
+		}
+		request.setSignFileLists(signFileLists);
 		return this.client.getAcsResponse(request);
 	}
 
