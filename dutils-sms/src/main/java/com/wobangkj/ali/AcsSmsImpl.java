@@ -1,4 +1,4 @@
-package com.wobangkj.api;
+package com.wobangkj.ali;
 
 import com.aliyuncs.*;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsRequest;
@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * 发送短信
@@ -22,7 +23,7 @@ import java.time.format.DateTimeFormatter;
  * @author cliod
  * @since 8/7/20 4:10 PM
  */
-public class SmsImpl implements Sms, Cloneable {
+public class AcsSmsImpl implements AcsSms, Cloneable {
 
 	private final IClientProfile profile;
 	private final IAcsClient client;
@@ -43,7 +44,7 @@ public class SmsImpl implements Sms, Cloneable {
 	@Getter
 	private String outId;
 
-	private SmsImpl(IClientProfile profile, IAcsClient client) {
+	private AcsSmsImpl(IClientProfile profile, IAcsClient client) {
 		this.profile = profile;
 		this.client = client;
 		String regionId = profile.getRegionId();
@@ -53,20 +54,20 @@ public class SmsImpl implements Sms, Cloneable {
 		batch.setSysRegionId(regionId);
 	}
 
-	protected SmsImpl(IClientProfile profile) {
+	protected AcsSmsImpl(IClientProfile profile) {
 		this(profile, new DefaultAcsClient(profile));
 	}
 
-	protected SmsImpl(String regionId, String accessKeyId, String accessSecret) {
+	protected AcsSmsImpl(String regionId, String accessKeyId, String accessSecret) {
 		this(DefaultProfile.getProfile(regionId, accessKeyId, accessSecret));
 	}
 
-	public static SmsImpl getInstance(String regionId, String accessKeyId, String secret) {
-		return new SmsImpl(regionId, accessKeyId, secret);
+	public static AcsSmsImpl getInstance(String regionId, String accessKeyId, String secret) {
+		return new AcsSmsImpl(regionId, accessKeyId, secret);
 	}
 
-	public static SmsImpl getInstance(IClientProfile profile) {
-		return new SmsImpl(profile);
+	public static AcsSmsImpl getInstance(IClientProfile profile) {
+		return new AcsSmsImpl(profile);
 	}
 
 	/**
@@ -74,19 +75,19 @@ public class SmsImpl implements Sms, Cloneable {
 	 *
 	 * @param templateCode      短信模板ID
 	 * @param templateParamJson 短信模板参数
-	 * @param phoneNumber       手机号. 支持对多个手机号码发送短信，手机号码之间以英文逗号（,）分隔。上限为1000个手机号码。
+	 * @param phoneNumbers      手机号. 支持对多个手机号码发送短信，手机号码之间以英文逗号（,）分隔。上限为1000个手机号码。
 	 * @return 发送结果封装
 	 * @throws ClientException 短信发送异常
 	 */
 	@Override
-	public CommonResponse commonSend(String templateCode, String templateParamJson, String phoneNumber) throws ClientException {
+	public CommonResponse commonSend(String templateCode, String templateParamJson, String signName, String phoneNumbers) throws ClientException {
 		final CommonRequest request = new CommonRequest();
 		request.setSysMethod(MethodType.POST);
 		request.setSysDomain("dysmsapi.aliyuncs.com");
 		request.setSysVersion("2017-05-25");
 		request.setSysAction("SendSms");
 		request.putQueryParameter("RegionId", this.profile.getRegionId());
-		request.putQueryParameter("PhoneNumbers", phoneNumber);
+		request.putQueryParameter("PhoneNumbers", phoneNumbers);
 		request.putQueryParameter("SignName", signName);
 		request.putQueryParameter("TemplateCode", templateCode);
 		request.putQueryParameter("TemplateParam", templateParamJson);
@@ -94,9 +95,9 @@ public class SmsImpl implements Sms, Cloneable {
 	}
 
 	@Override
-	public AcsResponse send(String template, String params, String signName, String phoneNumbers) throws ClientException {
+	public AcsResponse send(String template, String params, String signName, List<String> phoneNumbers) throws ClientException {
 		// 支持对多个手机号码发送短信，手机号码之间以英文逗号（,）分隔。上限为1000个手机号码。
-		this.sms.setPhoneNumbers(phoneNumbers);
+		this.sms.setPhoneNumbers(String.join(",", phoneNumbers));
 		this.sms.setSignName(signName);
 		this.sms.setTemplateCode(template);
 		this.sms.setTemplateParam(params);
@@ -135,7 +136,7 @@ public class SmsImpl implements Sms, Cloneable {
 	 * @return 结果
 	 */
 	@Override
-	public AcsResponse querySendDetails(String phoneNumber, LocalDate date, String bizId, Integer page, Integer size) throws ClientException {
+	public AcsResponse query(String phoneNumber, LocalDate date, String bizId, Integer page, Integer size) throws ClientException {
 		QuerySendDetailsRequest query = new QuerySendDetailsRequest();
 		query.setPhoneNumber(phoneNumber);
 		query.setSendDate(date.format(this.formatter));
@@ -152,18 +153,18 @@ public class SmsImpl implements Sms, Cloneable {
 	 */
 	@Override
 	@SneakyThrows
-	public Sms getSms() {
+	public AcsSmsImpl getSms() {
 		return this.clone();
 	}
 
 	@Override
-	public SmsSign getSmsSign() {
-		return SmsSign.getInstance(this.profile);
+	public AcsSmsSign getSmsSign() {
+		return AcsSmsSign.getInstance(this.profile);
 	}
 
 	@Override
-	public SmsTemplate getSmsTemplate() {
-		return SmsTemplate.getInstance(this.profile);
+	public AcsSmsTemplate getSmsTemplate() {
+		return AcsSmsTemplate.getInstance(this.profile);
 	}
 
 	/**
@@ -174,7 +175,7 @@ public class SmsImpl implements Sms, Cloneable {
 	 * @see Cloneable 需要实现Cloneable接口
 	 */
 	@Override
-	protected SmsImpl clone() throws CloneNotSupportedException {
-		return (SmsImpl) super.clone();
+	protected AcsSmsImpl clone() throws CloneNotSupportedException {
+		return (AcsSmsImpl) super.clone();
 	}
 }

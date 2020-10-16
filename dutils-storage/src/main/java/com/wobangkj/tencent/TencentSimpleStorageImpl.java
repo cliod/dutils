@@ -1,4 +1,4 @@
-package com.wobangkj.api;
+package com.wobangkj.tencent;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -7,6 +7,7 @@ import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.model.*;
 import com.qcloud.cos.region.Region;
+import com.wobangkj.api.CloudStorage;
 import com.wobangkj.bean.Summary;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

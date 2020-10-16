@@ -1,4 +1,4 @@
-package com.wobangkj.api;
+package com.wobangkj.ali;
 
 import com.aliyuncs.AcsResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -11,45 +11,56 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 短信签名操作
  *
  * @author cliod
  * @since 8/7/20 4:10 PM
  */
-public class SmsSignImpl implements SmsSign {
+public class AcsSmsSignImpl implements AcsSmsSign {
 
 	private final IAcsClient client;
 	private final String regionId;
 
-	private SmsSignImpl(String regionId, IAcsClient client) {
+	private AcsSmsSignImpl(String regionId, IAcsClient client) {
 		this.client = client;
 		this.regionId = regionId;
 	}
 
-	protected SmsSignImpl(IClientProfile profile) {
+	protected AcsSmsSignImpl(IClientProfile profile) {
 		this(profile.getRegionId(), new DefaultAcsClient(profile));
 	}
 
-	protected SmsSignImpl(String regionId, String accessKeyId, String accessSecret) {
+	protected AcsSmsSignImpl(String regionId, String accessKeyId, String accessSecret) {
 		this(regionId, new DefaultAcsClient(DefaultProfile.getProfile(regionId, accessKeyId, accessSecret)));
 	}
 
-	public static SmsSignImpl getInstance(String regionId, String accessKeyId, String accessSecret) {
-		return new SmsSignImpl(regionId, accessKeyId, accessSecret);
+	public static AcsSmsSignImpl getInstance(String regionId, String accessKeyId, String accessSecret) {
+		return new AcsSmsSignImpl(regionId, accessKeyId, accessSecret);
 	}
 
-	public static SmsSignImpl getInstance(IClientProfile profile) {
-		return new SmsSignImpl(profile);
+	public static AcsSmsSignImpl getInstance(IClientProfile profile) {
+		return new AcsSmsSignImpl(profile);
 	}
 
 	@Override
-	public AcsResponse add(String signName, Integer signSource, String remark) throws ClientException {
+	public AcsResponse add(String signName, Integer signSource, String remark, List<SignFile> signFiles) throws ClientException {
 		AddSmsSignRequest request = new AddSmsSignRequest();
 		request.setSignName(signName);
 		request.setSignSource(signSource);
 		request.setRemark(remark);
 		request.setSysRegionId(this.regionId);
+		List<AddSmsSignRequest.SignFileList> signFileLists = new ArrayList<>();
+		for (SignFile signFile : signFiles) {
+			signFileLists.add(new AddSmsSignRequest.SignFileList() {{
+				setFileContents(signFile.getFileContents());
+				setFileSuffix(signFile.getFileSuffix());
+			}});
+		}
+		request.setSignFileLists(signFileLists);
 		return this.client.getAcsResponse(request);
 	}
 
@@ -62,12 +73,20 @@ public class SmsSignImpl implements SmsSign {
 	}
 
 	@Override
-	public AcsResponse modify(String signName, Integer signSource, String remark) throws ClientException {
+	public AcsResponse modify(String signName, Integer signSource, String remark, List<SignFile> signFiles) throws ClientException {
 		ModifySmsSignRequest request = new ModifySmsSignRequest();
 		request.setSignName(signName);
 		request.setSignSource(signSource);
 		request.setRemark(remark);
 		request.setSysRegionId(this.regionId);
+		List<ModifySmsSignRequest.SignFileList> signFileLists = new ArrayList<>();
+		for (SignFile signFile : signFiles) {
+			signFileLists.add(new ModifySmsSignRequest.SignFileList() {{
+				setFileContents(signFile.getFileContents());
+				setFileSuffix(signFile.getFileSuffix());
+			}});
+		}
+		request.setSignFileLists(signFileLists);
 		return this.client.getAcsResponse(request);
 	}
 
