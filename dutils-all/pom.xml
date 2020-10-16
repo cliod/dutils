@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>4.0.14</version>
+        <version>4.2.4-FIX</version>
     </parent>
 
     <artifactId>dutils-all</artifactId>
@@ -23,21 +23,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.wobangkj</groupId>
-            <artifactId>dutils-base</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.wobangkj</groupId>
-            <artifactId>dutils-captcha</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.wobangkj</groupId>
-            <artifactId>dutils-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.wobangkj</groupId>
             <artifactId>dutils-datetime</artifactId>
@@ -72,6 +57,16 @@
             <groupId>com.wobangkj</groupId>
             <artifactId>dutils-sms</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wobangkj</groupId>
+            <artifactId>dutils-captcha</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wobangkj</groupId>
+            <artifactId>dutils-storage</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

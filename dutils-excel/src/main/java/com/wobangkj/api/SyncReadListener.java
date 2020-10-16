@@ -14,7 +14,11 @@ import java.util.List;
  */
 public abstract class SyncReadListener<T> extends AnalysisEventListener<T> {
 
-	protected List<T> cache = new ArrayList<>();
+	protected transient List<T> cache;
+
+	public SyncReadListener(int initCapacity) {
+		cache = new ArrayList<>(initCapacity);
+	}
 
 	/**
 	 * When analysis one row trigger invoke function.
@@ -27,13 +31,4 @@ public abstract class SyncReadListener<T> extends AnalysisEventListener<T> {
 		this.cache.add(data);
 	}
 
-	/**
-	 * if have something to do after all analysis
-	 *
-	 * @param context A context is the main anchorage point of a excel reader.
-	 */
-	@Override
-	public void doAfterAllAnalysed(AnalysisContext context) {
-
-	}
 }

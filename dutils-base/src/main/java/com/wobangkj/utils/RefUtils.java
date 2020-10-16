@@ -72,27 +72,7 @@ public class RefUtils {
 	 * @return 值
 	 */
 	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj, Integer... excludeMods) throws IllegalAccessException {
-		return getFieldValues(obj, Arrays.asList(excludeMods));
-	}
-
-	/**
-	 * 获取对象字段值
-	 *
-	 * @param obj         对象
-	 * @param excludeMods 排除不获取指定修饰符的字段
-	 * @return 值
-	 */
-	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj, Collection<Integer> excludeMods) throws IllegalAccessException {
-		Field[] fields = obj.getClass().getDeclaredFields();
-		Map<String, Object> map = new HashMap<>((int) (fields.length * 1.5));
-		for (Field field : fields) {
-			if (excludeMods.contains(field.getModifiers())) {
-				continue;
-			}
-			field.setAccessible(true);
-			map.put(covert.apply(field.getName()), field.get(obj));
-		}
-		return map;
+		return getFieldValues(obj, Arrays.asList(excludeMods), new ArrayList<>());
 	}
 
 	/**
@@ -114,10 +94,27 @@ public class RefUtils {
 	 * @return 值
 	 */
 	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj, List<String> excludeFieldNames) throws IllegalAccessException {
+		return getFieldValues(obj, Collections.singletonList(Modifier.STATIC), excludeFieldNames);
+	}
+
+	/**
+	 * 获取对象字段值
+	 *
+	 * @param obj               对象
+	 * @param excludeFieldNames 排除不获取指定名称的字段
+	 * @return 值
+	 */
+	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj, List<Integer> excludeMods, List<String> excludeFieldNames) throws IllegalAccessException {
 		Map<String, Object> map = new HashMap<>();
 		Field[] fields = obj.getClass().getDeclaredFields();
+		boolean mods = excludeMods.isEmpty();
+		boolean names = excludeFieldNames.isEmpty();
+		boolean exclude;
 		for (Field field : fields) {
-			if (excludeFieldNames.contains(field.getName()) || excludeFieldNames.contains(covert.apply(field.getName()))) {
+			exclude = !mods && excludeMods.contains(field.getModifiers());
+			exclude = exclude || !names
+					&& (excludeFieldNames.contains(field.getName()) || excludeFieldNames.contains(covert.apply(field.getName())));
+			if (exclude) {
 				continue;
 			}
 			field.setAccessible(true);

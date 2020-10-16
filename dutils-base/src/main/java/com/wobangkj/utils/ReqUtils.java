@@ -4,7 +4,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +85,7 @@ public class ReqUtils {
 	 * @return 结果
 	 */
 	public static @Nullable String getToken(@NotNull HttpServletRequest request) {
-		String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+		String token = request.getHeader("Authorization");
 		if (StringUtils.isBlank(token)) {
 			Cookie[] cookies = request.getCookies();
 			if (!ArrayUtils.isEmpty(cookies)) {

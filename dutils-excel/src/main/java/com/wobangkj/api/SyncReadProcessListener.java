@@ -12,16 +12,40 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 
+	protected static transient int maxSize = 500;
+
+	public SyncReadProcessListener() {
+		super(maxSize);
+	}
+
+	public SyncReadProcessListener(int initCapacity) {
+		super(initCapacity);
+	}
+
 	@Override
 	public final void invoke(T data, AnalysisContext context) {
 		if (!this.filter(data, context)) {
 			return;
 		}
 		this.cache.add(data);
+		if (this.condition(context)) {
+			// 满足条件, 提前处理
+			this.process(context);
+		}
 		// 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
 		if (this.cache.size() >= getMax()) {
 			this.process(context);
 		}
+	}
+
+	/**
+	 * 满足的条件
+	 *
+	 * @param context 上下文内容
+	 * @return 是否满足
+	 */
+	protected boolean condition(AnalysisContext context) {
+		return false;
 	}
 
 	@Override
@@ -45,7 +69,7 @@ public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 	 * @return 数量
 	 */
 	protected int getMax() {
-		return 500;
+		return maxSize;
 	}
 
 	/**
