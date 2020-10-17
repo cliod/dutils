@@ -1,16 +1,20 @@
 package com.wobangkj.utils;
 
+import lombok.SneakyThrows;
+
 import javax.crypto.Cipher;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
 
 /**
+ * 非对称加密。私钥加密 & 私钥解密 & 私钥签名
  * 消息摘要算法：
  * 消息摘要算法主要分三类：MD（Message Digest，消息摘要算法）、SHA（Secure Hash Algorithm，安全散列算法）和MAC（Message Authentication Code，消息认证码算法）。
  * <p>
@@ -24,38 +28,47 @@ import java.util.Arrays;
  */
 public class RsaUtils {
 
+	private static final String KEY_ALGORITHM = "RSA";
+	/**
+	 * 分隔符
+	 */
+	private static final String SPLIT = " ";
+	/**
+	 * 加密分段长度//不可超过117
+	 */
+	private static final int MAX = 117;
 	/**
 	 * 公钥字符串
 	 */
-	private static final String PUBLIC_KEY_STR = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDaJzVjC5K6kbS2YE2fiDs6H8pB" +
-			"JFDGEYqqJJC9I3E0Ebr5FsofdImV5eWdBSeADwcR9ppNbpORdZmcX6SipogKx9PX" +
-			"5aAO4GPesroVeOs91xrLEGt/arteW8iSD+ZaGDUVV3+wcEdci/eCvFlc5PUuZJou" +
-			"M2XZaDK4Fg2IRTfDXQIDAQAB";
+	private static final String PUBLIC_KEY_STR =
+			"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDaJzVjC5K6kbS2YE2fiDs6H8pB" +
+					"JFDGEYqqJJC9I3E0Ebr5FsofdImV5eWdBSeADwcR9ppNbpORdZmcX6SipogKx9PX" +
+					"5aAO4GPesroVeOs91xrLEGt/arteW8iSD+ZaGDUVV3+wcEdci/eCvFlc5PUuZJou" +
+					"M2XZaDK4Fg2IRTfDXQIDAQAB";
 	/**
 	 * 私钥字符串
 	 */
-	private static final String PRIVATE_KEY_STR = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBANonNWMLkrqRtLZg" +
-			"TZ+IOzofykEkUMYRiqokkL0jcTQRuvkWyh90iZXl5Z0FJ4APBxH2mk1uk5F1mZxf" +
-			"pKKmiArH09floA7gY96yuhV46z3XGssQa39qu15byJIP5loYNRVXf7BwR1yL94K8" +
-			"WVzk9S5kmi4zZdloMrgWDYhFN8NdAgMBAAECgYA9bz1Bn0i68b2KfqRdgOfs/nbe" +
-			"0XNN1DLQp2t7WDfRCg01iI1zPkZgyFVZWtI85f5/uIrLs5ArLosL1oNuqqc0nNne" +
-			"CvJK+ZxvA98Hx3ZqYTzDnleR054YhofL5awbhSciYVic204DOG1rhSsYWMqtX7J7" +
-			"3geoWL7TYdMfYXcCAQJBAPMMKsz6ZJh98EeQ1tDG5gpAGWFQkYNrxZDelP/LjeO0" +
-			"TP3XkQnIpcaZoCs7V/rRGRGMWwQ2BUdc/01in89ZZ5ECQQDlx2oBc1CtOAm2UAhN" +
-			"1xWrPkZWENQ53wTrwXO4qbTGDfBKon0AehLlGCSqxQ71aufLkNO7ZlX0IHTAlnk1" +
-			"TvENAkAGSEQ69CXxgx/Y2beTwfBkR2/gghKg0QJUUkyLqBlMz3ZGAXJwTE1sqr/n" +
-			"HiuSAiGhwH0ByNuuEotO1sPGukrhAkAMK26a2w+nzPL+u+hkrwKPykGRZ1zGH+Cz" +
-			"19AYNKzFXJGgclCqiMydY5T1knBDYUEbj/UW1Mmyn1FvrciHoUG1AkAEMEIuDauz" +
-			"JabEAU08YmZw6OoDGsukRWaPfjOEiVhH88p00veM1R37nwhoDMGyEGXVeVzNPvk7" +
-			"cELg28MSRzCK";
-
+	private static final String PRIVATE_KEY_STR =
+			"MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBANonNWMLkrqRtLZg" +
+					"TZ+IOzofykEkUMYRiqokkL0jcTQRuvkWyh90iZXl5Z0FJ4APBxH2mk1uk5F1mZxf" +
+					"pKKmiArH09floA7gY96yuhV46z3XGssQa39qu15byJIP5loYNRVXf7BwR1yL94K8" +
+					"WVzk9S5kmi4zZdloMrgWDYhFN8NdAgMBAAECgYA9bz1Bn0i68b2KfqRdgOfs/nbe" +
+					"0XNN1DLQp2t7WDfRCg01iI1zPkZgyFVZWtI85f5/uIrLs5ArLosL1oNuqqc0nNne" +
+					"CvJK+ZxvA98Hx3ZqYTzDnleR054YhofL5awbhSciYVic204DOG1rhSsYWMqtX7J7" +
+					"3geoWL7TYdMfYXcCAQJBAPMMKsz6ZJh98EeQ1tDG5gpAGWFQkYNrxZDelP/LjeO0" +
+					"TP3XkQnIpcaZoCs7V/rRGRGMWwQ2BUdc/01in89ZZ5ECQQDlx2oBc1CtOAm2UAhN" +
+					"1xWrPkZWENQ53wTrwXO4qbTGDfBKon0AehLlGCSqxQ71aufLkNO7ZlX0IHTAlnk1" +
+					"TvENAkAGSEQ69CXxgx/Y2beTwfBkR2/gghKg0QJUUkyLqBlMz3ZGAXJwTE1sqr/n" +
+					"HiuSAiGhwH0ByNuuEotO1sPGukrhAkAMK26a2w+nzPL+u+hkrwKPykGRZ1zGH+Cz" +
+					"19AYNKzFXJGgclCqiMydY5T1knBDYUEbj/UW1Mmyn1FvrciHoUG1AkAEMEIuDauz" +
+					"JabEAU08YmZw6OoDGsukRWaPfjOEiVhH88p00veM1R37nwhoDMGyEGXVeVzNPvk7" +
+					"cELg28MSRzCK";
 	/**
 	 * 默认加密键长度
 	 */
 	private static final int DEFAULT_KEY_SIZE = 2048;
-	private static PublicKey PUBLIC_KEY = null;
-
-	private static PrivateKey PRIVATE_KEY = null;
+	private static RSAPublicKey PUBLIC_KEY = null;
+	private static RSAPrivateKey PRIVATE_KEY = null;
 
 	public static void main(String[] args) throws GeneralSecurityException {
 		//原始报文
@@ -64,14 +77,37 @@ public class RsaUtils {
 		byte[] signatureByte = sign(plain);
 		System.out.println("原始报文是:" + plain);
 		System.out.println("加签结果:");
-		System.out.println(Base64Utils.encode(signatureByte));
+		System.out.println(Base64Utils.encodeToString(signatureByte));
 		//验签
 		boolean verifyResult = verify(plain, signatureByte);
 		System.out.println("验签结果:" + verifyResult);
-		System.out.println(Arrays.toString(decrypt(signatureByte)));
+
+		String pubKey = getRsaPublicKey();
+		String priKey = getRsaPrivateKey();
+
+		System.out.println("公钥:" + pubKey);
+		System.out.println("私钥:" + priKey);
+
+		//原文
+		StringBuilder res = new StringBuilder();
+
+		res.append("123456");
+		System.out.println("原文对比:" + res.toString());
+		System.out.println("-----------------------");
+
+		String enStr = encryptByPublicKey(res.toString(), pubKey);
+		String deStr = decryptByPrivateKey(enStr, priKey);
+		System.out.println("公钥加密:" + enStr);
+		System.out.println("私钥解密:" + deStr);
+
+		System.out.println("------------------------");
+		enStr = encryptByPrivateKey(res.toString(), priKey);
+		deStr = decryptByPublicKey(enStr, pubKey);
+		System.out.println("私钥加密:" + enStr);
+		System.out.println("公钥解密:" + deStr);
 	}
 
-	private static void init() throws GeneralSecurityException {
+	public static void init() throws GeneralSecurityException {
 		if (PUBLIC_KEY == null) {
 			PUBLIC_KEY = getPublicKey(PUBLIC_KEY_STR);
 		}
@@ -81,11 +117,250 @@ public class RsaUtils {
 	}
 
 	/**
+	 * 获取公钥
+	 */
+	@SneakyThrows
+	public static String getRsaPublicKey() {
+		return HexUtils.bytes2Hex(getPublicKey().getEncoded());
+	}
+
+	/**
+	 * 获取私钥
+	 */
+	@SneakyThrows
+	public static String getRsaPrivateKey() {
+		return HexUtils.bytes2Hex(getPrivateKey().getEncoded());
+	}
+
+	/**
+	 * 通过公钥加密
+	 *
+	 * @param res 原始报文数据
+	 * @param key 公钥
+	 * @return 结果
+	 */
+	public static String encryptByPublicKey(String res, String key) throws GeneralSecurityException {
+		byte[] resBytes = res.getBytes();
+		//先把公钥转为2进制
+		byte[] keyBytes = HexUtils.hex2Bytes(key);
+		//结果
+		StringBuilder result = new StringBuilder();
+		//如果超过了100个字节就分段
+		if (keyBytes.length <= MAX) {
+			//不超过直接返回即可
+			return encodePublic(resBytes, keyBytes);
+		} else {
+			int size = resBytes.length / MAX + (resBytes.length % MAX > 0 ? 1 : 0);
+			for (int i = 0; i < size; i++) {
+				int len = i == size - 1 ? resBytes.length % MAX : MAX;
+				//临时数组
+				byte[] bs = new byte[len];
+				System.arraycopy(resBytes, i * MAX, bs, 0, len);
+				result.append(encodePublic(bs, keyBytes));
+				if (i != size - 1) {
+					result.append(SPLIT);
+				}
+			}
+			return result.toString();
+		}
+	}
+
+	/**
+	 * 通过私钥加密
+	 *
+	 * @param res 原始报文数据
+	 * @param key 私钥
+	 * @return 结果
+	 */
+	public static String encryptByPrivateKey(String res, String key) throws GeneralSecurityException {
+		byte[] resBytes = res.getBytes();
+		byte[] keyBytes = HexUtils.hex2Bytes(key);
+		StringBuilder result = new StringBuilder();
+		//如果超过了100个字节就分段
+		if (keyBytes.length <= MAX) {
+			//不超过直接返回即可
+			return encodePrivate(resBytes, keyBytes);
+		} else {
+			int size = resBytes.length / MAX + (resBytes.length % MAX > 0 ? 1 : 0);
+			for (int i = 0; i < size; i++) {
+				int len = i == size - 1 ? resBytes.length % MAX : MAX;
+				//临时数组
+				byte[] bs = new byte[len];
+				System.arraycopy(resBytes, i * MAX, bs, 0, len);
+				result.append(encodePrivate(bs, keyBytes));
+				if (i != size - 1) {
+					result.append(SPLIT);
+				}
+			}
+			return result.toString();
+		}
+	}
+
+	/**
+	 * 解密-公钥
+	 */
+	public static String decryptByPublicKey(String res, String key) throws GeneralSecurityException {
+		byte[] keyBytes = HexUtils.hex2Bytes(key);
+		//先分段
+		String[] rs = res.split("\\" + SPLIT);
+		//分段解密
+		if (rs != null) {
+			int len = 0;
+			//组合byte[]
+			byte[] result = new byte[rs.length * MAX];
+			for (int i = 0; i < rs.length; i++) {
+				byte[] bs = decodePublic(HexUtils.hex2Bytes(rs[i]), keyBytes);
+				System.arraycopy(bs, 0, result, i * MAX, bs.length);
+				len += bs.length;
+			}
+			byte[] newResult = new byte[len];
+			System.arraycopy(result, 0, newResult, 0, len);
+			//还原字符串
+			return new String(newResult);
+		}
+		return null;
+	}
+
+	/**
+	 * 解密-私钥
+	 */
+	public static String decryptByPrivateKey(String res, String key) throws GeneralSecurityException {
+		byte[] keyBytes = HexUtils.hex2Bytes(key);
+		//先分段
+		String[] rs = res.split("\\" + SPLIT);
+		//分段解密
+		if (rs != null) {
+			int len = 0;
+			//组合byte[]
+			byte[] result = new byte[rs.length * MAX];
+			for (int i = 0; i < rs.length; i++) {
+				byte[] bs = decodePrivate(HexUtils.hex2Bytes(rs[i]), keyBytes);
+				System.arraycopy(bs, 0, result, i * MAX, bs.length);
+				len += bs.length;
+			}
+			byte[] newResult = new byte[len];
+			System.arraycopy(result, 0, newResult, 0, len);
+			//还原字符串
+			return new String(newResult);
+		}
+		return null;
+	}
+
+	/**
+	 * 通过公钥加密
+	 *
+	 * @param res 原始报文数据
+	 * @param key 公钥
+	 * @return 结果
+	 */
+	@SneakyThrows
+	public static String encryptByPublicKey(String res, RSAPublicKey key) {
+		return encryptByPublicKey(res, HexUtils.bytes2Hex(key.getEncoded()));
+	}
+
+	/**
+	 * 通过私钥加密
+	 *
+	 * @param res 原始报文数据
+	 * @param key 私钥
+	 * @return 结果
+	 */
+	@SneakyThrows
+	public static String encryptByPrivateKey(String res, RSAPrivateKey key) {
+		return encryptByPrivateKey(res, HexUtils.bytes2Hex(key.getEncoded()));
+	}
+
+	/**
+	 * 解密-公钥
+	 */
+	@SneakyThrows
+	public static String decryptByPublicKey(String res, RSAPublicKey key) {
+		return decryptByPublicKey(res, HexUtils.bytes2Hex(key.getEncoded()));
+	}
+
+	/**
+	 * 解密-私钥
+	 */
+	@SneakyThrows
+	public static String decryptByPrivateKey(String res, RSAPrivateKey key) {
+		return decryptByPrivateKey(res, HexUtils.bytes2Hex(key.getEncoded()));
+	}
+
+	/**
+	 * 加密-公钥-无分段
+	 *
+	 * @param res      原始报文数据
+	 * @param keyBytes 公钥
+	 * @return 解密结果
+	 */
+	private static String encodePublic(byte[] res, byte[] keyBytes) throws GeneralSecurityException {
+		//用2进制的公钥生成x509
+		X509EncodedKeySpec x5 = new X509EncodedKeySpec(keyBytes);
+		KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
+		//用KeyFactory把x509生成公钥pubKey
+		Key pubKey = factory.generatePublic(x5);
+		//生成相应的Cipher
+		Cipher cipher = Cipher.getInstance(factory.getAlgorithm());
+		//给cipher初始化为加密模式，以及传入公钥pubKey
+		cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+		//以16进制的字符串返回
+		return HexUtils.bytes2Hex(cipher.doFinal(res));
+	}
+
+	/**
+	 * 加密-私钥-无分段
+	 *
+	 * @param res      原始报文数据
+	 * @param keyBytes 秘钥
+	 * @return 解密结果
+	 */
+	private static String encodePrivate(byte[] res, byte[] keyBytes) throws GeneralSecurityException {
+		PKCS8EncodedKeySpec pk8 = new PKCS8EncodedKeySpec(keyBytes);
+		KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
+		Key priKey = factory.generatePrivate(pk8);
+		Cipher cipher = Cipher.getInstance(factory.getAlgorithm());
+		cipher.init(Cipher.ENCRYPT_MODE, priKey);
+		return HexUtils.bytes2Hex(cipher.doFinal(res));
+	}
+
+	/**
+	 * 解密-公钥-无分段
+	 *
+	 * @param res      原始报文数据
+	 * @param keyBytes 公钥
+	 * @return 解密结果
+	 */
+	private static byte[] decodePublic(byte[] res, byte[] keyBytes) throws GeneralSecurityException {
+		X509EncodedKeySpec x5 = new X509EncodedKeySpec(keyBytes);
+		KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
+		Key pubKey = factory.generatePublic(x5);
+		Cipher cipher = Cipher.getInstance(factory.getAlgorithm());
+		cipher.init(Cipher.DECRYPT_MODE, pubKey);
+		return cipher.doFinal(res);
+	}
+
+	/**
+	 * 解密-私钥-无分段
+	 *
+	 * @param res      原始报文数据
+	 * @param keyBytes 秘钥
+	 * @return 解密结果
+	 */
+	private static byte[] decodePrivate(byte[] res, byte[] keyBytes) throws GeneralSecurityException {
+		PKCS8EncodedKeySpec pk8 = new PKCS8EncodedKeySpec(keyBytes);
+		KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
+		Key priKey = factory.generatePrivate(pk8);
+		Cipher cipher = Cipher.getInstance(factory.getAlgorithm());
+		cipher.init(Cipher.DECRYPT_MODE, priKey);
+		return cipher.doFinal(res);
+	}
+
+	/**
 	 * 获取私钥
 	 *
 	 * @return 公钥
 	 */
-	private static PrivateKey getPrivateKey() throws GeneralSecurityException {
+	private static RSAPrivateKey getPrivateKey() throws GeneralSecurityException {
 		init();
 		return PRIVATE_KEY;
 	}
@@ -95,7 +370,7 @@ public class RsaUtils {
 	 *
 	 * @return 公钥
 	 */
-	public static PublicKey getPublicKey() throws GeneralSecurityException {
+	public static RSAPublicKey getPublicKey() throws GeneralSecurityException {
 		init();
 		return PUBLIC_KEY;
 	}
@@ -119,20 +394,6 @@ public class RsaUtils {
 		signature.update(plain.getBytes(StandardCharsets.UTF_8));
 		//加签
 		return signature.sign();
-	}
-
-	/**
-	 * 解签/解密
-	 *
-	 * @param signatureByte 加密数据
-	 * @return 解密数据
-	 * @throws GeneralSecurityException 异常
-	 */
-	public static byte[] decrypt(byte[] signatureByte) throws GeneralSecurityException {
-		String algorithm = "RSA/None/PKCS1Padding";
-		Cipher cipher = Cipher.getInstance(algorithm);
-		cipher.init(Cipher.DECRYPT_MODE, getPrivateKey());
-		return cipher.doFinal(signatureByte);
 	}
 
 	/**
@@ -163,7 +424,7 @@ public class RsaUtils {
 	 * @return 公钥对象
 	 * @throws GeneralSecurityException 异常
 	 */
-	public static PublicKey getPublicKey(String publicKeyStr) throws GeneralSecurityException {
+	public static RSAPublicKey getPublicKey(String publicKeyStr) throws GeneralSecurityException {
 		return getPublicKey(publicKeyStr.getBytes());
 	}
 
@@ -174,7 +435,7 @@ public class RsaUtils {
 	 * @return 私钥对象
 	 * @throws GeneralSecurityException 异常
 	 */
-	public static PrivateKey getPrivateKey(String privateKeyStr) throws GeneralSecurityException {
+	public static RSAPrivateKey getPrivateKey(String privateKeyStr) throws GeneralSecurityException {
 		return getPrivateKey(privateKeyStr.getBytes());
 	}
 
@@ -209,22 +470,20 @@ public class RsaUtils {
 	 * @param publicKeyFilename  公钥文件路径
 	 * @param privateKeyFilename 私钥文件路径
 	 * @param secret             生成密钥的密文
-	 * @param keySize            键长度，如果小于2048，取2048
+	 * @param keySize            键长度，如果小于2048，取2048，不宜太大，避免计算时间过长
 	 * @throws IOException,NoSuchAlgorithmException 异常
 	 */
 	public static void generateKey(String publicKeyFilename, String privateKeyFilename, String secret, int keySize) throws NoSuchAlgorithmException, IOException {
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
 		SecureRandom secureRandom = new SecureRandom(secret.getBytes());
 		keyPairGenerator.initialize(Math.max(keySize, DEFAULT_KEY_SIZE), secureRandom);
 		KeyPair keyPair = keyPairGenerator.genKeyPair();
 		// 获取公钥并写出
-		byte[] publicKeyBytes = keyPair.getPublic().getEncoded();
-		publicKeyBytes = java.util.Base64.getEncoder().encode(publicKeyBytes);
-		writeFile(publicKeyFilename, publicKeyBytes);
+		PUBLIC_KEY = (RSAPublicKey) keyPair.getPublic();
+		writeFile(publicKeyFilename, Base64Utils.encode(PUBLIC_KEY.getEncoded()));
 		// 获取私钥并写出
-		byte[] privateKeyBytes = keyPair.getPrivate().getEncoded();
-		privateKeyBytes = java.util.Base64.getEncoder().encode(privateKeyBytes);
-		writeFile(privateKeyFilename, privateKeyBytes);
+		PRIVATE_KEY = (RSAPrivateKey) keyPair.getPrivate();
+		writeFile(privateKeyFilename, Base64Utils.encode(PRIVATE_KEY.getEncoded()));
 	}
 
 	/**
@@ -234,11 +493,11 @@ public class RsaUtils {
 	 * @return java.security.PublicKey 公钥对象
 	 * @throws GeneralSecurityException 异常
 	 */
-	private static PublicKey getPublicKey(byte[] bytes) throws GeneralSecurityException {
+	private static RSAPublicKey getPublicKey(byte[] bytes) throws GeneralSecurityException {
 		bytes = Base64Utils.decode(bytes);
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(bytes);
-		KeyFactory factory = KeyFactory.getInstance("RSA");
-		return factory.generatePublic(spec);
+		KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
+		return (RSAPublicKey) factory.generatePublic(spec);
 	}
 
 	/**
@@ -248,11 +507,11 @@ public class RsaUtils {
 	 * @return java.security.PrivateKey
 	 * @throws GeneralSecurityException 异常
 	 */
-	private static PrivateKey getPrivateKey(byte[] bytes) throws GeneralSecurityException {
+	private static RSAPrivateKey getPrivateKey(byte[] bytes) throws GeneralSecurityException {
 		bytes = Base64Utils.decode(bytes);
 		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(bytes);
-		KeyFactory factory = KeyFactory.getInstance("RSA");
-		return factory.generatePrivate(spec);
+		KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
+		return (RSAPrivateKey) factory.generatePrivate(spec);
 	}
 
 	/**
@@ -281,5 +540,43 @@ public class RsaUtils {
 			}
 		}
 		Files.write(dest.toPath(), bytes);
+	}
+
+	/**
+	 * 通过公钥加密
+	 *
+	 * @param res 原始报文数据
+	 * @return 结果
+	 */
+	@SneakyThrows
+	public String encryptByPublicKey(String res) {
+		return encryptByPublicKey(res, getRsaPublicKey());
+	}
+
+	/**
+	 * 通过私钥加密
+	 *
+	 * @param res 原始报文数据
+	 * @return 结果
+	 */
+	@SneakyThrows
+	public String encryptByPrivateKey(String res) {
+		return encryptByPublicKey(res, getRsaPrivateKey());
+	}
+
+	/**
+	 * 解密-公钥
+	 */
+	@SneakyThrows
+	public String decryptByPublicKey(String res) {
+		return decryptByPublicKey(res, getRsaPublicKey());
+	}
+
+	/**
+	 * 解密-私钥
+	 */
+	@SneakyThrows
+	public String decryptByPrivateKey(String res) {
+		return decryptByPrivateKey(res, getRsaPrivateKey());
 	}
 }
