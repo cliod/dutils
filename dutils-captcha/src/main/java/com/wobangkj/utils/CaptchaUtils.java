@@ -302,13 +302,16 @@ public class CaptchaUtils {
 	 *
 	 * @see CaptchaKits 验证码生成
 	 */
-	public static boolean checkValidCode(@NotNull HttpSession session) {
+	public static boolean checkValidCode(String code, @NotNull HttpSession session) {
 		if (Objects.isNull(CAPTCHA)) {
 			throw new NullObjectException((EnumTextMsg) () -> "为初始化, 无可验证");
 		}
 		// 从session中获取随机数
 		String random = (String) session.getAttribute(CODE_SESSION_KEY);
 		if (random == null) {
+			return false;
+		}
+		if (!Objects.equals(code, random)) {
 			return false;
 		}
 		// 忽略大小写，比较字符串是否相等
