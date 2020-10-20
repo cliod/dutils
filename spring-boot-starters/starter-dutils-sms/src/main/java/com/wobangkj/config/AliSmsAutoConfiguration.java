@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnClass(value = DefaultAcsClient.class)
 @EnableConfigurationProperties(AliProperties.class)
-public class AliSmsConfiguration {
+public class AliSmsAutoConfiguration {
 
 	@Bean
 	public AcsSms acsSms(AliProperties aliProperties) {

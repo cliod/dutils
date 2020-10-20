@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>4.3.2-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -23,7 +23,7 @@
         <module>dutils-excel</module>
         <module>dutils-sms</module>
         <module>dutils-storage</module>
-        <module>starter-dutils-sms</module>
+        <module>spring-boot-starters</module>
     </modules>
 
     <name>dutils</name>
