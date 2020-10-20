@@ -1,0 +1,33 @@
+{
+  "groups": [
+    {
+      "name": "ali",
+      "type": "com.wobangkj.config.AliProperties",
+      "sourceType": "com.wobangkj.config.AliProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "ali.access-key",
+      "type": "java.lang.String",
+      "description": "Alibaba Cloud platform development access key.",
+      "sourceType": "com.wobangkj.config.AliProperties",
+      "defaultValue": ""
+    },
+    {
+      "name": "ali.access-secret",
+      "type": "java.lang.String",
+      "description": "Alibaba Cloud platform development access secret.",
+      "sourceType": "com.wobangkj.config.AliProperties",
+      "defaultValue": ""
+    },
+    {
+      "name": "ali.region-id",
+      "type": "java.lang.String",
+      "description": "Alibaba Cloud platform development region id.",
+      "sourceType": "com.wobangkj.config.AliProperties",
+      "defaultValue": ""
+    }
+  ],
+  "hints": []
+}

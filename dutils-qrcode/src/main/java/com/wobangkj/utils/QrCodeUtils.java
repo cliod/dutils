@@ -32,11 +32,11 @@ public class QrCodeUtils {
 	 * 编码
 	 */
 	private static final String CHARSET = "utf-8";
-	private static final int maxSize = 500;
-	private static final LinkedHashMap<String, QrCode> caches = new LinkedHashMap<String, QrCode>(maxSize) {
+	private static final int MAX_SIZE = 500;
+	private static final LinkedHashMap<String, QrCode> CACHES = new LinkedHashMap<String, QrCode>(MAX_SIZE) {
 		@Override
 		protected boolean removeEldestEntry(Map.Entry<String, QrCode> eldest) {
-			return this.size() > maxSize;
+			return this.size() > MAX_SIZE;
 		}
 
 		@Override
@@ -100,7 +100,7 @@ public class QrCodeUtils {
 	 * @throws WriterException 异常
 	 */
 	public static @NotNull BufferedImage createImage(String content) throws WriterException {
-		return caches.get(content).createImage(content);
+		return CACHES.get(content).createImage(content);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class QrCodeUtils {
 	 */
 	@Deprecated
 	protected static void insertImage(String content, String logo, boolean needCompress) throws IOException {
-		caches.get(content).setLogo(new File(logo), needCompress);
+		CACHES.get(content).setLogo(new File(logo), needCompress);
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class QrCodeUtils {
 	 */
 	@Deprecated
 	protected static void insertImage(String content, File logo, boolean needCompress) throws IOException {
-		caches.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).setLogo(logo, needCompress);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class QrCodeUtils {
 	 */
 	@Deprecated
 	protected static void insertImage(String content, InputStream logo, boolean needCompress) throws IOException {
-		caches.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).setLogo(logo, needCompress);
 	}
 
 	/**
@@ -197,8 +197,8 @@ public class QrCodeUtils {
 	@Deprecated
 	public static @NotNull File encode(@NotNull String content, String logo, String destPath, String fileName, boolean needCompress) throws Exception {
 		File file = createFile(destPath, fileName);
-		caches.get(content).setLogo(logo, needCompress);
-		caches.get(content).createImage(content, file);
+		CACHES.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).createImage(content, file);
 		return file;
 	}
 
@@ -215,8 +215,8 @@ public class QrCodeUtils {
 	@Deprecated
 	public static @NotNull File encode(@NotNull String content, InputStream logo, String destPath, String fileName, boolean needCompress) throws Exception {
 		File file = createFile(destPath, fileName);
-		caches.get(content).setLogo(logo, needCompress);
-		caches.get(content).createImage(content, file);
+		CACHES.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).createImage(content, file);
 		return file;
 	}
 
@@ -285,8 +285,8 @@ public class QrCodeUtils {
 	 */
 	@Deprecated
 	public static void encode(@NotNull String content, String logo, File file, boolean needCompress) throws Exception {
-		caches.get(content).setLogo(logo, needCompress);
-		caches.get(content).createImage(content, file);
+		CACHES.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).createImage(content, file);
 	}
 
 	/**
@@ -299,8 +299,8 @@ public class QrCodeUtils {
 	 * @throws Exception 异常
 	 */
 	public static void encode(@NotNull String content, @Nullable File logo, @NotNull File file, boolean needCompress) throws Exception {
-		caches.get(content).setLogo(logo, needCompress);
-		caches.get(content).createImage(content, file);
+		CACHES.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).createImage(content, file);
 	}
 
 	/**
@@ -313,8 +313,8 @@ public class QrCodeUtils {
 	 * @throws Exception 异常
 	 */
 	public static void encode(@NotNull String content, @Nullable InputStream logo, @NotNull File file, boolean needCompress) throws Exception {
-		caches.get(content).setLogo(logo, needCompress);
-		caches.get(content).createImage(content, file);
+		CACHES.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).createImage(content, file);
 	}
 
 	/**
@@ -413,8 +413,8 @@ public class QrCodeUtils {
 	 */
 	@Deprecated
 	public static void encode(@NotNull String content, @Nullable String logo, @NotNull OutputStream output, boolean needCompress) throws Exception {
-		caches.get(content).setLogo(logo, needCompress);
-		caches.get(content).createImage(content, output);
+		CACHES.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).createImage(content, output);
 	}
 
 	/**
@@ -427,8 +427,8 @@ public class QrCodeUtils {
 	 * @throws Exception 异常
 	 */
 	public static void encode(@NotNull String content, @Nullable File logo, @NotNull OutputStream output, boolean needCompress) throws Exception {
-		caches.get(content).setLogo(logo, needCompress);
-		caches.get(content).createImage(content, output);
+		CACHES.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).createImage(content, output);
 	}
 
 	/**
@@ -441,8 +441,8 @@ public class QrCodeUtils {
 	 * @throws Exception 异常
 	 */
 	public static void encode(@NotNull String content, @Nullable InputStream logo, @NotNull OutputStream output, boolean needCompress) throws Exception {
-		caches.get(content).setLogo(logo, needCompress);
-		caches.get(content).createImage(content, output);
+		CACHES.get(content).setLogo(logo, needCompress);
+		CACHES.get(content).createImage(content, output);
 	}
 
 	/**

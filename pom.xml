@@ -23,6 +23,7 @@
         <module>dutils-excel</module>
         <module>dutils-sms</module>
         <module>dutils-storage</module>
+        <module>starter-dutils-sms</module>
     </modules>
 
     <name>dutils</name>
@@ -299,30 +300,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!--lu-->
-    <distributionManagement>
-        <repository>
-            <id>rdc-releases</id>
-            <url>https://repo.rdc.aliyun.com/repository/79115-release-8qAEIB/</url>
-        </repository>
-        <snapshotRepository>
-            <id>rdc-snapshots</id>
-            <url>https://repo.rdc.aliyun.com/repository/79115-SNAPSHOT-nphODc/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <!--cliod-->
-    <!--    <distributionManagement>-->
-    <!--        <repository>-->
-    <!--            <id>rdc-releases</id>-->
-    <!--            <url>https://repo.rdc.aliyun.com/repository/134223-release-08Oyns/</url>-->
-    <!--        </repository>-->
-    <!--        <snapshotRepository>-->
-    <!--            <id>rdc-snapshots</id>-->
-    <!--            <url>https://repo.rdc.aliyun.com/repository/134223-snapshot-KTjEgP/</url>-->
-    <!--        </snapshotRepository>-->
-    <!--    </distributionManagement>-->
 
     <build>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
