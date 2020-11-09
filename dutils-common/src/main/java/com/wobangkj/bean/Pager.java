@@ -17,9 +17,8 @@ import java.util.List;
 @Data
 public final class Pager<T> implements SessionSerializable {
 
-	public static Pager<?> EMPTY = Pager.of(0, 1, 10, Collections.emptyList());
-
 	private static final long serialVersionUID = 7562274153136856700L;
+	public static Pager<?> EMPTY = Pager.of(0, 1, 10, Collections.emptyList());
 	/**
 	 * 总数量
 	 */
@@ -85,8 +84,16 @@ public final class Pager<T> implements SessionSerializable {
 		return pager;
 	}
 
+	/**
+	 * 返回默认空分页
+	 *
+	 * @param <T> 类型
+	 * @return 结果
+	 * @see Pager#empty()
+	 */
+	@Deprecated
 	public static <T> @NotNull Pager<T> of() {
-		return Pager.of(0, Pageable.of(), Collections.emptyList());
+		return empty();
 	}
 
 	/**
@@ -106,7 +113,8 @@ public final class Pager<T> implements SessionSerializable {
 	 * @return 字符串
 	 */
 	@Override
-	public @NotNull String toString() {
+	public @NotNull
+	String toString() {
 		return this.toJson();
 	}
 
@@ -117,7 +125,8 @@ public final class Pager<T> implements SessionSerializable {
 	 * @see java.util.Map
 	 */
 	@Override
-	public @NotNull Res toObject() {
+	public @NotNull
+	Res toObject() {
 		return Res.of("data", this.getData())
 				.add("pager", Res
 						.of("client_page", this.getClientPage())
