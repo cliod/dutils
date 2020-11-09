@@ -27,7 +27,7 @@ public class Base64Utils {
 	 * @return base64加密后的结果
 	 */
 	@NotNull
-	public static String encode(@NotNull String str) {
+	public static String encodeToString(@NotNull String str) {
 		return Base64.getEncoder().encodeToString(str.getBytes());
 	}
 
@@ -38,8 +38,30 @@ public class Base64Utils {
 	 * @return base64加密后的结果
 	 */
 	@NotNull
-	public static String encode(@NotNull byte[] contents) {
+	public static String encodeToString(@NotNull byte[] contents) {
 		return Base64.getEncoder().encodeToString(contents);
+	}
+
+	/**
+	 * 用base64算法进行加密
+	 *
+	 * @param str 需要加密的字符串
+	 * @return base64加密后的结果
+	 */
+	@NotNull
+	public static byte[] encode(@NotNull String str) {
+		return Base64.getEncoder().encode(str.getBytes());
+	}
+
+	/**
+	 * 用base64算法进行加密
+	 *
+	 * @param contents 需要加密二进制数组
+	 * @return base64加密后的结果
+	 */
+	@NotNull
+	public static byte[] encode(@NotNull byte[] contents) {
+		return Base64.getEncoder().encode(contents);
 	}
 
 	/**
@@ -74,7 +96,7 @@ public class Base64Utils {
 	 */
 	public static @NotNull String encodeFile(File file) throws IOException {
 		byte[] bytes = IOUtils.toByteArray(new FileInputStream(file));
-		return encode(bytes);
+		return encodeToString(bytes);
 	}
 
 	/**
