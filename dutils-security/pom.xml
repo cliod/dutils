@@ -3,16 +3,18 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <packaging>jar</packaging>
+
     <parent>
         <groupId>com.wobangkj</groupId>
-        <artifactId>development</artifactId>
-        <version>2.0.1</version>
+        <artifactId>dutils</artifactId>
+        <version>5.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>development-jwt</artifactId>
 
-    <name>development-jwt</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <artifactId>dutils-security</artifactId>
+    <name>dutils-security</name>
+    <url>http://www.wobangkj.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,21 +25,34 @@
     <dependencies>
         <dependency>
             <groupId>com.wobangkj</groupId>
-            <artifactId>development-common</artifactId>
-            <version>${project.version}</version>
+            <artifactId>dutils-base</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
+            <groupId>com.wobangkj</groupId>
+            <artifactId>dutils-cache</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <!-- jwt -->
         <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>3.8.2</version>
+            <version>3.10.3</version>
+        </dependency>
+        <!--文件通用工具包-->
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
