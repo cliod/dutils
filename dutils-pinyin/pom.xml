@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <packaging>jar</packaging>
-
     <parent>
         <groupId>com.wobangkj</groupId>
-        <artifactId>dutils</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <artifactId>development</artifactId>
+        <version>1.2.3</version>
     </parent>
+    <artifactId>development-pinyin</artifactId>
 
-    <artifactId>dutils-pinyin</artifactId>
-    <name>dutils-pinyin</name>
-    <url>http://www.wobangkj.com</url>
+    <name>development-pinyin</name>
+    <!-- FIXME change it to the project's website -->
+    <url>http://www.example.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,13 +21,11 @@
     </properties>
 
     <dependencies>
-        <!--中文文字转拼音-->
         <!-- https://mvnrepository.com/artifact/com.belerweb/pinyin4j -->
         <dependency>
             <groupId>com.belerweb</groupId>
             <artifactId>pinyin4j</artifactId>
-            <version>2.5.1</version>
+            <version>2.5.0</version>
         </dependency>
     </dependencies>
-
 </project>

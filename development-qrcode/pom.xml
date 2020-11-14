@@ -8,9 +8,9 @@
         <artifactId>development</artifactId>
         <version>1.2.3</version>
     </parent>
-    <artifactId>development-datetime</artifactId>
+    <artifactId>development-qrcode</artifactId>
 
-    <name>development-datetime</name>
+    <name>development-qrcode</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
@@ -21,23 +21,11 @@
     </properties>
 
     <dependencies>
+        <!--二维码-->
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.10.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
-            <optional>true</optional>
-        </dependency>
-        <!--第三方jar-->
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.3.3</version>
         </dependency>
     </dependencies>
-
 </project>
