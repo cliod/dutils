@@ -8,12 +8,12 @@
 
     <parent>
         <groupId>com.wobangkj</groupId>
-        <artifactId>dutils</artifactId>
+        <artifactId>spring-boot-starters</artifactId>
         <version>5.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dutils-sms</artifactId>
-    <name>dutils-sms</name>
+    <artifactId>starter-dutils-sms</artifactId>
+    <name>starter-dutils-sms</name>
     <url>http://www.wobangkj.com</url>
 
     <properties>
@@ -25,8 +25,19 @@
     <dependencies>
         <dependency>
             <groupId>com.wobangkj</groupId>
-            <artifactId>dutils-base</artifactId>
+            <artifactId>dutils-common</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wobangkj</groupId>
+            <artifactId>dutils-sms</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+            <optional>true</optional>
         </dependency>
         <!--短信sdk-->
         <dependency>
@@ -42,15 +53,5 @@
             <version>2.1.0</version>
             <optional>true</optional>
         </dependency>
-
-        <!-- go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. -->
-        <!-- 请到https://search.maven.org/search?q=tencentcloud-sdk-java查询最新版本 -->
-        <dependency>
-            <groupId>com.tencentcloudapi</groupId>
-            <artifactId>tencentcloud-sdk-java</artifactId>
-            <version>3.1.147</version>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
-
 </project>

@@ -9,11 +9,10 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>4.3.2-SNAPSHOT</version>
+        <version>5.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>dutils-storage</artifactId>
-
     <name>dutils-storage</name>
     <url>http://www.wobangkj.com</url>
 
