@@ -163,8 +163,7 @@ public class RefUtils {
 	 * @param obj 对象
 	 * @return 结果
 	 */
-	@NotNull
-	public static String[] getFieldNames(@NotNull Object obj) {
+	public static @NotNull String[] getFieldNames(@NotNull Object obj) {
 		return getFieldNames(obj.getClass(), Modifier.STATIC, Modifier.FINAL).toArray(new String[0]);
 	}
 
@@ -174,8 +173,7 @@ public class RefUtils {
 	 * @param obj 对象类
 	 * @return 结果
 	 */
-	@NotNull
-	public static String[] getFieldNames(@NotNull Class<?> obj) {
+	public static @NotNull String[] getFieldNames(@NotNull Class<?> obj) {
 		return getFieldNames(obj, Modifier.STATIC, Modifier.FINAL).toArray(new String[0]);
 	}
 
@@ -186,8 +184,7 @@ public class RefUtils {
 	 * @param excludeMods 忽略指定的修饰符
 	 * @return 结果
 	 */
-	@NotNull
-	public static List<String> getFieldNames(@NotNull Class<?> obj, Integer... excludeMods) {
+	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, Integer... excludeMods) {
 		return getFieldNames(obj, Arrays.asList(excludeMods));
 	}
 
@@ -198,8 +195,7 @@ public class RefUtils {
 	 * @param excludeFieldNames 忽略指定字段
 	 * @return 结果
 	 */
-	@NotNull
-	public static List<String> getFieldNames(@NotNull Class<?> obj, String... excludeFieldNames) {
+	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, String... excludeFieldNames) {
 		return getFieldNames(obj, Arrays.asList(excludeFieldNames));
 	}
 
@@ -210,8 +206,7 @@ public class RefUtils {
 	 * @param excludeMods 忽略指定的修饰符
 	 * @return 结果
 	 */
-	@NotNull
-	public static List<String> getFieldNames(@NotNull Class<?> obj, Collection<Integer> excludeMods) {
+	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, Collection<Integer> excludeMods) {
 		Field[] fields = obj.getDeclaredFields();
 		List<String> result = new ArrayList<>();
 		for (Field field : fields) {
@@ -230,8 +225,7 @@ public class RefUtils {
 	 * @param excludeFieldNames 忽略指定字段
 	 * @return 结果
 	 */
-	@NotNull
-	public static List<String> getFieldNames(@NotNull Class<?> obj, List<String> excludeFieldNames) {
+	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, List<String> excludeFieldNames) {
 		Field[] fields = obj.getDeclaredFields();
 		List<String> result = new ArrayList<>();
 		for (Field field : fields) {
@@ -250,8 +244,7 @@ public class RefUtils {
 	 * @param var 分隔符
 	 * @return 字符串
 	 */
-	@NotNull
-	public static String getFieldNameStr(@NotNull Object obj, CharSequence var) {
+	public static @NotNull String getFieldNameStr(@NotNull Object obj, CharSequence var) {
 		return String.join(var, getFieldNames(obj));
 	}
 
@@ -262,8 +255,7 @@ public class RefUtils {
 	 * @param var 分隔符
 	 * @return 字符串
 	 */
-	@NotNull
-	public static String getFieldNameStr(@NotNull Class<?> obj, CharSequence var) {
+	public static @NotNull String getFieldNameStr(@NotNull Class<?> obj, CharSequence var) {
 		return String.join(var, getFieldNames(obj));
 	}
 
@@ -275,8 +267,7 @@ public class RefUtils {
 	 * @param excludeMods 忽略指定的修饰符
 	 * @return 字符串
 	 */
-	@NotNull
-	public static String getFieldNameStr(@NotNull Class<?> obj, CharSequence var, Integer... excludeMods) {
+	public static @NotNull String getFieldNameStr(@NotNull Class<?> obj, CharSequence var, Integer... excludeMods) {
 		return String.join(var, getFieldNames(obj, excludeMods));
 	}
 
@@ -288,8 +279,7 @@ public class RefUtils {
 	 * @param excludeMods 忽略指定的修饰符
 	 * @return 字符串
 	 */
-	@NotNull
-	public static String getFieldNameStr(@NotNull Class<?> obj, CharSequence var, Collection<Integer> excludeMods) {
+	public static @NotNull String getFieldNameStr(@NotNull Class<?> obj, CharSequence var, Collection<Integer> excludeMods) {
 		return String.join(var, getFieldNames(obj, excludeMods));
 	}
 
@@ -301,8 +291,7 @@ public class RefUtils {
 	 * @param excludeFieldNames 忽略指定字段
 	 * @return 字符串
 	 */
-	@NotNull
-	public static String getFieldNameStr(@NotNull Class<?> obj, CharSequence var, String... excludeFieldNames) {
+	public static @NotNull String getFieldNameStr(@NotNull Class<?> obj, CharSequence var, String... excludeFieldNames) {
 		return String.join(var, getFieldNames(obj, excludeFieldNames));
 	}
 
@@ -314,8 +303,7 @@ public class RefUtils {
 	 * @param excludeFieldNames 忽略指定字段
 	 * @return 字符串
 	 */
-	@NotNull
-	public static String getFieldNameStr(@NotNull Class<?> obj, CharSequence var, List<String> excludeFieldNames) {
+	public static @NotNull String getFieldNameStr(@NotNull Class<?> obj, CharSequence var, List<String> excludeFieldNames) {
 		return String.join(var, getFieldNames(obj, excludeFieldNames));
 	}
 
@@ -325,8 +313,7 @@ public class RefUtils {
 	 * @param obj 对象
 	 * @return 结果
 	 */
-	@NotNull
-	public static Map<String, Class<?>> getFieldNameAndType(@NotNull Object obj) {
+	public static @NotNull Map<String, Class<?>> getFieldNameAndType(@NotNull Object obj) {
 		return getFieldNameAndType(obj.getClass(), Modifier.STATIC, Modifier.FINAL);
 	}
 
@@ -336,8 +323,7 @@ public class RefUtils {
 	 * @param obj 对象
 	 * @return 结果
 	 */
-	@NotNull
-	public static Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj) {
+	public static @NotNull Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj) {
 		return getFieldNameAndType(obj, Modifier.STATIC, Modifier.FINAL);
 	}
 
@@ -348,8 +334,7 @@ public class RefUtils {
 	 * @param excludeMods 忽略指定的修饰符
 	 * @return 结果
 	 */
-	@NotNull
-	public static Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj, Integer... excludeMods) {
+	public static @NotNull Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj, Integer... excludeMods) {
 		return getFieldNameAndType(obj, Arrays.asList(excludeMods));
 	}
 
@@ -360,8 +345,7 @@ public class RefUtils {
 	 * @param excludeMods 忽略指定的修饰符
 	 * @return 结果
 	 */
-	@NotNull
-	public static Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj, Collection<Integer> excludeMods) {
+	public static @NotNull Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj, Collection<Integer> excludeMods) {
 		Field[] fields = obj.getDeclaredFields();
 		Map<String, Class<?>> map = new HashMap<>();
 		for (Field field : fields) {
@@ -380,8 +364,7 @@ public class RefUtils {
 	 * @param excludeFieldNames 忽略指定字段
 	 * @return 结果
 	 */
-	@NotNull
-	public static Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj, String... excludeFieldNames) {
+	public static @NotNull Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj, String... excludeFieldNames) {
 		return getFieldNameAndType(obj, Arrays.asList(excludeFieldNames));
 	}
 
@@ -392,8 +375,7 @@ public class RefUtils {
 	 * @param excludeFieldNames 忽略指定字段
 	 * @return 结果
 	 */
-	@NotNull
-	public static Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj, List<String> excludeFieldNames) {
+	public static @NotNull Map<String, Class<?>> getFieldNameAndType(@NotNull Class<?> obj, List<String> excludeFieldNames) {
 		Field[] fields = obj.getDeclaredFields();
 		Map<String, Class<?>> map = new HashMap<>();
 		for (Field field : fields) {
@@ -412,8 +394,7 @@ public class RefUtils {
 	 * @param <T>   类型
 	 * @return 结果对象
 	 */
-	@NotNull
-	public static <T> T newInstance(@NotNull Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+	public static @NotNull <T> T newInstance(@NotNull Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 		return clazz.getConstructor().newInstance();
 	}
 
@@ -424,8 +405,7 @@ public class RefUtils {
 	 * @param <T>       类型
 	 * @return 结果对象
 	 */
-	@NotNull
-	public static <T> T newInstance(@NotNull String className) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
+	public static @NotNull <T> T newInstance(@NotNull String className) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
 		@SuppressWarnings("unchecked")
 		Class<T> clazz = (Class<T>) Class.forName(className);
 		return newInstance(clazz);

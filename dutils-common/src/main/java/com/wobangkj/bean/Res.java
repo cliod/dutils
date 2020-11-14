@@ -129,12 +129,6 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	}
 
 	@Override
-	@Deprecated
-	public Object rem(String k) {
-		return remove(k);
-	}
-
-	@Override
 	public Object pop(String id) {
 		return remove(id);
 	}

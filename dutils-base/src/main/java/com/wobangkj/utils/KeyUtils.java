@@ -120,7 +120,7 @@ public class KeyUtils {
 	 * @param bytes 字符byte
 	 * @return 加密字符串
 	 */
-	private static @NotNull String byte2Hex(@NotNull byte[] bytes) {
+	private static @NotNull String byte2Hex(byte[] bytes) {
 		StringBuilder stringBuffer = new StringBuilder();
 		String temp;
 		for (byte b : bytes) {
@@ -139,8 +139,7 @@ public class KeyUtils {
 	 *
 	 * @return id
 	 */
-	@NotNull
-	public static String generateTimeKey() {
+	public static @NotNull String generateTimeKey() {
 		return System.currentTimeMillis() + randNum(6);
 	}
 
@@ -150,8 +149,7 @@ public class KeyUtils {
 	 * @param fileName 文件名
 	 * @return 扩展名
 	 */
-	@NotNull
-	public static String getExt(@NotNull String fileName) {
+	public static @NotNull String getExt(@NotNull String fileName) {
 		return fileName.substring(fileName.lastIndexOf(".") + 1);
 	}
 
@@ -161,8 +159,7 @@ public class KeyUtils {
 	 * @return uuid.
 	 * @author WuShuicheng.
 	 */
-	@NotNull
-	public static String get32uuid() {
+	public static @NotNull String get32uuid() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
 
