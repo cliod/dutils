@@ -1,8 +1,7 @@
 package com.wobangkj.enums;
 
-import com.wobangkj.api.EnumMsg;
-import com.wobangkj.api.EnumTextMsg;
 import com.wobangkj.utils.JsonUtils;
+import com.wobangkj.api.EnumMsg;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +15,7 @@ import java.io.Serializable;
  * @since 19-6-9
  */
 @Getter
-public enum ResultEnum implements EnumTextMsg {
+public enum ResultEnum implements EnumMsg {
     /**
      * HTTP 状态码
      * #1000～1999 区间表示参数错误

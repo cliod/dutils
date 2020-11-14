@@ -1,8 +1,8 @@
 package com.wobangkj.enums.type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wobangkj.api.EnumType;
 import com.wobangkj.utils.JsonUtils;
+import com.wobangkj.api.EnumType;
 import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -21,9 +21,9 @@ public enum GenderType implements EnumType {
     /**
      * 性别
      */
-    MALE(0, "男"),
-    FEMALE(1, "女"),
-    UNKNOWN(2, "未知"),
+    MALE(1, "男"),
+    FEMALE(2, "女"),
+    UNKNOWN(0, "未知"),
     ;
 
     private final Integer code;

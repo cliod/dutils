@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>development</artifactId>
-    <version>1.2.3</version>
+    <version>2.0.1</version>
 
     <packaging>pom</packaging>
     <modules>
@@ -40,15 +40,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <version>1.2.3</version>
+        <version>2.0.1</version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>17.0.0</version>
+            <version>19.0.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -59,6 +65,12 @@
                 <artifactId>lombok</artifactId>
                 <version>[1.18.10,)</version>
                 <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>19.0.0</version>
+                <scope>compile</scope>
             </dependency>
 
             <dependency>
