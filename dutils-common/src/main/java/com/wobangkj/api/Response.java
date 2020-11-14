@@ -19,11 +19,11 @@ public final class Response {
 	public static final int SHOW_CODE = 271;
 	public static final int SUCCESS_CODE = 200;
 	public static final int ERROR_CODE = 500;
-	public static Maps<String, Object> OK = ok();
-	public static Maps<String, Object> ERR = err("未知异常");
-	public static Maps<String, Object> DELETE = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_DELETE.getMsg());
-	public static Maps<String, Object> UPDATE = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_EDIT.getMsg());
-	public static Maps<String, Object> INSERT = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_ADD.getMsg());
+	public static Res OK = ok();
+	public static Res ERR = err("未知异常");
+	public static Res DELETE = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_DELETE.getMsg());
+	public static Res UPDATE = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_EDIT.getMsg());
+	public static Res INSERT = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_ADD.getMsg());
 
 	/**
 	 * 无返回(请求成功)
@@ -52,7 +52,7 @@ public final class Response {
 	 * @return 成功对象
 	 */
 	public static @NotNull Res ok(String key, Object value) {
-		return ok(Maps.of(key, value));
+		return ok().add("data", Maps.of(key, value));
 	}
 
 	/**
@@ -157,76 +157,5 @@ public final class Response {
 	 */
 	public static @NotNull Res err(Throwable throwable) {
 		return ofRes(ERROR_CODE, "系统异常", throwable);
-	}
-
-	/**
-	 * 非默认返回信息返回
-	 *
-	 * @param msg 消息
-	 * @param o   对象
-	 * @return 成功对象
-	 */
-	@Deprecated
-	public static @NotNull Res ok(@NotNull EnumMsg msg, Object o) {
-		return ok(msg.getCode(), msg.getMsg(), o);
-	}
-
-	/**
-	 * 其他信息返回
-	 *
-	 * @param code 消息码
-	 * @param msg  消息
-	 * @param o    对象
-	 * @return 成功对象
-	 */
-	@Deprecated
-	public static @NotNull Res ok(int code, String msg, Object o) {
-		return ofRes(code, msg, o);
-	}
-
-	/**
-	 * 失败返回
-	 *
-	 * @param msg 消息
-	 * @return 失败对象
-	 */
-	@Deprecated
-	public static @NotNull Res fail(@NotNull EnumMsg msg) {
-		return ofRes(msg.getCode(), msg.getMsg(), msg.toThrowable());
-	}
-
-	/**
-	 * 失败返回,携带系统错误信息
-	 *
-	 * @param msg       消息
-	 * @param throwable 可抛出异常消息
-	 * @return 失败对象
-	 */
-	@Deprecated
-	public static @NotNull Res fail(@NotNull EnumMsg msg, @NotNull Throwable throwable) {
-		return ofRes(msg.getCode(), msg.getMsg(), throwable);
-	}
-
-	/**
-	 * 已处理失败返回
-	 *
-	 * @param msg 消息
-	 * @param em  消息
-	 * @return 失败对象
-	 */
-	@Deprecated
-	public static @NotNull Res fail(@NotNull EnumMsg msg, @NotNull EnumMsg em) {
-		return ofRes(msg.getCode(), msg.getMsg(), em.toThrowable());
-	}
-
-	/**
-	 * 位置异常,携带信息
-	 *
-	 * @param err 错处/异常/消息
-	 * @return 失败对象
-	 */
-	@Deprecated
-	public static @NotNull Res err(@NotNull EnumMsg err) {
-		return ofRes(ERROR_CODE, "未知错误", err.toThrowable());
 	}
 }
