@@ -4,9 +4,11 @@ import com.wobangkj.bean.Res;
 import com.wobangkj.enums.ResultEnum;
 import com.wobangkj.exception.AccessException;
 import com.wobangkj.exception.AuthorizeException;
+import com.wobangkj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -46,6 +48,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		r.setStatus(code);
 		r.setMsg(ResultEnum.NOT_AUTH.getMsg());
 		r.setErr(e.getAuth());
+		log.warn(r.toString());
 		return r;
 	}
 
@@ -61,6 +64,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		r.setStatus(code);
 		r.setMsg(e.getMessage());
 		r.setErr(e.getAccess());
+		log.warn(r.toString());
 		return r;
 	}
 
@@ -83,6 +87,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		r.setStatus(HttpStatus.NOT_FOUND.value());
 		r.setMsg(HttpStatus.NOT_FOUND.getReasonPhrase());
 		r.setErr(String.format("接口不存在(%s):" + e.getRequestURL(), e.getHttpMethod() + "方法"));
+		log.warn(r.toString());
 		return r;
 	}
 
@@ -97,6 +102,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		Res r = Res.empty();
 		r.setStatus(code);
 		r.setMsg(e.getMessage());
+		log.error(r.toString());
 		return r;
 	}
 
@@ -112,6 +118,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		r.setStatus(HttpStatus.BAD_REQUEST.value());
 		r.setMsg(HttpStatus.BAD_REQUEST.getReasonPhrase());
 		r.setErr(String.format("指定参数类型%s,名称%s的方式不存在", e.getParameterType(), e.getParameterName()));
+		log.warn(r.toString());
 		return r;
 	}
 
@@ -126,7 +133,8 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		Res r = Res.empty();
 		r.setStatus(code);
 		r.setMsg(e.getMessage());
-		r.setErr(e.getMethod());
+		r.setErr(String.format("该方法不支持%s请求", e.getMethod()));
+		log.warn(r.toString());
 		return r;
 	}
 
@@ -141,7 +149,9 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		Res r = Res.empty();
 		r.setStatus(code);
 		r.setMsg(e.getMessage());
-		r.setErr(e.getLocalizedMessage());
+		MethodParameter mp = e.getParameter();
+		r.setErr(String.format("方法名：%s, 参数信息：%s", e.getName(), JsonUtils.toJson(mp)));
+		log.warn(r.toString());
 		return r;
 	}
 
@@ -156,6 +166,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		Res r = Res.empty();
 		r.setStatus(code);
 		r.setMsg(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
+		log.warn(r.toString());
 		return r;
 	}
 
@@ -170,6 +181,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		Res r = Res.empty();
 		r.setStatus(code);
 		r.setMsg(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
+		log.error(r.toString());
 		return r;
 	}
 
@@ -179,10 +191,11 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 	 * @return 结果消息
 	 */
 	@ExceptionHandler(NullPointerException.class)
-	public Object nullPointerException() {
+	public Object nullPointerException(NullPointerException e) {
 		Res r = Res.empty();
 		r.setStatus(code);
 		r.setMsg("空指针异常");
+		log.error(r.toString(), e);
 		return r;
 	}
 
@@ -201,6 +214,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		}
 		r.setStatus(500);
 		r.setMsg(msg);
+		log.error(r.toString());
 		return r;
 	}
 

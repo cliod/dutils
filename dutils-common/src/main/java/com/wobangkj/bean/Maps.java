@@ -20,7 +20,7 @@ public abstract class Maps<K, V> extends HashMap<K, V> implements Map<K, V> {
 	}
 
 	public Maps() {
-		this(16);
+		this(4);
 	}
 
 	public Maps(Map<? extends K, ? extends V> m) {

@@ -1,6 +1,5 @@
 package com.wobangkj.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wobangkj.api.SessionSerializable;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -20,17 +19,9 @@ public final class Pager<T> implements SessionSerializable {
 	private static final long serialVersionUID = 7562274153136856700L;
 	public static Pager<?> EMPTY = Pager.of(0, 1, 10, Collections.emptyList());
 	/**
-	 * 总数量
+	 * 分页信息😀
 	 */
-	private Long totalNum;
-	/**
-	 * 当前页
-	 */
-	private Integer clientPage;
-	/**
-	 * 当前数量
-	 */
-	private Integer everyPage;
+	private PageInfo pager = PageInfo.of();
 	/**
 	 * 列表
 	 */
@@ -47,9 +38,9 @@ public final class Pager<T> implements SessionSerializable {
 	 */
 	public static <T> @NotNull Pager<T> of(long totalNum, int page, int size, List<T> objects) {
 		Pager<T> pager = new Pager<>();
-		pager.totalNum = totalNum;
-		pager.everyPage = size;
-		pager.clientPage = page;
+		pager.setTotalNum(totalNum);
+		pager.setEveryPage(size);
+		pager.setClientPage(page);
 		pager.data = objects;
 		return pager;
 	}
@@ -62,6 +53,7 @@ public final class Pager<T> implements SessionSerializable {
 	 * @param <T>      类型
 	 * @return 结果
 	 */
+	@Deprecated
 	public static <T> @NotNull Pager<T> of(long totalNum, int page, List<T> list) {
 		return Pager.of(totalNum, page, list.size(), list);
 	}
@@ -77,9 +69,9 @@ public final class Pager<T> implements SessionSerializable {
 	 */
 	public static <T> @NotNull Pager<T> of(long totalNum, @NotNull Pageable pageable, List<T> objects) {
 		Pager<T> pager = new Pager<>();
-		pager.totalNum = totalNum;
-		pager.everyPage = pageable.getSize();
-		pager.clientPage = pageable.getPage();
+		pager.setTotalNum(totalNum);
+		pager.setEveryPage(pageable.getSize());
+		pager.setClientPage(pageable.getPage());
 		pager.data = objects;
 		return pager;
 	}
@@ -107,14 +99,37 @@ public final class Pager<T> implements SessionSerializable {
 		return (Pager<T>) EMPTY;
 	}
 
+	public Long getTotalNum() {
+		return pager.getTotalNum();
+	}
+
+	public void setTotalNum(Long totalNum) {
+		this.pager.totalNum = totalNum;
+	}
+
+	public Integer getClientPage() {
+		return pager.getClientPage();
+	}
+
+	public void setClientPage(Integer clientPage) {
+		this.pager.clientPage = clientPage;
+	}
+
+	public Integer getEveryPage() {
+		return pager.getEveryPage();
+	}
+
+	public void setEveryPage(Integer everyPage) {
+		this.pager.everyPage = everyPage;
+	}
+
 	/**
 	 * 转成字符串
 	 *
 	 * @return 字符串
 	 */
 	@Override
-	public @NotNull
-	String toString() {
+	public @NotNull String toString() {
 		return this.toJson();
 	}
 
@@ -125,61 +140,32 @@ public final class Pager<T> implements SessionSerializable {
 	 * @see java.util.Map
 	 */
 	@Override
-	public @NotNull
-	Res toObject() {
+	public @NotNull Res toObject() {
 		return Res.of("data", this.getData())
-				.add("pager", Res
-						.of("client_page", this.getClientPage())
-						.set("every_page", this.getEveryPage())
-						.set("total_num", this.getTotalNum()));
+				.add("pager", this.getPager());
 	}
 
-	@Deprecated
-	@JsonIgnore
-	public Long getCount() {
-		return totalNum;
-	}
+	@Data
+	static class PageInfo {
+		/**
+		 * 总数量
+		 */
+		private Long totalNum;
+		/**
+		 * 当前页
+		 */
+		private Integer clientPage;
+		/**
+		 * 当前数量
+		 */
+		private Integer everyPage;
 
-	@Deprecated
-	@JsonIgnore
-	public void setCount(Long count) {
-		this.totalNum = count;
+		static PageInfo of() {
+			PageInfo info = new PageInfo();
+			info.setTotalNum(0L);
+			info.setClientPage(1);
+			info.setEveryPage(10);
+			return info;
+		}
 	}
-
-	@Deprecated
-	@JsonIgnore
-	public Integer getPage() {
-		return clientPage;
-	}
-
-	@Deprecated
-	@JsonIgnore
-	public void setPage(Integer page) {
-		this.clientPage = page;
-	}
-
-	@Deprecated
-	@JsonIgnore
-	public Integer getSize() {
-		return everyPage;
-	}
-
-	@Deprecated
-	@JsonIgnore
-	public void setSize(Integer size) {
-		this.everyPage = size;
-	}
-
-	@Deprecated
-	@JsonIgnore
-	public List<T> getList() {
-		return data;
-	}
-
-	@Deprecated
-	@JsonIgnore
-	public void setList(List<T> list) {
-		this.data = list;
-	}
-
 }

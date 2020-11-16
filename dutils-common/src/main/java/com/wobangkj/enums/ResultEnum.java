@@ -1,13 +1,9 @@
 package com.wobangkj.enums;
 
-import com.wobangkj.api.EnumMsg;
 import com.wobangkj.api.EnumTextMsg;
-import com.wobangkj.utils.JsonUtils;
-import lombok.Data;
+import com.wobangkj.bean.Res;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.Serializable;
 
 /**
  * return msg
@@ -85,43 +81,6 @@ public enum ResultEnum implements EnumTextMsg {
     @Override
     @NotNull
     public Object toObject() {
-        return Entry.convert(this);
+        return Res.ofRes(this.getCode(), this.getMsg());
     }
-
-    @NotNull
-    @Override
-    public String toJson() {
-        return JsonUtils.toJson(this);
-    }
-
-    /**
-     * 内置类,进行json序列化使用
-     */
-    @Data
-    public static class Entry implements Serializable {
-
-        private static final long serialVersionUID = 4140185593972696603L;
-        /**
-         * 状态码
-         */
-        private Integer code;
-        /**
-         * 消息
-         */
-        private String msg;
-
-        @NotNull
-        static <T extends Enum<T>> ResultEnum.Entry convert(@NotNull EnumMsg e) {
-            Entry entry = new Entry();
-            entry.setCode(e.getCode());
-            entry.setMsg(e.getMsg());
-            return entry;
-        }
-
-        @Override
-        public String toString() {
-            return JsonUtils.toJson(this);
-        }
-    }
-
 }

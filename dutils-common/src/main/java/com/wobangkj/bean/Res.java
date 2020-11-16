@@ -1,6 +1,5 @@
 package com.wobangkj.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.JsonUtils;
 import org.jetbrains.annotations.NotNull;
@@ -33,9 +32,9 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	}
 
 	public static @NotNull Res of(String k, Object v) {
-		Res map = new Res(4);
-		map.put(k, v);
-		return map;
+		Res res = new Res();
+		res.put(k, v);
+		return res;
 	}
 
 	/**
@@ -56,10 +55,10 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @return result
 	 */
 	public static @NotNull Res ofRes(int code, String msg) {
-		Res result = new Res(4);
-		result.setCode(code);
-		result.setMsg(msg);
-		return result;
+		Res res = new Res(4);
+		res.setStatus(code);
+		res.setMsg(msg);
+		return res;
 	}
 
 	/**
@@ -71,11 +70,11 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @return result
 	 */
 	public static @NotNull Res ofRes(int code, String msg, Object o) {
-		Res result = new Res(4);
-		result.setCode(code);
-		result.setMsg(msg);
-		result.setData(o);
-		return result;
+		Res res = new Res(4);
+		res.setStatus(code);
+		res.setMsg(msg);
+		res.setData(o);
+		return res;
 	}
 
 	/**
@@ -87,11 +86,11 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @return result
 	 */
 	public static @NotNull Res ofRes(int code, String msg, @NotNull Throwable o) {
-		Res result = new Res(4);
-		result.setCode(code);
-		result.setMsg(msg);
-		result.setErr(o.getMessage());
-		return result;
+		Res res = new Res(4);
+		res.setStatus(code);
+		res.setMsg(msg);
+		res.setErr(o.getMessage());
+		return res;
 	}
 
 	/**
@@ -167,18 +166,6 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	@Override
 	public final @NotNull Object readResolve() throws Exception {
 		return this.getClass().getConstructor().newInstance();
-	}
-
-	@JsonIgnore
-	@Deprecated
-	public Integer getCode() {
-		return (Integer) get("status");
-	}
-
-	@JsonIgnore
-	@Deprecated
-	public void setCode(Integer code) {
-		put("status", code);
 	}
 
 	public Integer getStatus() {

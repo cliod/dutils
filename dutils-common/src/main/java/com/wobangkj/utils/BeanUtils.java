@@ -3,13 +3,14 @@ package com.wobangkj.utils;
 import com.wobangkj.api.EnumMsg;
 import com.wobangkj.exception.NullObjectException;
 import lombok.SneakyThrows;
-import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.time.temporal.Temporal;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.reflect.Modifier.*;
 
@@ -123,21 +124,9 @@ public class BeanUtils {
 			return ((Map<?, ?>) obj).isEmpty();
 		}
 		//POJO
-		Field[] fields = clazz.getDeclaredFields();
-		int mod;
-		Object inner;
-		boolean exclude;
-		for (Field field : fields) {
-			field.setAccessible(true);
-			//判断字段是否为空，并且对象属性中的基本都会转为对象类型来判断
-			mod = field.getModifiers();
-			//静态不算 //最终不算 //公开不算
-			exclude = isStatic(mod) || isFinal(mod) || isPublic(mod);
-			if (exclude) {
-				continue;
-			}
-			inner = field.get(obj);
-			if (isEmpty(inner)) {
+		Map<String, Object> fields = RefUtils.getFieldValues(obj, STATIC, FINAL, PUBLIC);
+		for (Object value : fields.values()) {
+			if (!isEmpty(value)) {
 				return false;
 			}
 		}
@@ -235,145 +224,6 @@ public class BeanUtils {
 	 */
 	public static boolean equals(Object var0, Object var1) {
 		return Objects.equals(var0, var1);
-	}
-
-	/**
-	 * 获取对象字段值
-	 *
-	 * @param obj 对象
-	 * @param key 字段
-	 * @return 值
-	 * @see RefUtils#getFieldValue(Object, String) 反射工具类
-	 */
-	@Deprecated
-	public static Object getFieldValue(@NotNull Object obj, String key) throws NoSuchFieldException, IllegalAccessException {
-		return RefUtils.getFieldValue(obj, key);
-	}
-
-	/**
-	 * 获取对象字段值
-	 *
-	 * @param obj 对象
-	 * @return 值
-	 * @see RefUtils#getFieldValues(Object) 反射工具类
-	 */
-	@Deprecated
-	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj) throws IllegalAccessException {
-		return RefUtils.getFieldValues(obj);
-	}
-
-	/**
-	 * 给对象的属性值赋值
-	 * 注: 暂无反射删除方法
-	 *
-	 * @param key   字段名
-	 * @param value 字段值
-	 * @param obj   操作对象
-	 *              //@return 是否成功赋值
-	 * @see RefUtils#setFieldValue(Object, String, Object) 反射工具类
-	 */
-	@Deprecated
-	public static void setFieldValue(@NotNull Object obj, String key, Object value) throws NoSuchFieldException, IllegalAccessException {
-		RefUtils.setFieldValue(obj, key, value);
-	}
-
-	/**
-	 * 获取对象属性
-	 *
-	 * @param obj 对象
-	 * @return 属性数组
-	 * @see RefUtils#getFieldNames(Object) 反射工具类
-	 */
-	@Deprecated
-	public static @NotNull String[] getFieldNames(@NotNull Object obj) {
-		return RefUtils.getFieldNames(obj);
-	}
-
-	/**
-	 * 获取对象属性
-	 *
-	 * @param obj 对象类型
-	 * @return 属性数组
-	 * @see RefUtils#getFieldNames(Class) 反射工具类
-	 */
-	@Deprecated
-	public static @NotNull String[] getFieldNames(@NotNull Class<?> obj) {
-		return RefUtils.getFieldNames(obj);
-	}
-
-	/**
-	 * 获取对象字段名
-	 *
-	 * @param obj 对象
-	 * @param var 分隔符
-	 * @return 字符串
-	 * @see RefUtils#getFieldNameStr(Class, CharSequence) 反射工具类
-	 */
-	@Deprecated
-	public static @NotNull String getFieldNames(@NotNull Class<?> obj, CharSequence var) {
-		return RefUtils.getFieldNameStr(obj, var);
-	}
-
-	/**
-	 * 获取对象字段名
-	 *
-	 * @param obj 对象
-	 * @param var 分隔符
-	 * @return 字符串
-	 * @see RefUtils#getFieldNameStr(Object, CharSequence) 反射工具类
-	 */
-	@Deprecated
-	public static @NotNull String getFieldNames(@NotNull Object obj, CharSequence var) {
-		return RefUtils.getFieldNameStr(obj, var);
-	}
-
-	/**
-	 * 获取对象字段名和类型
-	 *
-	 * @param obj 对象
-	 * @return 字符串
-	 * @see RefUtils#getFieldNameAndType(Object) 反射工具类
-	 */
-	@Deprecated
-	public static @NotNull Map<String, Class<?>> getFieldNameAndType(@NotNull Object obj) {
-		return RefUtils.getFieldNameAndType(obj);
-	}
-
-	/**
-	 * 扩展字段
-	 *
-	 * @param objs    对象列表
-	 * @param extObjs 扩展字段列表
-	 * @return map对象列表
-	 * @throws IllegalAccessException 字段非法访问异常
-	 */
-	@Deprecated
-	public static @NotNull List<Map<String, Object>> extend(List<Object> objs, List<Map<String, Object>> extObjs) throws IllegalAccessException {
-		List<Map<String, Object>> result = new ArrayList<>();
-		if (CollectionUtils.isEmpty(objs)) {
-			return result;
-		}
-		int size = objs.size();
-		Object obj;
-		Map<String, Object> extObj;
-		for (int i = 0; i < size; i++) {
-			obj = objs.get(i);
-			extObj = extObjs.get(i);
-			result.add(extend(obj, extObj));
-		}
-		return result;
-	}
-
-	@Deprecated
-	public static @NotNull List<Map<String, Object>> extend(Map<Object, Map<String, Object>> maps) throws IllegalAccessException {
-		List<Map<String, Object>> result = new ArrayList<>();
-		if (isNull(maps) || CollectionUtils.isEmpty(maps.keySet())) {
-			return result;
-		}
-		for (Map.Entry<Object, Map<String, Object>> entry : maps.entrySet()) {
-			result.add(extend(entry.getKey(), entry.getValue()));
-		}
-		return result;
 	}
 
 	/**
