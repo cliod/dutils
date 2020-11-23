@@ -47,6 +47,10 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 		return new Res(map);
 	}
 
+	public static @NotNull <T> Res from(Pager<T> pager) {
+		return pager.toObject();
+	}
+
 	/**
 	 * 代替构造方法
 	 *
@@ -74,6 +78,23 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 		res.setStatus(code);
 		res.setMsg(msg);
 		res.setData(o);
+		return res;
+	}
+
+	/**
+	 * 代替构造方法
+	 *
+	 * @param code  状态码
+	 * @param msg   响应消息
+	 * @param pager 响应数据
+	 * @return result
+	 */
+	public static @NotNull Res ofRes(int code, String msg, @NotNull Pager<?> pager) {
+		Res res = new Res(4);
+		res.setStatus(code);
+		res.setMsg(msg);
+		res.setData(pager.getData());
+		res.add("pager", pager.getPager());
 		return res;
 	}
 

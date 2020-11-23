@@ -63,7 +63,7 @@ public final class Response {
 	 * @return 结果
 	 */
 	public static @NotNull <T> Res ok(@NotNull Pager<T> pager) {
-		return ok().addAll(pager.toObject());
+		return ofRes(SUCCESS_CODE, "请求成功", pager);
 	}
 
 	/**
