@@ -186,7 +186,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>[1.13,)</version>
+                <version>1.15</version>
             </dependency>
             <!--集合通用工具包-->
             <dependency>
