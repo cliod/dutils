@@ -1,0 +1,77 @@
+package com.wobangkj.api;
+
+import java.util.List;
+
+/**
+ * 抽象实现
+ *
+ * @author cliod
+ * @since 11/24/20 5:04 PM
+ */
+public abstract class ServiceImpl<T> implements IService<T> {
+
+	/**
+	 * 获取Dao
+	 *
+	 * @return 通用dao
+	 */
+	public abstract IDao<T> getDao();
+
+	/**
+	 * 通过ID查询单条数据
+	 *
+	 * @param id 主键
+	 * @return 实例对象
+	 */
+	@Override
+	public T queryById(Long id) {
+		return this.getDao().queryById(id);
+	}
+
+	/**
+	 * 通过参数查询单条数据
+	 *
+	 * @param t 参数
+	 * @return 实例对象
+	 */
+	@Override
+	public T queryOne(T t) {
+		return this.getDao().queryOne(t);
+	}
+
+	/**
+	 * 查询多条数据
+	 *
+	 * @param t      实例对象
+	 * @param offset 查询起始位置
+	 * @param limit  查询条数
+	 * @return 对象列表
+	 */
+	@Override
+	public List<T> queryAll(T t, int offset, int limit) {
+		return this.getDao().queryAllByConditionLimit(t, offset, limit);
+	}
+
+	/**
+	 * 修改数据
+	 *
+	 * @param t 实例对象
+	 * @return 实例对象
+	 */
+	@Override
+	public T update(T t) {
+		this.getDao().update(t);
+		return this.queryOne(t);
+	}
+
+	/**
+	 * 查找行数
+	 *
+	 * @param t 实例对象
+	 * @return 实例行数
+	 */
+	@Override
+	public long count(T t) {
+		return this.getDao().count(t);
+	}
+}

@@ -1,14 +1,12 @@
 package com.wobangkj.api;
 
-import java.util.List;
-
 /**
  * 默认实现
  *
  * @author cliod
  * @since 9/4/20 11:07 AM
  */
-public abstract class TkServiceImpl<D extends IMapper<T>, T> implements IService<T> {
+public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> implements IService<T> {
 
 	protected final D dao;
 
@@ -17,18 +15,8 @@ public abstract class TkServiceImpl<D extends IMapper<T>, T> implements IService
 	}
 
 	@Override
-	public T queryById(Long id) {
-		return this.dao.queryById(id);
-	}
-
-	@Override
-	public T queryOne(T t) {
-		return this.dao.queryOne(t);
-	}
-
-	@Override
-	public List<T> queryAll(T t, int offset, int limit) {
-		return this.dao.queryAllByConditionLimit(t, offset, limit);
+	public D getDao() {
+		return this.dao;
 	}
 
 	@Override
@@ -38,18 +26,8 @@ public abstract class TkServiceImpl<D extends IMapper<T>, T> implements IService
 	}
 
 	@Override
-	public T update(T t) {
-		this.dao.updateByPrimaryKeySelective(t);
-		return this.queryOne(t);
-	}
-
-	@Override
 	public boolean deleteById(Long id) {
 		return this.dao.deleteById(id) > 0;
 	}
 
-	@Override
-	public long count(T t) {
-		return this.dao.count(t);
-	}
 }

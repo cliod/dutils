@@ -1,16 +1,18 @@
 package com.wobangkj.api;
 
 /**
+ * 废弃
  * 默认实现
  *
  * @author cliod
  * @since 9/4/20 11:07 AM
  */
-public class JpaServiceImpl<D extends IRepository<T>, T> extends ServiceImpl<T> implements IService<T> {
+@Deprecated
+public class BaseService<D extends IRepository<T>, T> extends ServiceImpl<T> implements IService<T> {
 
 	protected final D dao;
 
-	public JpaServiceImpl(D dao) {
+	public BaseService(D dao) {
 		this.dao = dao;
 	}
 
