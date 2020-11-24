@@ -1,5 +1,7 @@
 package com.wobangkj.api;
 
+import com.wobangkj.thread.WorkThreadFactory;
+
 import java.util.concurrent.*;
 
 /**
@@ -11,15 +13,15 @@ import java.util.concurrent.*;
 public class PoolQrCode extends DefaultQrCode {
 
 	private static final SynchronousQueue<PoolQrCode> POOL = new SynchronousQueue<>();
-	private static final ExecutorService fork =
-			new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), 1000, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+	private static final ExecutorService FORK = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
+			1000, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new WorkThreadFactory("二维码进程"));
 
 	protected PoolQrCode() {
 	}
 
 	public static PoolQrCode getInstance() {
 		if (POOL.isEmpty()) {
-			fork.execute(PoolQrCode::initPool);
+			FORK.execute(PoolQrCode::initPool);
 			return new PoolQrCode();
 		}
 		return POOL.poll();

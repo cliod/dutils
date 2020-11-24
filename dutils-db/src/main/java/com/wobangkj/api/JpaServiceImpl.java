@@ -8,11 +8,11 @@ import java.util.List;
  * @author cliod
  * @since 9/4/20 11:07 AM
  */
-public abstract class BaseService<D extends IRepository<T>, T> implements IService<T> {
+public abstract class JpaServiceImpl<D extends IRepository<T>, T> implements IService<T> {
 
 	protected final D dao;
 
-	public BaseService(D dao) {
+	public JpaServiceImpl(D dao) {
 		this.dao = dao;
 	}
 

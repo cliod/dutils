@@ -1,5 +1,6 @@
 package com.wobangkj.utils;
 
+import com.wobangkj.api.DateFormat;
 import com.wobangkj.enums.Format;
 import org.jetbrains.annotations.NotNull;
 
@@ -224,15 +225,19 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		return res;
 	}
 
-	public static String parse(LocalDate localDate, String pattern) {
-		return Optional.ofNullable(FORMATTER.get(pattern)).orElse(DateTimeFormatter.ofPattern(pattern)).format(localDate);
+	public static String format(TemporalAccessor time, String pattern) {
+		return Optional.ofNullable(FORMATTER.get(pattern)).orElse(DateTimeFormatter.ofPattern(pattern)).format(time);
 	}
 
-	public static String parse(LocalDateTime localDateTime, String pattern) {
-		return Optional.ofNullable(FORMATTER.get(pattern)).orElse(DateTimeFormatter.ofPattern(pattern)).format(localDateTime);
+	public static String format(TemporalAccessor time, DateFormat pattern) {
+		return Optional.ofNullable(FORMATTER.get(pattern.getPattern())).orElse(DateTimeFormatter.ofPattern(pattern.getPattern())).format(time);
 	}
 
-	public static String parse(LocalTime localTime, String pattern) {
-		return Optional.ofNullable(FORMATTER.get(pattern)).orElse(DateTimeFormatter.ofPattern(pattern)).format(localTime);
+	public static TemporalAccessor parse(String timeStr, DateFormat pattern) {
+		return Optional.ofNullable(FORMATTER.get(pattern.getPattern())).orElse(DateTimeFormatter.ofPattern(pattern.getPattern())).parse(timeStr);
+	}
+
+	public static TemporalAccessor parse(String timeStr, String pattern) {
+		return Optional.ofNullable(FORMATTER.get(pattern)).orElse(DateTimeFormatter.ofPattern(pattern)).parse(timeStr);
 	}
 }

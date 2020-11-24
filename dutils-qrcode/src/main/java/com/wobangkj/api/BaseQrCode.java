@@ -5,11 +5,16 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -24,7 +29,7 @@ public abstract class BaseQrCode implements QrCode {
 	/**
 	 * Specifies what character encoding to use where applicable (type {@link String})
 	 */
-	public static final String charset = "utf-8";
+	public static final String CHARSET = "utf-8";
 	/**
 	 * QR code size. The preferred size in pixels.
 	 */
@@ -137,7 +142,7 @@ public abstract class BaseQrCode implements QrCode {
 		shape = new RoundRectangle2D.Float(x, y, this.logoWidth, this.logoHeight, 6, 6);
 		hints = new HashMap<>();
 		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-		hints.put(EncodeHintType.CHARACTER_SET, charset);
+		hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
 		hints.put(EncodeHintType.MARGIN, 1);
 		stroke = new BasicStroke(3F);
 		writer = new MultiFormatWriter();
@@ -157,9 +162,52 @@ public abstract class BaseQrCode implements QrCode {
 	public BaseQrCode(int x, int y, Shape shape, Stroke stroke) {
 		this(x, y, shape, new HashMap<EncodeHintType, Object>() {{
 			put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-			put(EncodeHintType.CHARACTER_SET, charset);
+			put(EncodeHintType.CHARACTER_SET, CHARSET);
 			put(EncodeHintType.MARGIN, 1);
 		}}, stroke, new MultiFormatWriter(), new MultiFormatReader());
+	}
+
+	/**
+	 * 代替静态方法
+	 *
+	 * @param content      内容
+	 * @param logo         logo（nullable）
+	 * @param needCompress 是否压缩
+	 * @param needLogo     是否需要插入logo
+	 * @return 二维码对象
+	 * @throws IOException IO异常
+	 */
+	public static BaseQrCode of(@NotNull Object content, Object logo, Boolean needCompress, Boolean needLogo) throws IOException {
+		BaseQrCode qrCode = new BaseQrCode() {
+		};
+		qrCode.setContent(content);
+		if (Objects.nonNull(needCompress)) {
+			qrCode.setNeedCompress(needCompress);
+		}
+		if (Objects.nonNull(needLogo)) {
+			qrCode.setNeedLogo(needLogo);
+		}
+		if (Objects.nonNull(logo)) {
+			if (logo instanceof BufferedImage) {
+				qrCode.setLogo((BufferedImage) logo);
+			} else if (logo instanceof InputStream) {
+				qrCode.setLogo((InputStream) logo);
+			} else if (logo instanceof File) {
+				qrCode.setLogo((File) logo);
+			} else if (logo instanceof URL) {
+				qrCode.setLogo((URL) logo);
+			} else {
+				qrCode.setLogo((BufferedImage) null);
+			}
+		} else {
+			qrCode.setNeedLogo(false);
+		}
+		return qrCode;
+	}
+
+	@SneakyThrows
+	public static QrCode of(@NotNull Object content) {
+		return of(content, null, null, null);
 	}
 
 	/**
@@ -170,8 +218,9 @@ public abstract class BaseQrCode implements QrCode {
 	 */
 	@Override
 	public @NotNull BufferedImage createImage() throws WriterException {
-		if (!isChange)
+		if (!isChange) {
 			return image;
+		}
 		// 点阵
 		BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, size, size, hints);
 		int width = bitMatrix.getWidth();
@@ -184,10 +233,12 @@ public abstract class BaseQrCode implements QrCode {
 				}
 			}
 			colors = image.getRGB(0, 0, width, height, null, 0, width);
-		} else
+		} else {
 			image.setRGB(0, 0, width, height, colors, 0, width);
-		if (isNeedLogo && Objects.nonNull(this.logo))
+		}
+		if (isNeedLogo && Objects.nonNull(this.logo)) {
 			insertLogo();
+		}
 		isChange = false;
 		return image;
 	}
@@ -204,8 +255,12 @@ public abstract class BaseQrCode implements QrCode {
 	 */
 	@Override
 	public void setLogo(BufferedImage logo) {
-		if (Objects.isNull(logo)) return;
-		if (Objects.equals(logo, this.logo)) return;
+		if (Objects.isNull(logo)) {
+			return;
+		}
+		if (Objects.equals(logo, this.logo)) {
+			return;
+		}
 		this.logo = logo;
 		this.isChange = true;
 		this.setNeedLogo(true);
@@ -218,8 +273,12 @@ public abstract class BaseQrCode implements QrCode {
 	 */
 	@Override
 	public void setContent(String content) {
-		if (Objects.isNull(content)) return;
-		if (Objects.equals(content, this.content)) return;
+		if (Objects.isNull(content)) {
+			return;
+		}
+		if (Objects.equals(content, this.content)) {
+			return;
+		}
 		this.isChange = true;
 		this.content = content;
 	}

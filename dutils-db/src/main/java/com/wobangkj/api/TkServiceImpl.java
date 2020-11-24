@@ -8,11 +8,11 @@ import java.util.List;
  * @author cliod
  * @since 9/4/20 11:07 AM
  */
-public abstract class ServiceImpl<D extends IMapper<T>, T> implements IService<T> {
+public abstract class TkServiceImpl<D extends IMapper<T>, T> implements IService<T> {
 
 	protected final D dao;
 
-	public ServiceImpl(D dao) {
+	public TkServiceImpl(D dao) {
 		this.dao = dao;
 	}
 

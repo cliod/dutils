@@ -1,7 +1,6 @@
 package com.wobangkj.api;
 
 import com.google.zxing.WriterException;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -22,47 +21,6 @@ import java.util.Objects;
  * @since 8/22/20 1:23 PM
  */
 public interface QrCode {
-	/**
-	 * 代替静态方法
-	 *
-	 * @param content      内容
-	 * @param logo         logo（nullable）
-	 * @param needCompress 是否压缩
-	 * @param needLogo     是否需要插入logo
-	 * @return 二维码对象
-	 * @throws IOException IO异常
-	 */
-	static QrCode of(@NotNull Object content, Object logo, Boolean needCompress, Boolean needLogo) throws IOException {
-		QrCode qrCode = DefaultQrCode.getInstance();
-		qrCode.setContent(content);
-		if (Objects.nonNull(needCompress)) {
-			qrCode.setNeedCompress(needCompress);
-		}
-		if (Objects.nonNull(needLogo)) {
-			qrCode.setNeedLogo(needLogo);
-		}
-		if (Objects.nonNull(logo)) {
-			if (logo instanceof BufferedImage) {
-				qrCode.setLogo((BufferedImage) logo);
-			} else if (logo instanceof InputStream) {
-				qrCode.setLogo((InputStream) logo);
-			} else if (logo instanceof File) {
-				qrCode.setLogo((File) logo);
-			} else if (logo instanceof URL) {
-				qrCode.setLogo((URL) logo);
-			} else {
-				qrCode.setLogo((BufferedImage) null);
-			}
-		} else {
-			qrCode.setNeedLogo(false);
-		}
-		return qrCode;
-	}
-
-	@SneakyThrows
-	static QrCode of(@NotNull Object content) {
-		return of(content, null, null, null);
-	}
 
 	/**
 	 * Generate QR code.
