@@ -195,6 +195,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		Res r = Res.empty();
 		r.setStatus(code);
 		r.setMsg("空指针异常");
+		r.setErr(e.getMessage());
 		log.error(r.toString(), e);
 		return r;
 	}
