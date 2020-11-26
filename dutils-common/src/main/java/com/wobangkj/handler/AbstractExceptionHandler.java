@@ -179,10 +179,11 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 	 * @return 结果消息
 	 */
 	@ExceptionHandler(NullPointerException.class)
-	public Object nullPointerException() {
+	public Object nullPointerException(NullPointerException e) {
 		Res r = Res.empty();
 		r.setStatus(code);
 		r.setMsg("空指针异常");
+		r.setErr(e.getMessage());
 		return r;
 	}
 

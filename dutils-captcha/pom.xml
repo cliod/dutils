@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>4.2.4-FIX2</version>
+        <version>4.2.5</version>
     </parent>
 
     <artifactId>dutils-captcha</artifactId>
