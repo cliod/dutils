@@ -53,5 +53,12 @@
             <version>2.1.0</version>
             <optional>true</optional>
         </dependency>
+        <!-- 请到https://search.maven.org/search?q=tencentcloud-sdk-java查询最新版本 -->
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
+            <version>3.1.147</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>
