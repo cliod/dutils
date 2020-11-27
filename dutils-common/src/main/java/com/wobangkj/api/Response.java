@@ -19,8 +19,8 @@ public final class Response {
 	public static final int SHOW_CODE = 271;
 	public static final int SUCCESS_CODE = 200;
 	public static final int ERROR_CODE = 500;
-	public static Res OK = ok();
-	public static Res ERR = err("未知异常");
+	public static Res OK = ofRes(SUCCESS_CODE, "请求成功");
+	public static Res ERR = ofRes(ERROR_CODE, "未知异常");
 	public static Res DELETE = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_DELETE.getMsg());
 	public static Res UPDATE = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_EDIT.getMsg());
 	public static Res INSERT = ofRes(SUCCESS_CODE, ResultEnum.SUCCESS_ADD.getMsg());
@@ -136,7 +136,7 @@ public final class Response {
 	 * @return 结果
 	 */
 	public static @NotNull Res err() {
-		return ofRes(ERROR_CODE, "未知异常");
+		return ERR;
 	}
 
 	/**
@@ -147,6 +147,16 @@ public final class Response {
 	 */
 	public static @NotNull Res err(String msg) {
 		return ofRes(ERROR_CODE, msg);
+	}
+
+	/**
+	 * 报错返回
+	 *
+	 * @param msg 500消息
+	 * @return 结果
+	 */
+	public static @NotNull Res err(EnumMsg msg) {
+		return ofRes(ERROR_CODE, msg.getMsg());
 	}
 
 	/**

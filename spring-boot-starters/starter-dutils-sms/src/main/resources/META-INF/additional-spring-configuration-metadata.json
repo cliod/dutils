@@ -4,6 +4,11 @@
       "name": "ali",
       "type": "com.wobangkj.config.AliProperties",
       "sourceType": "com.wobangkj.config.AliProperties"
+    },
+    {
+      "name": "tencent",
+      "type": "com.wobangkj.config.TencentProperties",
+      "sourceType": "com.wobangkj.config.TencentProperties"
     }
   ],
   "properties": [
@@ -26,6 +31,27 @@
       "type": "java.lang.String",
       "description": "Alibaba Cloud platform development region id.",
       "sourceType": "com.wobangkj.config.AliProperties",
+      "defaultValue": ""
+    },
+    {
+      "name": "tencent.access-key-id",
+      "type": "java.lang.String",
+      "description": "Tencent Cloud platform development access key id.",
+      "sourceType": "com.wobangkj.config.TencentProperties",
+      "defaultValue": ""
+    },
+    {
+      "name": "tencent.secret",
+      "type": "java.lang.String",
+      "description": "Tencent Cloud platform development secret.",
+      "sourceType": "com.wobangkj.config.TencentProperties",
+      "defaultValue": ""
+    },
+    {
+      "name": "tencent.app-id",
+      "type": "java.lang.String",
+      "description": "Tencent Cloud platform development app id.",
+      "sourceType": "com.wobangkj.config.TencentProperties",
       "defaultValue": ""
     }
   ],

@@ -3,6 +3,8 @@ package com.wobangkj.config;
 import com.aliyuncs.DefaultAcsClient;
 import com.wobangkj.ali.AcsSms;
 import com.wobangkj.ali.AcsSmsImpl;
+import com.wobangkj.tencent.TcsSms;
+import com.wobangkj.tencent.TcsSmsImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnClass(value = DefaultAcsClient.class)
-@EnableConfigurationProperties(AliProperties.class)
+@EnableConfigurationProperties({AliProperties.class, TencentProperties.class})
 public class AliSmsAutoConfiguration {
 
 	@Bean
@@ -22,4 +24,8 @@ public class AliSmsAutoConfiguration {
 		return AcsSmsImpl.getInstance(aliProperties.getRegionId(), aliProperties.getAccessKey(), aliProperties.getAccessSecret());
 	}
 
+	@Bean
+	public TcsSms tcsSms(TencentProperties tencentProperties) {
+		return TcsSmsImpl.getInstance(tencentProperties.getAccessKeyId(), tencentProperties.getSecret(), tencentProperties.getAppId());
+	}
 }
