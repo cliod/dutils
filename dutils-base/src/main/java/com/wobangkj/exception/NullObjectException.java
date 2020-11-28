@@ -10,10 +10,13 @@ import org.jetbrains.annotations.NotNull;
  * @author cliod
  * @since 19-7-18
  */
-@Getter
+@Deprecated
 public class NullObjectException extends AppException {
 
-	private Object detail;
+	@Deprecated
+	public Object getDetail() {
+		return null;
+	}
 
 	public NullObjectException(@NotNull EnumMsg re) {
 		super(re);
@@ -23,18 +26,11 @@ public class NullObjectException extends AppException {
 		super(code, s);
 	}
 
-	public NullObjectException(@NotNull EnumMsg re, Object detail) {
-		super(re);
-		this.detail = detail;
+	public NullObjectException(Integer code, Throwable cause) {
+		super(code, cause);
 	}
 
-	public NullObjectException(Integer code, String s, Object detail) {
-		super(code, s);
-		this.detail = detail;
-	}
-
-	public NullObjectException(Throwable cause, Integer code, Object detail) {
-		super(cause, code);
-		this.detail = detail;
+	public NullObjectException(@NotNull EnumMsg re, Throwable cause) {
+		super(re, cause);
 	}
 }

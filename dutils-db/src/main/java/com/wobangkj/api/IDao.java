@@ -72,7 +72,9 @@ public interface IDao<T> {
 	 */
 	default Pager<T> queryAll(T t, Pageable pageable) {
 		long count = this.count(t);
-		if (count == 0) return Pager.empty();
+		if (count == 0) {
+			return Pager.empty();
+		}
 		return Pager.of(count, pageable, this.queryAllByConditionLimit(t, pageable.getMybatisPage(), pageable.getLimit()));
 	}
 }

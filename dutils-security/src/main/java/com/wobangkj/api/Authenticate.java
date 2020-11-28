@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public abstract class Authenticate {
 
-	private static Cacheables CACHE;
+	private static Cacheables cacheables;
 	private static Jwt jwt;
 
 	/**
@@ -34,7 +34,7 @@ public abstract class Authenticate {
 		init();
 		String sign = jwt.sign(new SignObj(ip, auth, id), 24, TimeUnit.HOURS);
 		String token = genToken(ip, id.toString());
-		CACHE.set(token, sign, 24, TimeUnit.HOURS);
+		cacheables.set(token, sign, 24, TimeUnit.HOURS);
 		return token;
 	}
 
@@ -45,7 +45,7 @@ public abstract class Authenticate {
 	 */
 	public static SignObj authenticate(String token) {
 		init();
-		String sign = (String) CACHE.obtain(token);
+		String sign = (String) cacheables.obtain(token);
 		if (StringUtils.isEmpty(sign)) {
 			return null;
 		}
@@ -61,8 +61,8 @@ public abstract class Authenticate {
 	}
 
 	private static void init() {
-		if (Objects.isNull(CACHE)) {
-			CACHE = new MapCacheImpl();
+		if (Objects.isNull(cacheables)) {
+			cacheables = new MapCacheImpl();
 		}
 		if (Objects.isNull(jwt)) {
 			try {

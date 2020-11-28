@@ -1,7 +1,7 @@
 package com.wobangkj.enums;
 
-import com.wobangkj.api.EnumTextMsg;
-import com.wobangkj.bean.Maps;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wobangkj.api.EnumMsg;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,8 +11,9 @@ import org.jetbrains.annotations.NotNull;
  * @author cliod
  * @since 19-6-9
  */
-@Getter
-public enum ResultEnum implements EnumTextMsg {
+@Deprecated
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum ResultEnum implements EnumMsg {
 	/**
 	 * HTTP 状态码
 	 * #1000～1999 区间表示参数错误
@@ -51,10 +52,12 @@ public enum ResultEnum implements EnumTextMsg {
 	/**
 	 * 状态码
 	 */
+	@Getter
 	private final Integer code;
 	/**
 	 * 消息
 	 */
+	@Getter
 	private final String msg;
 
 	ResultEnum(int code, String msg) {
@@ -62,15 +65,9 @@ public enum ResultEnum implements EnumTextMsg {
 		this.msg = msg;
 	}
 
-	@NotNull
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		return this.toJson();
 	}
 
-	@Override
-	@NotNull
-	public Object toObject() {
-		return Maps.of("code", (Object) this.getCode()).add("msg", this.getMsg());
-	}
 }

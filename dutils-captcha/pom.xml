@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>5.0.3-SNAPSHOT</version>
+        <version>5.0.3</version>
     </parent>
 
     <artifactId>dutils-captcha</artifactId>
@@ -25,13 +25,8 @@
     <dependencies>
         <dependency>
             <groupId>com.wobangkj</groupId>
-            <artifactId>dutils-base</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-captcha</artifactId>
-            <version>5.4.2</version>
+            <artifactId>jat-captcha</artifactId>
+            <version>${jat.version}</version>
         </dependency>
     </dependencies>
 
