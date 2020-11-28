@@ -48,17 +48,39 @@ public class Result<T> implements SessionSerializable {
 	 *
 	 * @param code code
 	 * @param msg  msg
-	 * @param o    T
+	 * @param data T
 	 * @return result
 	 */
-	public static @NotNull <T> Result<T> of(int code, String msg, T o) {
-		return of(code, msg, null, o);
+	public static @NotNull <T> Result<T> of(Integer code, String msg, T data) {
+		return of(code, msg, null, data);
 	}
 
+	/**
+	 * 代替构造方法
+	 *
+	 * @param code code
+	 * @param msg  msg
+	 * @return result
+	 */
+	public static @NotNull <T> Result<T> of(Integer code, String msg) {
+		return of(code, msg, null);
+	}
+
+	/**
+	 * 从res转化
+	 *
+	 * @param res res
+	 * @return result
+	 */
 	public static @NotNull <T> Result<T> ofRes(Res res) {
 		return of(res.getStatus(), res.getMsg(), res.getErr(), (T) res.getData());
 	}
 
+	/**
+	 * 转成res对象
+	 *
+	 * @return res
+	 */
 	public Res toRes() {
 		Res res = Res.ofRes(this.getCode(), this.getMsg());
 		if (Objects.nonNull(this.getData())) {

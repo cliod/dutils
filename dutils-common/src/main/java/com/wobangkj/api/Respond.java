@@ -1,6 +1,7 @@
 package com.wobangkj.api;
 
 import com.wobangkj.bean.Page;
+import com.wobangkj.bean.Res;
 import com.wobangkj.bean.Result;
 import com.wobangkj.enums.ResultEnum;
 import lombok.Data;
@@ -30,8 +31,8 @@ public class Respond {
 	 * 无返回
 	 */
 	@NotNull
-	public static Result<Object> ok() {
-		return ok(null);
+	public static <T> Result<T> ok() {
+		return ok((T) null);
 	}
 
 	/**
@@ -39,15 +40,20 @@ public class Respond {
 	 */
 	@NotNull
 	public static <T> Result<T> ok(T o) {
-		return ok(ResultEnum.SUCCESS, o);
+		return ok(200, "成功", o);
 	}
 
 	/**
 	 * 分页返回
 	 */
 	@NotNull
+	@Deprecated
 	public static <T> Result<Page<T>> ok(long length, List<T> list) {
 		return of(200, "成功", Page.of(length, list));
+	}
+
+	public static <T> Result<Page<T>> ok(Page<T> page) {
+		return of(200, "成功", page);
 	}
 
 	/**
@@ -55,9 +61,7 @@ public class Respond {
 	 */
 	@NotNull
 	public static <V> Result<Map<String, Object>> ok(String valueName, V value) {
-		return ok(new HashMap<String, Object>(4) {{
-			put(valueName, value);
-		}});
+		return ok(Res.of(valueName, value));
 	}
 
 	/**
@@ -81,6 +85,7 @@ public class Respond {
 
 	@SafeVarargs
 	@NotNull
+	@Deprecated
 	public static <V> Result<Map<String, Object>> ok(@NotNull String titles, V... values) {
 		return ok(titles.split(","), values);
 	}
@@ -102,11 +107,63 @@ public class Respond {
 	}
 
 	/**
+	 * 已处理失败返回
+	 */
+	@NotNull
+	public static Result<Object> fail(String msg) {
+		return of(271, msg);
+	}
+
+	/**
+	 * 已处理失败返回
+	 */
+	@NotNull
+	public static Result<Object> fail(Integer code, String msg) {
+		return of(code, msg);
+	}
+
+	/**
+	 * 失败返回,携带系统错误信息
+	 */
+	@NotNull
+	public static Result<Object> fail(@NotNull EnumMsg re, Throwable err) {
+		return of(re.getCode(), re.getMsg(), err.getMessage(), null);
+	}
+
+	/**
+	 * 失败返回
+	 */
+	@NotNull
+	public static Result<Object> fail(@NotNull EnumMsg re) {
+		return of(re.getCode(), re.getMsg());
+	}
+
+	/**
+	 * 已处理失败返回
+	 */
+	@NotNull
+	@Deprecated
+	public static Result<Object> fail(@NotNull EnumMsg re, @NotNull EnumMsg err) {
+		return of(re.getCode(), re.getMsg(), err.toObject(), null);
+	}
+
+	/**
+	 * 已处理失败返回
+	 */
+	@NotNull
+	public static Result<Object> fail(@NotNull ResultEnum re, int code, String msg) {
+		return of(re.getCode(), re.getMsg(), new HashMap<String, Object>(16) {{
+			put("code", code);
+			put("msg", msg);
+		}}, null);
+	}
+
+	/**
 	 * 未知异常
 	 */
 	@NotNull
 	public static Result<Object> error() {
-		return of(500, "系统错误", null);
+		return of(500, "系统错误");
 	}
 
 	/**
@@ -125,42 +182,8 @@ public class Respond {
 		return of(500, "未知错误", msg, null);
 	}
 
-	/**
-	 * 失败返回,携带系统错误信息
-	 */
 	@NotNull
-	public static Result<Object> fail(@NotNull ResultEnum re, Throwable err) {
-		return of(re.getCode(), re.getMsg(), err, null);
-	}
-
-	/**
-	 * 失败返回
-	 */
-	@NotNull
-	public static Result<Object> fail(@NotNull ResultEnum re) {
-		return of(re.getCode(), re.getMsg(), re.toObject(), null);
-	}
-
-	/**
-	 * 已处理失败返回
-	 */
-	@NotNull
-	public static Result<Object> fail(@NotNull ResultEnum re, @NotNull EnumMsg err) {
-		return of(re.getCode(), re.getMsg(), err.toObject(), null);
-	}
-
-	/**
-	 * 已处理失败返回
-	 */
-	@NotNull
-	public static Result<Object> fail(@NotNull ResultEnum re, int code, String msg) {
-		return of(re.getCode(), re.getMsg(), new HashMap<String, Object>(16) {{
-			put("code", code);
-			put("msg", msg);
-		}}, null);
-	}
-
-	@NotNull
+	@Deprecated
 	public static Builder build(String title, Object data) {
 		return new Builder() {{
 			setData(new HashMap<String, Object>(16) {{
@@ -170,7 +193,24 @@ public class Respond {
 	}
 
 	@NotNull
+	@Deprecated
 	public static Builder build() {
+		return new Builder() {{
+			setData(new HashMap<>(16));
+		}};
+	}
+
+	@NotNull
+	public static Builder builder(String title, Object data) {
+		return new Builder() {{
+			setData(new HashMap<String, Object>(16) {{
+				put(title, data);
+			}});
+		}};
+	}
+
+	@NotNull
+	public static Builder builder() {
 		return new Builder() {{
 			setData(new HashMap<>(16));
 		}};
@@ -200,7 +240,12 @@ public class Respond {
 			return this;
 		}
 
+		@Deprecated
 		public @NotNull Result<?> ok() {
+			return Respond.ok(this.data);
+		}
+
+		public @NotNull Result<?> build() {
 			return Respond.ok(this.data);
 		}
 

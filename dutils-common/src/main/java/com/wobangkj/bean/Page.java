@@ -105,8 +105,24 @@ public class Page<T> implements SessionSerializable {
 		return Page.of(length, 1, list.length, Arrays.asList(list));
 	}
 
+	/**
+	 * 从pager转化
+	 *
+	 * @param pager pager对象
+	 * @param <T>   类型
+	 * @return page对象
+	 */
 	public static @NotNull <T> Page<T> ofPage(Pager<T> pager) {
 		return Page.of(pager.getTotalNum(), pager.getClientPage(), pager.getEveryPage(), pager.getData());
+	}
+
+	/**
+	 * 转成pager对象
+	 *
+	 * @return pager
+	 */
+	public Pager<T> toPager() {
+		return Pager.of(this.getCount(), Pageable.of(1, this.getSize()), this.getList());
 	}
 
 	/**
@@ -127,10 +143,6 @@ public class Page<T> implements SessionSerializable {
 	@Override
 	public Object toObject() {
 		return this;
-	}
-
-	public Pager<T> toPager() {
-		return Pager.of(this.getCount(), Pageable.of(1, this.getSize()), this.getList());
 	}
 
 	/**
