@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 旧版分页封装
@@ -26,29 +27,53 @@ public class Page<T> implements SessionSerializable {
 	 */
 	private Long count;
 	/**
+	 * 分页
+	 */
+	private Integer page;
+	/**
 	 * 当前数量
 	 */
 	private Integer size;
 	/**
 	 * 列表
 	 */
-	private Collection<T> list;
+	private List<T> list;
 
 	/**
 	 * 静态of函数代替构造函数
 	 *
 	 * @param length  总数目
+	 * @param page    当前页数
 	 * @param size    当前数目
 	 * @param objects 列表
 	 * @param <T>     类型
 	 * @return 结果
 	 */
-	public static @NotNull <T> Page<T> of(long length, int size, Collection<T> objects) {
-		Page<T> page = new Page<>();
-		page.count = length;
-		page.size = size;
-		page.list = objects;
-		return page;
+	public static @NotNull <T> Page<T> of(long length, int page, int size, Collection<T> objects) {
+		Page<T> res = new Page<>();
+		res.count = length;
+		res.page = page;
+		res.size = size;
+		res.list = new ArrayList<>(objects);
+		return res;
+	}
+
+	/**
+	 * 静态of函数代替构造函数
+	 *
+	 * @param length   总数目
+	 * @param pageable 分页
+	 * @param objects  列表
+	 * @param <T>      类型
+	 * @return 结果
+	 */
+	public static @NotNull <T> Page<T> of(long length, @NotNull Pageable pageable, List<T> objects) {
+		Page<T> pager = new Page<T>();
+		pager.count = length;
+		pager.size = pageable.getSize();
+		pager.page = pageable.getPage();
+		pager.list = objects;
+		return pager;
 	}
 
 	/**
@@ -60,7 +85,7 @@ public class Page<T> implements SessionSerializable {
 	 * @return 结果
 	 */
 	public static @NotNull <T> Page<T> of(long length, Collection<T> list) {
-		return Page.of(length, list.size(), list);
+		return Page.of(length, 1, list.size(), list);
 	}
 
 	/**
@@ -75,9 +100,13 @@ public class Page<T> implements SessionSerializable {
 	@Deprecated
 	public static @NotNull <T> Page<T> of(long length, final T... list) {
 		if (BeanUtils.isNull(list)) {
-			return Page.of(length, 0, new ArrayList<>());
+			return Page.of(length, 1, 0, new ArrayList<>());
 		}
-		return Page.of(length, list.length, Arrays.asList(list));
+		return Page.of(length, 1, list.length, Arrays.asList(list));
+	}
+
+	public static @NotNull <T> Page<T> ofPage(Pager<T> pager) {
+		return Page.of(pager.getTotalNum(), pager.getClientPage(), pager.getEveryPage(), pager.getData());
 	}
 
 	/**
@@ -91,13 +120,26 @@ public class Page<T> implements SessionSerializable {
 	}
 
 	/**
+	 * 转成对象
+	 *
+	 * @return obj
+	 */
+	@Override
+	public Object toObject() {
+		return this;
+	}
+
+	public Pager<T> toPager() {
+		return Pager.of(this.getCount(), Pageable.of(1, this.getSize()), this.getList());
+	}
+
+	/**
 	 * 转成Json
 	 *
 	 * @return Json
 	 */
 	@Override
 	public String toJson() {
-		return JsonUtils.toJson(this);
+		return JsonUtils.toJson(this.toObject());
 	}
-
 }
