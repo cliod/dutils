@@ -11,10 +11,13 @@ import org.jetbrains.annotations.NotNull;
  * @see AppException
  * @since 2019/7/16
  */
-@Getter
+@Deprecated
 public class AuthorizeException extends AppException {
 
-    private String auth;
+    @Deprecated
+    public String getAuth() {
+        return null;
+    }
 
     public AuthorizeException(@NotNull EnumMsg re) {
         super(re);
@@ -24,18 +27,11 @@ public class AuthorizeException extends AppException {
         super(code, s);
     }
 
-    public AuthorizeException(@NotNull EnumMsg re, @NotNull Object detail) {
-        super(re);
-        this.auth = detail.toString();
+    public AuthorizeException(Integer code, Throwable cause) {
+        super(code, cause);
     }
 
-    public AuthorizeException(Integer code, String s, @NotNull Object detail) {
-        super(code, s);
-        this.auth = detail.toString();
-    }
-
-    public AuthorizeException(@NotNull EnumMsg re, Throwable cause, String auth) {
+    public AuthorizeException(@NotNull EnumMsg re, Throwable cause) {
         super(re, cause);
-        this.auth = auth;
     }
 }

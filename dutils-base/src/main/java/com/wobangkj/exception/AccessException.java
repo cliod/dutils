@@ -10,10 +10,8 @@ import org.jetbrains.annotations.NotNull;
  * @author cliod
  * @since 19-7-18
  */
-@Getter
+@Deprecated
 public class AccessException extends AppException {
-
-	private Object access;
 
 	public AccessException(@NotNull EnumMsg re) {
 		super(re);
@@ -23,18 +21,12 @@ public class AccessException extends AppException {
 		super(code, s);
 	}
 
-	public AccessException(@NotNull EnumMsg re, Object access) {
-		super(re);
-		this.access = access;
+	public AccessException(Integer code, Throwable cause) {
+		super(code, cause);
 	}
 
-	public AccessException(Integer code, String s, Object access) {
-		super(code, s);
-		this.access = access;
-	}
-
-	public AccessException(Throwable cause, Integer code, Object access) {
-		super(cause, code);
-		this.access = access;
+	@Deprecated
+	public Object getAccess() {
+		return null;
 	}
 }

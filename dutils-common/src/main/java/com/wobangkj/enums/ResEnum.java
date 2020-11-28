@@ -2,7 +2,6 @@ package com.wobangkj.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wobangkj.api.EnumTextMsg;
-import com.wobangkj.bean.Maps;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
  * @author cliod
  * @since 19-6-9
  */
-@Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ResEnum implements EnumTextMsg {
 	/**
@@ -42,15 +40,11 @@ public enum ResEnum implements EnumTextMsg {
 	/**
 	 * 消息
 	 */
+	@Getter
 	private final String msg;
 
 	ResEnum(String msg) {
 		this.msg = msg;
-	}
-
-	@Override
-	public @NotNull Object toObject() {
-		return Maps.of("code", (Object) this.getCode()).add("msg", this.getMsg());
 	}
 
 	@Override
