@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.JsonUtils;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * 旧版结果封装
@@ -52,6 +53,31 @@ public class Result<T> implements SessionSerializable {
 	 */
 	public static @NotNull <T> Result<T> of(int code, String msg, T o) {
 		return of(code, msg, null, o);
+	}
+
+	public static @NotNull <T> Result<T> ofRes(Res res) {
+		return of(res.getStatus(), res.getMsg(), res.getErr(), (T) res.getData());
+	}
+
+	public Res toRes() {
+		Res res = Res.ofRes(this.getCode(), this.getMsg());
+		if (Objects.nonNull(this.getData())) {
+			res.put("data", this.getData());
+		}
+		if (Objects.nonNull(this.getErr())) {
+			res.put("err", this.getErr());
+		}
+		return res;
+	}
+
+	/**
+	 * 转成对象
+	 *
+	 * @return obj
+	 */
+	@Override
+	public Object toObject() {
+		return this;
 	}
 
 	/**
