@@ -17,7 +17,7 @@ import java.util.Objects;
 @Data
 @Deprecated
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Result<T> implements SessionSerializable {
+public class Result<T> implements IRes, SessionSerializable {
 	private static final long serialVersionUID = -1884640212713045469L;
 	private Integer code;
 	private String msg;
@@ -81,10 +81,19 @@ public class Result<T> implements SessionSerializable {
 	 *
 	 * @return res
 	 */
+	@Override
 	public Res toRes() {
 		Res res = Res.ofRes(this.getCode(), this.getMsg());
 		if (Objects.nonNull(this.getData())) {
+			Object data = this.getData();
+			if (data instanceof Page) {
+				res.putAll(((Page<?>) data).toRes());
+			}
+			if (data instanceof Pager) {
+				res.putAll(((Pager<?>) data).toObject());
+			}
 			res.put("data", this.getData());
+
 		}
 		if (Objects.nonNull(this.getErr())) {
 			res.put("err", this.getErr());
@@ -99,7 +108,7 @@ public class Result<T> implements SessionSerializable {
 	 */
 	@Override
 	public Object toObject() {
-		return this;
+		return toRes();
 	}
 
 	/**

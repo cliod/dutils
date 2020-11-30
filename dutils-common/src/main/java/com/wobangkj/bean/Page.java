@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Data
 @Deprecated
-public class Page<T> implements SessionSerializable {
+public class Page<T> implements IRes, SessionSerializable {
 
 	private static final long serialVersionUID = 7562274153136856700L;
 	/**
@@ -126,6 +126,16 @@ public class Page<T> implements SessionSerializable {
 	}
 
 	/**
+	 * 转成Res[Map]对象
+	 *
+	 * @return Map
+	 */
+	@Override
+	public Res toRes() {
+		return toPager().toObject();
+	}
+
+	/**
 	 * 转成字符串
 	 *
 	 * @return 字符串
@@ -142,7 +152,7 @@ public class Page<T> implements SessionSerializable {
 	 */
 	@Override
 	public Object toObject() {
-		return this;
+		return toRes();
 	}
 
 	/**
