@@ -73,7 +73,9 @@ public class Result<T> implements IRes, SessionSerializable {
 	 * @return result
 	 */
 	public static @NotNull <T> Result<T> ofRes(Res res) {
-		return of(res.getStatus(), res.getMsg(), res.getErr(), (T) res.getData());
+		@SuppressWarnings("unchecked")
+		T t = (T) res.getData();
+		return of(res.getStatus(), res.getMsg(), res.getErr(), t);
 	}
 
 	/**
@@ -88,12 +90,11 @@ public class Result<T> implements IRes, SessionSerializable {
 			Object data = this.getData();
 			if (data instanceof Page) {
 				res.putAll(((Page<?>) data).toRes());
-			}
-			if (data instanceof Pager) {
+			} else if (data instanceof Pager) {
 				res.putAll(((Pager<?>) data).toObject());
+			} else {
+				res.put("data", data);
 			}
-			res.put("data", this.getData());
-
 		}
 		if (Objects.nonNull(this.getErr())) {
 			res.put("err", this.getErr());

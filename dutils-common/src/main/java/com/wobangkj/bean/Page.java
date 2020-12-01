@@ -68,7 +68,7 @@ public class Page<T> implements IRes, SessionSerializable {
 	 * @return 结果
 	 */
 	public static @NotNull <T> Page<T> of(long length, @NotNull Pageable pageable, List<T> objects) {
-		Page<T> pager = new Page<T>();
+		Page<T> pager = new Page<>();
 		pager.count = length;
 		pager.size = pageable.getSize();
 		pager.page = pageable.getPage();
@@ -122,7 +122,7 @@ public class Page<T> implements IRes, SessionSerializable {
 	 * @return pager
 	 */
 	public Pager<T> toPager() {
-		return Pager.of(this.getCount(), Pageable.of(1, this.getSize()), this.getList());
+		return Pager.of(this.getCount(), Pageable.of(this.getPage(), this.getSize()), this.getList());
 	}
 
 	/**
