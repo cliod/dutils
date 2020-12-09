@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
  */
 public class FileUtils {
 
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 	public static final String WIN_NAME = "win";
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 	private static final String OS_NAME = System.getProperty("os.name");
 	private static final Pattern WIN_PATH_SRC = Pattern.compile("(^[A-Z]:(([\\\\/])([a-zA-Z0-9\\-_]){1,255}){1,255}|([A-Z]:([\\\\/])))");
 	private static final Pattern LINUX_PATH_SRC = Pattern.compile("(/([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255}/)*([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255})|/)");
@@ -45,10 +45,14 @@ public class FileUtils {
 		if (StringUtils.isEmpty(rootPath)) {
 			rootPath = System.getProperty("user.home");
 		}
+		if (!rootPath.endsWith(File.separator)) {
+			rootPath += File.separator;
+		}
+		// 一定是 File.separator 结尾
 		checkPath(rootPath);
 
 		//虚拟路径,用与访问
-		String path = "/file/" + FORMATTER.format(LocalDate.now()) + "/";
+		String path = "file" + File.separator + FORMATTER.format(LocalDate.now()) + File.separator;
 		//真实物理路径
 		String filePath = rootPath + path;
 

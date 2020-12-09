@@ -28,7 +28,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	/**
 	 * 格式转化器
 	 */
-	public static final Map<Object, SimpleDateFormat> DATA_FORMAT;
+	public static final Map<Object, SimpleDateFormat> FORMAT;
 	public static final Map<Object, DateTimeFormatter> FORMATTER;
 
 	/**
@@ -57,12 +57,12 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	static final String EMPTY = "";
 
 	static {
-		DATA_FORMAT = new HashMap<>(16);
+		FORMAT = new HashMap<>(16);
 		SimpleDateFormat dateFormat;
 		for (Format value : Format.values()) {
 			dateFormat = new SimpleDateFormat(value.getPattern());
-			DATA_FORMAT.put(value, dateFormat);
-			DATA_FORMAT.put(value.getPattern(), dateFormat);
+			FORMAT.put(value, dateFormat);
+			FORMAT.put(value.getPattern(), dateFormat);
 		}
 
 		FORMATTER = new HashMap<>(16);
