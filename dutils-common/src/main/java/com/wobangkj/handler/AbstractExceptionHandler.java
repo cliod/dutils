@@ -1,5 +1,6 @@
 package com.wobangkj.handler;
 
+import com.wobangkj.api.Response;
 import com.wobangkj.bean.Res;
 import com.wobangkj.enums.ResultEnum;
 import com.wobangkj.exception.AccessException;
@@ -34,7 +35,7 @@ import java.util.Objects;
 @ResponseBody
 public abstract class AbstractExceptionHandler implements com.wobangkj.handler.ExceptionHandler {
 
-	protected int code = 217;
+	protected int code = Response.FAIL_CODE;
 
 	/**
 	 * 自定义授权异常
