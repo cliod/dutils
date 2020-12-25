@@ -17,6 +17,8 @@ import static com.wobangkj.bean.Res.ofRes;
  */
 public final class Response {
 	public static final int SHOW_CODE = 271;
+	public static final int MSG_CODE = 271;
+	public static final int FAIL_CODE = 271;
 	public static final int SUCCESS_CODE = 200;
 	public static final int ERROR_CODE = 500;
 	public static Maps<String, Object> OK = ok();
@@ -63,7 +65,17 @@ public final class Response {
 	 * @return 结果
 	 */
 	public static @NotNull <T> Res ok(@NotNull Pager<T> pager) {
-		return ok().addAll(pager.toObject());
+		return ok(pager.toObject());
+	}
+
+	/**
+	 * 包装结果
+	 *
+	 * @param res map结果
+	 * @return 用于快速返回Res
+	 */
+	public static @NotNull Res ok(Maps<String, Object> res) {
+		return ok().addAll(res);
 	}
 
 	/**

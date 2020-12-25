@@ -232,6 +232,8 @@ public class BeanUtils {
 	 * @param var0 对象1
 	 * @param var1 对象2
 	 * @return 是否相等
+	 * @see Objects#equals(Object, Object)
+	 * @deprecated
 	 */
 	public static boolean equals(Object var0, Object var1) {
 		return Objects.equals(var0, var1);
