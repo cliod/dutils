@@ -25,7 +25,12 @@ public enum BaseDesensitizeStrategy implements DesensitizeStrategy {
 	/**
 	 * Address sensitive type.
 	 */
-	ADDRESS(s -> s.replaceAll("(\\S{8})\\S{4}(\\S*)\\S{4}", "$1****$2****"));
+	ADDRESS(s -> s.replaceAll("(\\S{8})\\S{4}(\\S*)\\S{4}", "$1****$2****")),
+	/**
+	 * Password sensitive type.
+	 */
+	PASSWORD(s -> "******"),
+	;
 
 	private final Desensitizer desensitizer;
 

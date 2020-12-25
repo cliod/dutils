@@ -1,12 +1,14 @@
 package com.wobangkj.plugins.desensitization;
 
+import org.apache.ibatis.plugin.Interceptor;
+
 /**
  * 脱敏实现
  *
  * @author cliod
  * @since 9/17/20 10:29 AM
  */
-public abstract class DesensitizeHandler<T> {
+public abstract class DesensitizeHandler<T> implements Interceptor {
 	/**
 	 * 脱敏拦截
 	 *
