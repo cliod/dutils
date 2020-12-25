@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>dutils-datetime</artifactId>
@@ -25,8 +25,16 @@
     <dependencies>
         <dependency>
             <groupId>com.wobangkj</groupId>
-            <artifactId>jat-datetime</artifactId>
-            <version>${jat.version}</version>
+            <artifactId>dutils-base</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!--时间工具-->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.10.6</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

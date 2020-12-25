@@ -30,47 +30,42 @@ public class Respond {
 	/**
 	 * 无返回
 	 */
-	@NotNull
-	public static <T> Result<T> ok() {
+	public static @NotNull <T> Result<T> ok() {
 		return ok((T) null);
 	}
 
 	/**
 	 * 对象返回
 	 */
-	@NotNull
-	public static <T> Result<T> ok(T o) {
+	public static @NotNull <T> Result<T> ok(T o) {
 		return ok(200, "成功", o);
 	}
 
 	/**
 	 * 分页返回
 	 */
-	@NotNull
 	@Deprecated
-	public static <T> Result<Page<T>> ok(long length, List<T> list) {
+	public static @NotNull <T> Result<Page<T>> ok(long length, List<T> list) {
 		return of(200, "成功", Page.of(length, list));
 	}
 
-	public static <T> Result<Page<T>> ok(Page<T> page) {
+	public static @NotNull <T> Result<Page<T>> ok(Page<T> page) {
 		return of(200, "成功", page);
 	}
 
 	/**
 	 * 自定义字段, value 返回
 	 */
-	@NotNull
-	public static <V> Result<Map<String, Object>> ok(String valueName, V value) {
+	public static @NotNull <V> Result<Map<String, Object>> ok(String valueName, V value) {
 		return ok(Res.of(valueName, value));
 	}
 
 	/**
 	 * 多自定义字段, value 返回
 	 */
-	@NotNull
 	@SafeVarargs
 	@Deprecated
-	public static <V> Result<Map<String, Object>> ok(@NotNull String[] valueNames, @NotNull V... values) {
+	public static @NotNull <V> Result<Map<String, Object>> ok(@NotNull String[] valueNames, @NotNull V... values) {
 		int len = Math.min(valueNames.length, values.length);
 		if (len == 0) {
 			return ok(new HashMap<>(0));
@@ -84,74 +79,67 @@ public class Respond {
 	}
 
 	@SafeVarargs
-	@NotNull
 	@Deprecated
-	public static <V> Result<Map<String, Object>> ok(@NotNull String titles, V... values) {
+	public static @NotNull <V> Result<Map<String, Object>> ok(@NotNull String titles, V... values) {
 		return ok(titles.split(","), values);
 	}
 
 	/**
 	 * 非默认返回信息返回
 	 */
-	@NotNull
-	public static <T> Result<T> ok(@NotNull EnumMsg re, T o) {
+	public static @NotNull <T> Result<T> ok(@NotNull EnumMsg re, T o) {
 		return ok(re.getCode(), re.getMsg(), o);
 	}
 
 	/**
 	 * 其他信息返回
 	 */
-	@NotNull
-	public static <T> Result<T> ok(int code, String msg, T o) {
+	public static @NotNull <T> Result<T> ok(int code, String msg, T o) {
 		return of(code, msg, o);
 	}
 
 	/**
 	 * 已处理失败返回
 	 */
-	@NotNull
-	public static Result<Object> fail(String msg) {
+
+	public static @NotNull Result<Object> fail(String msg) {
 		return of(271, msg);
 	}
 
 	/**
 	 * 已处理失败返回
 	 */
-	@NotNull
-	public static Result<Object> fail(Integer code, String msg) {
+
+	public static @NotNull Result<Object> fail(Integer code, String msg) {
 		return of(code, msg);
 	}
 
 	/**
 	 * 失败返回,携带系统错误信息
 	 */
-	@NotNull
-	public static Result<Object> fail(@NotNull EnumMsg re, Throwable err) {
+	public static @NotNull Result<Object> fail(@NotNull EnumMsg re, Throwable err) {
 		return of(re.getCode(), re.getMsg(), err.getMessage(), null);
 	}
 
 	/**
 	 * 失败返回
 	 */
-	@NotNull
-	public static Result<Object> fail(@NotNull EnumMsg re) {
+	public static @NotNull Result<Object> fail(@NotNull EnumMsg re) {
 		return of(re.getCode(), re.getMsg());
 	}
 
 	/**
 	 * 已处理失败返回
 	 */
-	@NotNull
 	@Deprecated
-	public static Result<Object> fail(@NotNull EnumMsg re, @NotNull EnumMsg err) {
+	public static @NotNull Result<Object> fail(@NotNull EnumMsg re, @NotNull EnumMsg err) {
 		return of(re.getCode(), re.getMsg(), err.toObject(), null);
 	}
 
 	/**
 	 * 已处理失败返回
 	 */
-	@NotNull
-	public static Result<Object> fail(@NotNull ResultEnum re, int code, String msg) {
+	public static @NotNull Result<Object> fail(@NotNull ResultEnum re, int code, String msg) {
 		return of(re.getCode(), re.getMsg(), new HashMap<String, Object>(16) {{
 			put("code", code);
 			put("msg", msg);
@@ -161,30 +149,26 @@ public class Respond {
 	/**
 	 * 未知异常
 	 */
-	@NotNull
-	public static Result<Object> error() {
+	public static @NotNull Result<Object> error() {
 		return of(500, "系统错误");
 	}
 
 	/**
 	 * 位置异常,携带信息
 	 */
-	@NotNull
-	public static Result<Object> error(@NotNull EnumMsg err) {
+	public static @NotNull Result<Object> error(@NotNull EnumMsg err) {
 		return of(500, "未知错误", err.toObject(), null);
 	}
 
 	/**
 	 * 未知异常,携带信息
 	 */
-	@NotNull
-	public static Result<Object> error(Throwable msg) {
+	public static @NotNull Result<Object> error(Throwable msg) {
 		return of(500, "未知错误", msg, null);
 	}
 
-	@NotNull
 	@Deprecated
-	public static Builder build(String title, Object data) {
+	public static @NotNull Builder build(String title, Object data) {
 		return new Builder() {{
 			setData(new HashMap<String, Object>(16) {{
 				put(title, data);
@@ -192,16 +176,14 @@ public class Respond {
 		}};
 	}
 
-	@NotNull
 	@Deprecated
-	public static Builder build() {
+	public static @NotNull Builder build() {
 		return new Builder() {{
 			setData(new HashMap<>(16));
 		}};
 	}
 
-	@NotNull
-	public static Builder builder(String title, Object data) {
+	public static @NotNull Builder builder(String title, Object data) {
 		return new Builder() {{
 			setData(new HashMap<String, Object>(16) {{
 				put(title, data);
@@ -209,8 +191,7 @@ public class Respond {
 		}};
 	}
 
-	@NotNull
-	public static Builder builder() {
+	public static @NotNull Builder builder() {
 		return new Builder() {{
 			setData(new HashMap<>(16));
 		}};
@@ -220,21 +201,18 @@ public class Respond {
 	public static class Builder {
 		private Map<String, Object> data;
 
-		@NotNull
-		public Builder put(String title, Object data) {
+		public @NotNull Builder put(String title, Object data) {
 			this.data.put(title, data);
 			return this;
 		}
 
-		@NotNull
 		@Deprecated
-		public Builder put(String title, Date data) {
+		public @NotNull Builder put(String title, Date data) {
 			return this.put(title, data, "yyyy-MM-dd HH:mm:ss");
 		}
 
-		@NotNull
 		@Deprecated
-		public Builder put(String title, @NotNull Date data, String pattern) {
+		public @NotNull Builder put(String title, @NotNull Date data, String pattern) {
 			this.data.put(title, DateTimeFormatter.ofPattern(pattern)
 					.format(data.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
 			return this;

@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>5.1.0-SNAPSHOT</version>
+    <version>5.2.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -24,6 +24,7 @@
         <module>dutils-sms</module>
         <module>dutils-storage</module>
         <module>spring-boot-starters</module>
+        <module>dutils-core</module>
     </modules>
 
     <name>dutils</name>
@@ -53,7 +54,6 @@
         <spring.version>[5.2.0.RELEASE,)</spring.version>
         <spring.boot.version>[2.2.9.RELEASE,)</spring.boot.version>
         <poi.version>[4.1.0,)</poi.version>
-        <jat.version>5.0.1</jat.version>
     </properties>
 
     <dependencies>
