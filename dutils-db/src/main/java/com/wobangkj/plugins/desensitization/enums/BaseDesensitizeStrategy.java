@@ -11,7 +11,11 @@ import com.wobangkj.plugins.desensitization.Desensitizer;
  */
 public enum BaseDesensitizeStrategy implements DesensitizeStrategy {
 	/**
-	 * Username sensitive strategy.
+	 * Nuno sensitive strategy.
+	 */
+	NUNO(s -> s),
+	/**
+	 * Username sensitive type.
 	 */
 	USERNAME(s -> s.replaceAll("(\\S)\\S(\\S*)", "$1*$2")),
 	/**

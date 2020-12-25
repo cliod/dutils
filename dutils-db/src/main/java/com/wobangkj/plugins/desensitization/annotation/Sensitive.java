@@ -23,13 +23,7 @@ public @interface Sensitive {
 	 */
 	Class<? extends DesensitizeStrategy> special() default BaseDesensitizeStrategy.class;
 	/**
-	 * 脱敏策略，当特殊脱敏存在不为null也不是BaseDesensitizeStrategy时，该字段失效
+	 * 脱敏策略，当特殊脱敏存在不为null也不是BaseDesensitizeStrategy时，该字段失效，默认无策略
 	 */
-	@AliasFor("value")
-	BaseDesensitizeStrategy strategy();
-	/**
-	 * 策略策略，当特殊脱敏存在不为null也不是BaseDesensitizeStrategy时，该字段失效
-	 */
-	@AliasFor("strategy")
-	BaseDesensitizeStrategy value();
+	BaseDesensitizeStrategy strategy() default BaseDesensitizeStrategy.NUNO;
 }
