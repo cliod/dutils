@@ -9,7 +9,6 @@ import java.io.Serializable;
  *
  * @author cliod
  * @since 2019/11/9
- * package : com.wobangkj.api
  */
 public interface SessionSerializable extends Serializer, Deserializer, Serializable {
 

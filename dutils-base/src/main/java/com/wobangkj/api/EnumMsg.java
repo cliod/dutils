@@ -10,7 +10,6 @@ import java.util.Map;
  *
  * @author cliod
  * @since 2019/12/27
- * package : com.wobangkj.api
  */
 public interface EnumMsg extends SessionSerializable {
 

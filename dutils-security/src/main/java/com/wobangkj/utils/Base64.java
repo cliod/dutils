@@ -5,7 +5,6 @@ package com.wobangkj.utils;
  *
  * @author cliod
  * @since 2019/12/5
- * package : com.wobangkj.util
  */
 public final class Base64 {
 

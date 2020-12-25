@@ -14,7 +14,6 @@ import java.util.Arrays;
  *
  * @author cliod
  * @since 2019/7/27
- * package : com.wobangkj.git.magicked.util
  */
 public class PinyinUtils {
 	private static final HanyuPinyinOutputFormat DEFAULT_FORMAT;

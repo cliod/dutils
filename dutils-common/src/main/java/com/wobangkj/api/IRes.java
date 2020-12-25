@@ -1,4 +1,6 @@
-package com.wobangkj.bean;
+package com.wobangkj.api;
+
+import com.wobangkj.bean.Res;
 
 /**
  * 转换

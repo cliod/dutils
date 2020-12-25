@@ -6,8 +6,7 @@ import com.wobangkj.api.Dimension;
  * 一维收缩
  *
  * @author cliod
- * @see Number
- * @see java.io.Serializable
+ * @see Number 属于(二维)数字
  * @since 2020-04-07
  */
 public abstract class Among<T extends Number> implements Dimension {

@@ -7,7 +7,6 @@ import java.util.function.Supplier;
  *
  * @author cliod
  * @since 2019/12/27
- * package : com.wobangkj.api
  */
 @FunctionalInterface
 public interface EnumTextMsg extends EnumMsg, Supplier<String> {

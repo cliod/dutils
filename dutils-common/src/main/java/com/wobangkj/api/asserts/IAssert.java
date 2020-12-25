@@ -11,11 +11,10 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * assert
+ * assert interface
  *
  * @author @cliod
  * @since 4/28/20 11:53 AM
- * package: com.wobangkj.api
  */
 public interface IAssert {
 

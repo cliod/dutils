@@ -13,7 +13,6 @@ import java.util.function.Function;
  *
  * @author cliod
  * @since 2020/07/26
- * package : com.wobangkj.util
  */
 public class CovUtils {
 	/**

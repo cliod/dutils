@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * 分页封装
+ * 由原版Page演变而来
  *
  * @author cliod
  * @since 19-6-9

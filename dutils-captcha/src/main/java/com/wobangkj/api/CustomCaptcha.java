@@ -3,7 +3,7 @@ package com.wobangkj.api;
 import cn.hutool.captcha.generator.CodeGenerator;
 
 /**
- * 简单自定义图片验证码
+ * 自定义图片验证码
  *
  * @author cliod
  * @since 10/14/20 10:29 AM

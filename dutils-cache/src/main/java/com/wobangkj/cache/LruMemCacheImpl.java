@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * map cache
+ * lru memory cache
  *
  * @author cliod
  * @since 6/22/20 10:16 AM

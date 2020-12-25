@@ -16,7 +16,6 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author cliod
  * @since 2019/11/9
- * package : com.wobangkj.util
  */
 public class FileStorageJwt extends StorageJwt implements Signable {
 

@@ -9,7 +9,7 @@
     <parent>
         <artifactId>dutils</artifactId>
         <groupId>com.wobangkj</groupId>
-        <version>5.2.0-SNAPSHOT</version>
+        <version>5.2.1</version>
     </parent>
 
     <artifactId>spring-boot-starters</artifactId>

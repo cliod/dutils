@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * 简单自定义图片验证码
+ * 自定义融合图片验证码
  *
  * @author cliod
  * @since 10/14/20 10:29 AM

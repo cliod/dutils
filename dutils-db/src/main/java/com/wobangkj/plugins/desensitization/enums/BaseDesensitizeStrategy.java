@@ -22,7 +22,6 @@ public enum BaseDesensitizeStrategy implements DesensitizeStrategy {
 	 * Phone sensitive type.
 	 */
 	PHONE(s -> s.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2")),
-
 	/**
 	 * Address sensitive type.
 	 */

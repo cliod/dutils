@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * 验证码工具类
+ * 旧版验证码工具类
  *
  * @author cliod
  * @since 2019/10/20

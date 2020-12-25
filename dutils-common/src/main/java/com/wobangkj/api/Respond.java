@@ -17,7 +17,7 @@ import java.util.Map;
 import static com.wobangkj.bean.Result.of;
 
 /**
- * 结果API
+ * 旧版结果API
  *
  * @author cliod
  * @since 11/28/20 3:07 PM

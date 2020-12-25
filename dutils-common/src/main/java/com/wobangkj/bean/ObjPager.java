@@ -6,11 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * pageable
+ * 统一对象分页传参，主要用于Post请求分页， 继承于 Pageable
  *
  * @author @cliod
  * @since 4/22/20 11:15 AM
- * package: com.wobangkj.bean
+ * @see com.wobangkj.bean.Pageable
  */
 @Setter
 public class ObjPager<T> extends Pageable {

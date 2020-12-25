@@ -97,7 +97,8 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		r.setStatus(HttpStatus.NOT_FOUND.value());
 		r.setMsg(HttpStatus.NOT_FOUND.getReasonPhrase());
 		r.setErr(String.format("接口不存在(%s方法: %s)", e.getHttpMethod(), e.getRequestURL()));
-		log.warn(e.getMessage());
+		// 这里不需要警告 o.s.web.servlet.PageNotFound 会进行警告
+		// log.warn(e.getMessage());
 		return r;
 	}
 

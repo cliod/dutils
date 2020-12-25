@@ -15,7 +15,6 @@ import java.util.Date;
  *
  * @author cliod
  * @since 2019/11/9
- * package : com.wobangkj.util
  */
 public class SimpleJwt extends Jwt implements Signable {
 

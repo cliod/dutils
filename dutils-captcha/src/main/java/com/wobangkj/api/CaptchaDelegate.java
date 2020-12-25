@@ -8,7 +8,7 @@ import lombok.SneakyThrows;
 import java.awt.*;
 
 /**
- * 验证码默认实现
+ * 验证码委托对象
  *
  * @author cliod
  * @since 9/14/20 11:20 AM

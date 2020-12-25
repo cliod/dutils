@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
  *
  * @author @cliod
  * @since 4/29/20 10:43 AM
- * package: com.wobangkj.jzlw.utils.excel
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

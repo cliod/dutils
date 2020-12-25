@@ -10,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author cliod
  * @since 2019/12/5
- * package : com.wobangkj.util
  */
 public class EncryptUtils {
 

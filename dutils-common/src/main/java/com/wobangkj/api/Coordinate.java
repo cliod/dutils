@@ -3,11 +3,10 @@ package com.wobangkj.api;
 import com.wobangkj.bean.Maps;
 
 /**
- * 点
+ * 点 顶级抽象
  *
  * @author @cliod
  * @since 4/8/20 9:17 AM
- * package: com.wobangkj.api
  */
 public interface Coordinate<X, Y, Z> extends Dimension {
 

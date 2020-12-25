@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
- * redis实现
+ * redis object implement
  *
  * @author cliod
  * @since 10/10/20 2:57 PM

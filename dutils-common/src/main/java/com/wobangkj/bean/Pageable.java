@@ -7,11 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * pageable
+ * 分页封装
  *
  * @author @cliod
  * @since 4/22/20 11:12 AM
- * package: com.wobangkj.bean
  */
 @Setter
 public abstract class Pageable implements com.wobangkj.api.Pageable, Cloneable {

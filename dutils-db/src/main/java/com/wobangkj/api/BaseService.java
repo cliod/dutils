@@ -1,8 +1,7 @@
 package com.wobangkj.api;
 
 /**
- * 废弃
- * 默认实现
+ * crud 默认实现
  *
  * @author cliod
  * @since 9/4/20 11:07 AM

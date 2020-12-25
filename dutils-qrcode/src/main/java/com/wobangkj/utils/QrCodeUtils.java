@@ -25,7 +25,6 @@ import java.util.*;
  *
  * @author cliod
  * @since 19-7-24
- * package : com.wobangkj.git.magicked.util
  */
 public class QrCodeUtils {
 	/**

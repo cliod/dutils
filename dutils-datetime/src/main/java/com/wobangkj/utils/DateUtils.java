@@ -20,7 +20,6 @@ import static com.wobangkj.enums.Format.*;
  *
  * @author cliod
  * @since 19-7-19
- * com.wobangkj.git.magicked.util
  */
 public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	/**

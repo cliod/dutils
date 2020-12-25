@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * map cache
+ * redis cache
  *
  * @author cliod
  * @since 6/22/20 10:16 AM

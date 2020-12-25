@@ -1,6 +1,7 @@
 package com.wobangkj.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wobangkj.api.IRes;
 import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.JsonUtils;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.Objects;
  * 旧版结果封装
  *
  * @author cliod
- * @since 11/28/20 3:05 PM
+ * @since 19-6-9
  */
 @Data
 @Deprecated

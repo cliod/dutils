@@ -11,7 +11,6 @@ import java.util.Objects;
  *
  * @author cliod
  * @since 2019/11/9
- * package : com.wobangkj.util
  */
 public abstract class StorageJwt extends Jwt implements Signable {
 

@@ -1,7 +1,7 @@
 package com.wobangkj.api;
 
 /**
- * 维度
+ * 维度 抽象
  *
  * @author cliod
  */
