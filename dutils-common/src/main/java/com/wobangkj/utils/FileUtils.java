@@ -40,8 +40,19 @@ public class FileUtils {
 	 * @return 返回相对路径
 	 * @throws IOException IO异常
 	 */
-	@NotNull
-	public static String upload(@NotNull MultipartFile file, String rootPath) throws IOException {
+	public static @NotNull String upload(@NotNull MultipartFile file, String rootPath) throws IOException {
+		return upload(file, rootPath, "");
+	}
+
+	/**
+	 * 文件上传
+	 *
+	 * @param file     文件
+	 * @param rootPath 文件存储路径
+	 * @return 返回相对路径
+	 * @throws IOException IO异常
+	 */
+	public static @NotNull String upload(@NotNull MultipartFile file, String rootPath, String customName) throws IOException {
 		if (StringUtils.isEmpty(rootPath)) {
 			rootPath = System.getProperty("user.home");
 		}
@@ -60,7 +71,10 @@ public class FileUtils {
 		String extendName = originalFilename.substring(originalFilename.lastIndexOf("."));
 
 		//文件新名字
-		String fileName = KeyUtils.get32uuid() + extendName;
+		String fileName = customName;
+		if (StringUtils.isEmpty(fileName)) {
+			fileName = KeyUtils.get32uuid() + extendName;
+		}
 		transferToFile(file, filePath, fileName);
 		return path + fileName;
 	}

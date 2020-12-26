@@ -1,16 +1,16 @@
 package com.wobangkj.utils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wobangkj.api.BaseJson;
+import com.wobangkj.impl.GsonJsonImpl;
+import com.wobangkj.impl.JacksonJsonImpl;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,32 +22,50 @@ import java.util.Map;
  */
 public class JsonUtils {
 
+	/**
+	 * 0jackson，1gson，2fastjson
+	 */
 	@Setter
 	private static int flat = 0;
-	private static ObjectMapper objectMapper = new ObjectMapper();
-	private static GsonBuilder gsonBuilder = new GsonBuilder();
-	private static Gson gson = gsonBuilder.create();
+	@Setter
+	@Getter
+	private static BaseJson JSON = new JacksonJsonImpl();
 
+	@Deprecated
 	public static @NotNull ObjectMapper getJackson() {
-		return objectMapper;
+		if (flat != 0) {
+			throw new UnsupportedOperationException("不存在此对象");
+		}
+		return ((JacksonJsonImpl) JSON).getObjectMapper();
 	}
 
+	@Deprecated
 	public static @NotNull Gson getGoogleJson() {
-		return gson;
+		if (flat != 1) {
+			throw new UnsupportedOperationException("不存在此对象");
+		}
+		return ((GsonJsonImpl) JSON).getGson();
 	}
 
+	@Deprecated
 	public static void setObjectMapper(@NotNull ObjectMapper objectMapper) {
-		JsonUtils.objectMapper = objectMapper;
+		if (flat != 0) {
+			throw new UnsupportedOperationException("无法设置此对象");
+		}
+		((JacksonJsonImpl) JSON).setObjectMapper(objectMapper);
 	}
 
 	@Deprecated
 	public static void setGsonBuilder(@NotNull GsonBuilder gsonBuilder) {
-		JsonUtils.gsonBuilder = gsonBuilder;
 		setGson(gsonBuilder.create());
 	}
 
+	@Deprecated
 	public static void setGson(@NotNull Gson gson) {
-		JsonUtils.gson = gson;
+		if (flat != 1) {
+			throw new UnsupportedOperationException("无法设置此对象");
+		}
+		((GsonJsonImpl) JSON).setGson(gson);
 	}
 
 	/**
@@ -60,13 +78,7 @@ public class JsonUtils {
 	 */
 	@SneakyThrows
 	public static <T> T fromJson(String json, Class<T> clazz) {
-		T t;
-		if (flat == 0) {
-			t = objectMapper.readValue(json, clazz);
-		} else {
-			t = gson.fromJson(json, clazz);
-		}
-		return t;
+		return JSON.toObject(json, clazz);
 	}
 
 	/**
@@ -87,20 +99,7 @@ public class JsonUtils {
 	 */
 	@SneakyThrows
 	public static Map<String, Object> toMap(String json) {
-		Map<String, Object> res;
-		if (flat == 0) {
-			res = objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {
-				@Override
-				public Type getType() {
-					return Map.class;
-				}
-			});
-		} else {
-			@SuppressWarnings("unchecked")
-			Map<String, Object> r = gson.fromJson(json, HashMap.class);
-			res = r;
-		}
-		return res;
+		return JSON.toMap(json);
 	}
 
 	/**
@@ -112,20 +111,7 @@ public class JsonUtils {
 	 */
 	@SneakyThrows
 	public static <T> List<T> toList(String json) {
-		List<T> list;
-		if (flat == 0) {
-			list = objectMapper.readValue(json, new TypeReference<List<T>>() {
-				@Override
-				public Type getType() {
-					return List.class;
-				}
-			});
-		} else {
-			@SuppressWarnings("unchecked")
-			List<T> t = gson.fromJson(json, ArrayList.class);
-			list = t;
-		}
-		return list;
+		return JSON.toList(json);
 	}
 
 	/**
@@ -136,13 +122,6 @@ public class JsonUtils {
 	 */
 	@SneakyThrows
 	public static String toJson(Object obj) {
-		String json;
-		if (flat == 0) {
-			json = objectMapper.writeValueAsString(obj);
-
-		} else {
-			json = gson.toJson(obj);
-		}
-		return json;
+		return JSON.toJson(obj);
 	}
 }
