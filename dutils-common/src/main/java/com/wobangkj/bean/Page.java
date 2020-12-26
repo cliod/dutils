@@ -1,25 +1,25 @@
 package com.wobangkj.bean;
 
+import com.wobangkj.api.IRes;
 import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.BeanUtils;
 import com.wobangkj.utils.JsonUtils;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * 旧版分页封装
  *
  * @author cliod
- * @since 11/28/20 3:06 PM
+ * @since 19-6-9
  */
 @Data
 @Deprecated
 public class Page<T> implements IRes, SessionSerializable {
+
+	public static Page<?> EMPTY = Page.of(0, 1, 10, Collections.emptyList());
 
 	private static final long serialVersionUID = 7562274153136856700L;
 	/**
@@ -68,7 +68,7 @@ public class Page<T> implements IRes, SessionSerializable {
 	 * @return 结果
 	 */
 	public static @NotNull <T> Page<T> of(long length, @NotNull Pageable pageable, List<T> objects) {
-		Page<T> pager = new Page<T>();
+		Page<T> pager = new Page<>();
 		pager.count = length;
 		pager.size = pageable.getSize();
 		pager.page = pageable.getPage();
@@ -105,6 +105,11 @@ public class Page<T> implements IRes, SessionSerializable {
 		return Page.of(length, 1, list.length, Arrays.asList(list));
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> @NotNull Page<T> of() {
+		return (Page<T>) EMPTY;
+	}
+
 	/**
 	 * 从pager转化
 	 *
@@ -122,7 +127,7 @@ public class Page<T> implements IRes, SessionSerializable {
 	 * @return pager
 	 */
 	public Pager<T> toPager() {
-		return Pager.of(this.getCount(), Pageable.of(1, this.getSize()), this.getList());
+		return Pager.of(this.getCount(), Pageable.of(this.getPage(), this.getSize()), this.getList());
 	}
 
 	/**
@@ -151,7 +156,7 @@ public class Page<T> implements IRes, SessionSerializable {
 	 * @return obj
 	 */
 	@Override
-	public Object toObject() {
+	public Res toObject() {
 		return toRes();
 	}
 

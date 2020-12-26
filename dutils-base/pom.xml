@@ -9,7 +9,7 @@
     <parent>
         <artifactId>dutils</artifactId>
         <groupId>com.wobangkj</groupId>
-        <version>5.0.5</version>
+        <version>5.2.4</version>
     </parent>
 
     <artifactId>dutils-base</artifactId>
@@ -23,11 +23,38 @@
     </properties>
 
     <dependencies>
+        <!--Json相关-->
         <dependency>
             <groupId>com.wobangkj</groupId>
-            <artifactId>jat-base</artifactId>
-            <version>${jat.version}</version>
+            <artifactId>dutils-json</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.11</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+            <optional>true</optional>
+        </dependency>
+
+
     </dependencies>
 
 </project>

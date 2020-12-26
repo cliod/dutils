@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>5.0.5</version>
+        <version>5.2.4</version>
     </parent>
 
     <artifactId>dutils-sms</artifactId>
@@ -25,8 +25,42 @@
     <dependencies>
         <dependency>
             <groupId>com.wobangkj</groupId>
-            <artifactId>jat-sms</artifactId>
-            <version>${jat.version}</version>
+            <artifactId>dutils-base</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!--短信sdk-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>[4.5.6,)</version>
+            <optional>true</optional>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-dysmsapi -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
+        <!-- go to https://search.maven.org/search?q=tencentcloud-sdk-java and get the latest version. -->
+        <!-- 请到https://search.maven.org/search?q=tencentcloud-sdk-java查询最新版本 -->
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
+            <version>3.1.147</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
         </dependency>
     </dependencies>
 

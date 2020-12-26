@@ -10,7 +10,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * map cache
+ * memory cache
  *
  * @author cliod
  * @since 6/22/20 10:16 AM

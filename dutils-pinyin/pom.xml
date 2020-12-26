@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>5.0.5</version>
+        <version>5.2.4</version>
     </parent>
 
     <artifactId>dutils-pinyin</artifactId>
@@ -23,10 +23,11 @@
     </properties>
 
     <dependencies>
+        <!--中文文字转拼音-->
         <dependency>
-            <groupId>com.wobangkj</groupId>
-            <artifactId>jat-pinyin</artifactId>
-            <version>${jat.version}</version>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.1</version>
         </dependency>
     </dependencies>
 

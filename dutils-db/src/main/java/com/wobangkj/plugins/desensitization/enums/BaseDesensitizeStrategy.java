@@ -11,7 +11,11 @@ import com.wobangkj.plugins.desensitization.Desensitizer;
  */
 public enum BaseDesensitizeStrategy implements DesensitizeStrategy {
 	/**
-	 * Username sensitive strategy.
+	 * Nuno sensitive strategy.
+	 */
+	NUNO(s -> s),
+	/**
+	 * Username sensitive type.
 	 */
 	USERNAME(s -> s.replaceAll("(\\S)\\S(\\S*)", "$1*$2")),
 	/**
@@ -22,11 +26,15 @@ public enum BaseDesensitizeStrategy implements DesensitizeStrategy {
 	 * Phone sensitive type.
 	 */
 	PHONE(s -> s.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2")),
-
 	/**
 	 * Address sensitive type.
 	 */
-	ADDRESS(s -> s.replaceAll("(\\S{8})\\S{4}(\\S*)\\S{4}", "$1****$2****"));
+	ADDRESS(s -> s.replaceAll("(\\S{8})\\S{4}(\\S*)\\S{4}", "$1****$2****")),
+	/**
+	 * Password sensitive type.
+	 */
+	PASSWORD(s -> "******"),
+	;
 
 	private final Desensitizer desensitizer;
 

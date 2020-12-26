@@ -5,25 +5,27 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>5.0.5</version>
+    <version>5.2.4</version>
 
     <packaging>pom</packaging>
 
     <modules>
+        <module>dutils-all</module>
         <module>dutils-base</module>
-        <module>dutils-common</module>
         <module>dutils-cache</module>
+        <module>dutils-captcha</module>
+        <module>dutils-common</module>
+        <module>dutils-core</module>
         <module>dutils-datetime</module>
-        <module>dutils-security</module>
+        <module>dutils-db</module>
+        <module>dutils-excel</module>
         <module>dutils-pinyin</module>
         <module>dutils-qrcode</module>
-        <module>dutils-db</module>
-        <module>dutils-all</module>
-        <module>dutils-captcha</module>
-        <module>dutils-excel</module>
+        <module>dutils-security</module>
         <module>dutils-sms</module>
         <module>dutils-storage</module>
         <module>spring-boot-starters</module>
+        <module>dutils-json</module>
     </modules>
 
     <name>dutils</name>
@@ -50,10 +52,12 @@
         <gson.version>[2.8.6,)</gson.version>
         <jackson.version>[2.11.1,)</jackson.version>
         <slf4j.version>[1.7.30,)</slf4j.version>
-        <spring.version>[5.2.0.RELEASE,)</spring.version>
+        <spring.version>[5.2.1.RELEASE,)</spring.version>
         <spring.boot.version>[2.2.9.RELEASE,)</spring.boot.version>
         <poi.version>[4.1.0,)</poi.version>
-        <jat.version>5.0.1</jat.version>
+        <jetbrains.version>[20.0.0,)</jetbrains.version>
+        <lombok.version>[1.18.12,)</lombok.version>
+        <servlet.version>[4.0.1,)</servlet.version>
     </properties>
 
     <dependencies>
@@ -68,20 +72,20 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>[20.0.0,)</version>
+            <version>${jetbrains.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>[1.18.12,)</version>
+            <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>[4.0.1,)</version>
+            <version>${servlet.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -96,6 +100,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
             <optional>true</optional>
         </dependency>
     </dependencies>
@@ -105,6 +115,16 @@
             <dependency>
                 <groupId>com.wobangkj</groupId>
                 <artifactId>dutils-base</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-cache</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -130,6 +150,11 @@
             <dependency>
                 <groupId>com.wobangkj</groupId>
                 <artifactId>dutils-excel</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wobangkj</groupId>
+                <artifactId>dutils-json</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -161,14 +186,14 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>[1.18.12,)</version>
+                <version>${lombok.version}</version>
                 <optional>true</optional>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>[19.0.0,)</version>
+                <version>${jetbrains.version}</version>
                 <scope>compile</scope>
             </dependency>
 
@@ -176,7 +201,7 @@
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
-                <version>[4.0.1,)</version>
+                <version>${servlet.version}</version>
                 <scope>provided</scope>
             </dependency>
             <!--日志通用接口-->
@@ -191,7 +216,7 @@
                 <version>${slf4j.version}</version>
             </dependency>
 
-            <!--Spring WebMvc-->
+            <!--Spring 相关-->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
@@ -203,6 +228,114 @@
                 <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <!--SpringBoot 相关-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <!--Json相关-->
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!--office文件操作依赖-->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-schemas</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>3.6.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.15</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.0-jre</version>
+            </dependency>
+
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.10.6</version>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>3.3.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

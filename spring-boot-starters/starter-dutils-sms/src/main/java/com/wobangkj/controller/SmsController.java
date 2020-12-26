@@ -52,10 +52,4 @@ public class SmsController {
 		}
 		return ok();
 	}
-
-	@GetMapping("/verify")
-	public Object verify(@RequestParam String mobile, @RequestParam String code, @RequestParam Long id) {
-		//todo: 验证短信验证码和下一个处理(建议返回api_token)
-		return ok();
-	}
 }
