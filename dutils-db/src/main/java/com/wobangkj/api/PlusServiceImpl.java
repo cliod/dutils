@@ -8,8 +8,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wobangkj.bean.Pageable;
 import com.wobangkj.bean.Pager;
 
-import java.util.List;
-
 /**
  * 默认实现
  *
@@ -37,21 +35,6 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
 	@Override
 	public T queryOne(T t) {
 		return this.getOne(new QueryWrapper<>(t));
-	}
-
-	/**
-	 * 查询多条数据
-	 *
-	 * @param t      实例对象
-	 * @param offset 查询起始位置
-	 * @param limit  查询条数
-	 * @return 对象列表
-	 */
-	@Override
-	public List<T> queryAll(T t, int offset, int limit) {
-		Page<T> page = new Page<>(offset, limit);
-		Page<T> pages = this.page(page.addOrder(OrderItem.desc("id")), new QueryWrapper<>(t));
-		return pages.getRecords();
 	}
 
 	/**

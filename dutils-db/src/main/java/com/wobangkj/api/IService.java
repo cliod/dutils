@@ -3,8 +3,6 @@ package com.wobangkj.api;
 import com.wobangkj.bean.Pageable;
 import com.wobangkj.bean.Pager;
 
-import java.util.List;
-
 /**
  * 通用Service, 兼容方法
  *
@@ -30,6 +28,15 @@ public interface IService<T> {
 	T queryOne(T t);
 
 	/**
+	 * 查询
+	 *
+	 * @param t        条件
+	 * @param pageable 分页
+	 * @return 列表
+	 */
+	Pager<T> queryAll(T t, Pageable pageable);
+
+	/**
 	 * 查询多条数据
 	 *
 	 * @param t      实例对象
@@ -37,7 +44,9 @@ public interface IService<T> {
 	 * @param limit  查询条数
 	 * @return 对象列表
 	 */
-	List<T> queryAll(T t, int offset, int limit);
+	default Pager<T> queryAll(T t, int offset, int limit) {
+		return this.queryAll(t, Pageable.of(offset, limit));
+	}
 
 	/**
 	 * 新增数据
@@ -70,17 +79,4 @@ public interface IService<T> {
 	 * @return 实例行数
 	 */
 	long count(T t);
-
-	/**
-	 * 查询
-	 *
-	 * @param t        条件
-	 * @param pageable 分页
-	 * @return 列表
-	 */
-	default Pager<T> queryAll(T t, Pageable pageable) {
-		long count = this.count(t);
-		if (count == 0) return Pager.empty();
-		return Pager.of(count, pageable, this.queryAll(t, pageable.getMybatisPage(), pageable.getSize()));
-	}
 }

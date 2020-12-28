@@ -1,6 +1,7 @@
 package com.wobangkj.api;
 
-import java.util.List;
+import com.wobangkj.bean.Pageable;
+import com.wobangkj.bean.Pager;
 
 /**
  * 抽象实现
@@ -40,16 +41,15 @@ public abstract class ServiceImpl<T> implements IService<T> {
 	}
 
 	/**
-	 * 查询多条数据
+	 * 查询
 	 *
-	 * @param t      实例对象
-	 * @param offset 查询起始位置
-	 * @param limit  查询条数
-	 * @return 对象列表
+	 * @param t        条件
+	 * @param pageable 分页
+	 * @return 列表
 	 */
 	@Override
-	public List<T> queryAll(T t, int offset, int limit) {
-		return this.getDao().queryAllByConditionLimit(t, offset, limit);
+	public Pager<T> queryAll(T t, Pageable pageable) {
+		return getDao().queryAllPage(t, pageable);
 	}
 
 	/**

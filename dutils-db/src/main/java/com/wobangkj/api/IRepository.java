@@ -46,7 +46,7 @@ public interface IRepository<T> extends IDao<T>, JpaRepository<T, Long> {
 	 * @return 对象列表
 	 */
 	@Override
-	default List<T> queryAllByEntity(T t) {
+	default List<T> queryAll(T t) {
 		return this.findAll(Example.of(t), Sort.by("id").descending());
 	}
 
@@ -59,10 +59,9 @@ public interface IRepository<T> extends IDao<T>, JpaRepository<T, Long> {
 	 * @return 对象列表
 	 */
 	@Override
-	default List<T> queryAllByConditionLimit(T t, int offset, int limit) {
-		Pageable page = Pageable.of(offset, limit);
-		Page<T> pager = this.findAll(Example.of(t), PageRequest.of(page.getJpaPage(), page.getSize()));
-		return pager.getContent();
+	default List<T> queryAllLimit(T t, int offset, int limit) {
+		Pageable pageable = Pageable.of(offset, limit);
+		return this.queryAllPage(t, pageable).getData();
 	}
 
 	/**
@@ -73,7 +72,7 @@ public interface IRepository<T> extends IDao<T>, JpaRepository<T, Long> {
 	 * @return 对象列表
 	 */
 	@Override
-	default Pager<T> queryAll(T t, Pageable pageable) {
+	default Pager<T> queryAllPage(T t, Pageable pageable) {
 		Page<T> page = this.findAll(Example.of(t), PageRequest.of(pageable.getJpaPage(), pageable.getSize()));
 		return Pager.of(page.getTotalElements(), pageable, page.getContent());
 	}

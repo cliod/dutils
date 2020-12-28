@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -154,11 +155,46 @@ public class ExcelUtils {
 	/**
 	 * 导出
 	 *
+	 * @param os   响应
+	 * @param data 导出数据
+	 */
+	public static void write(OutputStream os, List<?> data) {
+		write(os, data, null);
+	}
+
+	/**
+	 * 导出
+	 *
+	 * @param os   响应
+	 * @param data 导出数据
+	 * @param head 导出对象类型
+	 */
+	public static void write(OutputStream os, List<?> data, Class<?> head) {
+		write(os, data, head, "Sheet1", ExcelTypeEnum.XLS);
+	}
+
+	/**
+	 * 导出
+	 *
+	 * @param os        响应
+	 * @param data      导出数据
+	 * @param sheetName 表格名称
+	 * @param head      导出对象类型
+	 */
+	public static void write(OutputStream os, List<?> data, Class<?> head, String sheetName, ExcelTypeEnum fileType) {
+		EasyExcel.write(os, head)
+				.excelType(fileType).sheet(sheetName).registerWriteHandler(getStyleStrategy()).doWrite(data);
+	}
+
+	/**
+	 * 导出
+	 *
 	 * @param response 响应
 	 * @param data     导出数据
-	 * @throws Exception 异常
+	 * @throws IOException 异常
 	 */
-	public static void write(HttpServletResponse response, List<?> data) throws Exception {
+	@Deprecated
+	public static void write(HttpServletResponse response, List<?> data) throws IOException {
 		write(response, data, null);
 	}
 
@@ -168,9 +204,10 @@ public class ExcelUtils {
 	 * @param response 响应
 	 * @param data     导出数据
 	 * @param head     导出对象类型
-	 * @throws Exception 异常
+	 * @throws IOException 异常
 	 */
-	public static void write(HttpServletResponse response, List<?> data, Class<?> head) throws Exception {
+	@Deprecated
+	public static void write(HttpServletResponse response, List<?> data, Class<?> head) throws IOException {
 		write(response, data, head, KeyUtils.get32uuid(), "Sheet1", ExcelTypeEnum.XLS);
 	}
 
@@ -182,9 +219,10 @@ public class ExcelUtils {
 	 * @param fileName  文件名称
 	 * @param sheetName 表格名称
 	 * @param head      导出对象类型
-	 * @throws Exception 异常
+	 * @throws IOException 异常
 	 */
-	public static void write(HttpServletResponse response, List<?> data, Class<?> head, String fileName, String sheetName, ExcelTypeEnum fileType) throws Exception {
+	@Deprecated
+	public static void write(HttpServletResponse response, List<?> data, Class<?> head, String fileName, String sheetName, ExcelTypeEnum fileType) throws IOException {
 		fileName = URLEncoder.encode(fileName, "UTF-8");
 		response.setContentType("application/octet-stream");
 		response.setCharacterEncoding("utf8");

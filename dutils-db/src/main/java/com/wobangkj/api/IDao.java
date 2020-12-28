@@ -35,7 +35,7 @@ public interface IDao<T> {
 	 * @param t 实例对象
 	 * @return 对象列表
 	 */
-	List<T> queryAllByEntity(T t);
+	List<T> queryAll(T t);
 
 	/**
 	 * 通过实体作为筛选条件查询
@@ -45,7 +45,7 @@ public interface IDao<T> {
 	 * @param offset 分页
 	 * @return 对象列表
 	 */
-	List<T> queryAllByConditionLimit(T t, int offset, int limit);
+	List<T> queryAllLimit(T t, int offset, int limit);
 
 	/**
 	 * 修改数据
@@ -70,11 +70,11 @@ public interface IDao<T> {
 	 * @param pageable 分页
 	 * @return 对象列表
 	 */
-	default Pager<T> queryAll(T t, Pageable pageable) {
+	default Pager<T> queryAllPage(T t, Pageable pageable) {
 		long count = this.count(t);
 		if (count == 0) {
 			return Pager.empty();
 		}
-		return Pager.of(count, pageable, this.queryAllByConditionLimit(t, pageable.getMybatisPage(), pageable.getLimit()));
+		return Pager.of(count, pageable, this.queryAllLimit(t, pageable.getMybatisPage(), pageable.getLimit()));
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @author cliod
  * @since 10/10/20 2:57 PM
  */
+@Deprecated
 public class ObjRedisTemplate extends RedisTemplate<Object, Object> {
 
 	/**

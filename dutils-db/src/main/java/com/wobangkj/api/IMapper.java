@@ -42,7 +42,7 @@ public interface IMapper<T> extends IDao<T>, Mapper<T> {
 	 * @return 对象列表
 	 */
 	@Override
-	default List<T> queryAllByEntity(T t) {
+	default List<T> queryAll(T t) {
 		return this.select(t);
 	}
 
@@ -55,7 +55,7 @@ public interface IMapper<T> extends IDao<T>, Mapper<T> {
 	 * @return 对象列表
 	 */
 	@Override
-	default List<T> queryAllByConditionLimit(T t, int offset, int limit) {
+	default List<T> queryAllLimit(T t, int offset, int limit) {
 		return this.selectByRowBounds(t, new RowBounds(offset, limit));
 	}
 
