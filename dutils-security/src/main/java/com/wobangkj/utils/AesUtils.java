@@ -24,6 +24,48 @@ public class AesUtils {
 	}
 
 	/**
+	 * 加密
+	 *
+	 * @param content 字符串内容
+	 * @return 加密结果
+	 */
+	public static @NotNull String encode(String content) throws GeneralSecurityException {
+		return encode(content, AesUtils.AES_KEY);
+	}
+
+	/**
+	 * AES 解密操作
+	 *
+	 * @param content 加密内容
+	 * @return 解密结果
+	 */
+	public static @NotNull String decode(String content) throws GeneralSecurityException {
+		return decode(content, AesUtils.AES_KEY);
+	}
+
+	/**
+	 * 加密
+	 *
+	 * @param content 字符串内容
+	 * @param aesKey  加密盐
+	 * @return 加密结果
+	 */
+	public static @NotNull String encode(String content, String aesKey) throws GeneralSecurityException {
+		return encode(content, aesKey, AesUtils.AES_IV);
+	}
+
+	/**
+	 * AES 解密操作
+	 *
+	 * @param content 加密内容
+	 * @param aesKey  加密盐
+	 * @return 解密结果
+	 */
+	public static @NotNull String decode(String content, String aesKey) throws GeneralSecurityException {
+		return decode(content, aesKey, AesUtils.AES_IV);
+	}
+
+	/**
 	 * content: 加密内容
 	 * slatKey: 加密的盐，16位字符串
 	 * vectorKey: 加密的向量，16位字符串
@@ -67,7 +109,7 @@ public class AesUtils {
 	}
 
 	/**
-	 * content: 解密内容(base64编码格式)
+	 * content: 解密内容(hex16编码格式)
 	 * slatKey: 加密时使用的盐，16位字符串
 	 * vectorKey: 加密时使用的向量，16位字符串
 	 */

@@ -1,7 +1,5 @@
 package com.wobangkj.utils;
 
-import lombok.SneakyThrows;
-
 import javax.crypto.Cipher;
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +38,7 @@ public class RsaUtils {
 	/**
 	 * 公钥字符串
 	 */
-	private static final String PUBLIC_KEY_STR =
+	private static final String DEFAULT_PUBLIC_KEY_STR =
 			"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDaJzVjC5K6kbS2YE2fiDs6H8pB" +
 					"JFDGEYqqJJC9I3E0Ebr5FsofdImV5eWdBSeADwcR9ppNbpORdZmcX6SipogKx9PX" +
 					"5aAO4GPesroVeOs91xrLEGt/arteW8iSD+ZaGDUVV3+wcEdci/eCvFlc5PUuZJou" +
@@ -48,7 +46,7 @@ public class RsaUtils {
 	/**
 	 * 私钥字符串
 	 */
-	private static final String PRIVATE_KEY_STR =
+	private static final String DEFAULT_PRIVATE_KEY_STR =
 			"MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBANonNWMLkrqRtLZg" +
 					"TZ+IOzofykEkUMYRiqokkL0jcTQRuvkWyh90iZXl5Z0FJ4APBxH2mk1uk5F1mZxf" +
 					"pKKmiArH09floA7gY96yuhV46z3XGssQa39qu15byJIP5loYNRVXf7BwR1yL94K8" +
@@ -72,26 +70,24 @@ public class RsaUtils {
 
 	public static void init() throws GeneralSecurityException {
 		if (PUBLIC_KEY == null) {
-			PUBLIC_KEY = getPublicKey(PUBLIC_KEY_STR);
+			PUBLIC_KEY = getPublicKey(DEFAULT_PUBLIC_KEY_STR);
 		}
 		if (PRIVATE_KEY == null) {
-			PRIVATE_KEY = getPrivateKey(PRIVATE_KEY_STR);
+			PRIVATE_KEY = getPrivateKey(DEFAULT_PRIVATE_KEY_STR);
 		}
 	}
 
 	/**
 	 * 获取公钥
 	 */
-	@SneakyThrows
-	public static String getRsaPublicKey() {
+	public static String getRsaPublicKey() throws GeneralSecurityException {
 		return HexUtils.bytes2Hex(getPublicKey().getEncoded());
 	}
 
 	/**
 	 * 获取私钥
 	 */
-	@SneakyThrows
-	public static String getRsaPrivateKey() {
+	public static String getRsaPrivateKey() throws GeneralSecurityException {
 		return HexUtils.bytes2Hex(getPrivateKey().getEncoded());
 	}
 
@@ -216,8 +212,7 @@ public class RsaUtils {
 	 * @param key 公钥
 	 * @return 结果
 	 */
-	@SneakyThrows
-	public static String encryptByPublicKey(String res, RSAPublicKey key) {
+	public static String encryptByPublicKey(String res, RSAPublicKey key) throws GeneralSecurityException {
 		return encryptByPublicKey(res, HexUtils.bytes2Hex(key.getEncoded()));
 	}
 
@@ -228,24 +223,21 @@ public class RsaUtils {
 	 * @param key 私钥
 	 * @return 结果
 	 */
-	@SneakyThrows
-	public static String encryptByPrivateKey(String res, RSAPrivateKey key) {
+	public static String encryptByPrivateKey(String res, RSAPrivateKey key) throws GeneralSecurityException {
 		return encryptByPrivateKey(res, HexUtils.bytes2Hex(key.getEncoded()));
 	}
 
 	/**
 	 * 解密-公钥
 	 */
-	@SneakyThrows
-	public static String decryptByPublicKey(String res, RSAPublicKey key) {
+	public static String decryptByPublicKey(String res, RSAPublicKey key) throws GeneralSecurityException {
 		return decryptByPublicKey(res, HexUtils.bytes2Hex(key.getEncoded()));
 	}
 
 	/**
 	 * 解密-私钥
 	 */
-	@SneakyThrows
-	public static String decryptByPrivateKey(String res, RSAPrivateKey key) {
+	public static String decryptByPrivateKey(String res, RSAPrivateKey key) throws GeneralSecurityException {
 		return decryptByPrivateKey(res, HexUtils.bytes2Hex(key.getEncoded()));
 	}
 
@@ -511,8 +503,7 @@ public class RsaUtils {
 	 * @param res 原始报文数据
 	 * @return 结果
 	 */
-	@SneakyThrows
-	public String encryptByPublicKey(String res) {
+	public String encryptByPublicKey(String res) throws GeneralSecurityException {
 		return encryptByPublicKey(res, getRsaPublicKey());
 	}
 
@@ -522,24 +513,21 @@ public class RsaUtils {
 	 * @param res 原始报文数据
 	 * @return 结果
 	 */
-	@SneakyThrows
-	public String encryptByPrivateKey(String res) {
+	public String encryptByPrivateKey(String res) throws GeneralSecurityException {
 		return encryptByPublicKey(res, getRsaPrivateKey());
 	}
 
 	/**
 	 * 解密-公钥
 	 */
-	@SneakyThrows
-	public String decryptByPublicKey(String res) {
+	public String decryptByPublicKey(String res) throws GeneralSecurityException {
 		return decryptByPublicKey(res, getRsaPublicKey());
 	}
 
 	/**
 	 * 解密-私钥
 	 */
-	@SneakyThrows
-	public String decryptByPrivateKey(String res) {
+	public String decryptByPrivateKey(String res) throws GeneralSecurityException {
 		return decryptByPrivateKey(res, getRsaPrivateKey());
 	}
 }

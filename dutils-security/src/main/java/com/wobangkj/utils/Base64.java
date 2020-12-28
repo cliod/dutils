@@ -6,6 +6,7 @@ package com.wobangkj.utils;
  * @author cliod
  * @since 2019/12/5
  */
+@Deprecated
 public final class Base64 {
 
 	static private final int BASE_LENGTH = 128;
