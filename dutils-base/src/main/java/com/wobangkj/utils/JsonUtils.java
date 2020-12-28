@@ -49,9 +49,7 @@ public class JsonUtils {
 
 	@Deprecated
 	public static void setObjectMapper(@NotNull ObjectMapper objectMapper) {
-		if (flat != 0) {
-			throw new UnsupportedOperationException("无法设置此对象");
-		}
+		setFlat(0);
 		((JacksonJsonImpl) JSON).setObjectMapper(objectMapper);
 	}
 
@@ -62,9 +60,7 @@ public class JsonUtils {
 
 	@Deprecated
 	public static void setGson(@NotNull Gson gson) {
-		if (flat != 1) {
-			throw new UnsupportedOperationException("无法设置此对象");
-		}
+		setFlat(1);
 		((GsonJsonImpl) JSON).setGson(gson);
 	}
 
