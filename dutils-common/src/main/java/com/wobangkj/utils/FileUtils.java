@@ -1,11 +1,9 @@
 package com.wobangkj.utils;
 
-import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +12,6 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -79,7 +76,7 @@ public class FileUtils {
 		return path + fileName;
 	}
 
-	private static void checkPath(String path) throws IllegalArgumentException {
+	public static void checkPath(String path) throws IllegalArgumentException {
 		if (OS_NAME.toLowerCase().contains(WIN_NAME)) {
 			Assert.isTrue(!WIN_PATH_SRC.matcher(path).matches(), "文件路径不正确");
 		} else {
@@ -92,9 +89,9 @@ public class FileUtils {
 	 *
 	 * @param response http响应
 	 * @param file     文件
-	 * @throws Exception 异常
+	 * @throws IOException 异常
 	 */
-	public static void download(@NotNull HttpServletResponse response, @NotNull File file) throws Exception {
+	public static void download(@NotNull HttpServletResponse response, @NotNull File file) throws IOException {
 		response.setHeader("content-type", "image/png");
 		// 文件流,(可能下载, 可能打开[浏览器有插件会先打开文件])
 		response.setContentType("application/octet-stream");
@@ -104,7 +101,7 @@ public class FileUtils {
 		byte[] buff = new byte[1024];
 		//创建缓冲输入流
 		try (OutputStream outputStream = response.getOutputStream();
-		     BufferedInputStream bis = new BufferedInputStream(fileToInputStream(file))) {
+		     BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
 			int read = bis.read(buff);
 			//通过while循环写入到指定了的文件夹中
 			while (read != -1) {
@@ -112,8 +109,6 @@ public class FileUtils {
 				outputStream.flush();
 				read = bis.read(buff);
 			}
-		} catch (Exception e) {
-			throw new Exception(e);
 		}
 	}
 
@@ -153,7 +148,7 @@ public class FileUtils {
 	 * @return 结果字符串
 	 */
 	public static @NotNull String getBase64FromInputStream(@NotNull File file) throws IOException {
-		return FileUtils.getBase64FromInputStream(new FileInputStream(file));
+		return getBase64FromInputStream(new FileInputStream(file));
 	}
 
 	/**
@@ -164,7 +159,7 @@ public class FileUtils {
 	 * @param fileName 文件名称
 	 * @throws IOException IO异常
 	 */
-	private static void transferToFile(MultipartFile file, String filePath, String fileName) throws IOException {
+	public static void transferToFile(MultipartFile file, String filePath, String fileName) throws IOException {
 		File dir = new File(filePath, fileName);
 		File path = new File(filePath);
 		boolean makeDir;
@@ -175,19 +170,19 @@ public class FileUtils {
 			}
 		}
 		//写入文档中
-		file.transferTo(dir);
+		transferToFile(file, dir);
 	}
 
 	/**
 	 * 将网络文件MultipartFile转存成内存File
 	 *
-	 * @param file 流文件
-	 * @param path 内存文件
+	 * @param uploadFile 流文件
+	 * @param localFile  内存文件
 	 * @throws IOException IO异常
 	 */
-	private static void transferToFile(@NotNull MultipartFile file, File path) throws IOException {
+	public static void transferToFile(@NotNull MultipartFile uploadFile, @NotNull File localFile) throws IOException {
 		//写入文档中
-		file.transferTo(path);
+		uploadFile.transferTo(localFile);
 	}
 
 	/**
@@ -207,17 +202,14 @@ public class FileUtils {
 	 * @return 输入流
 	 * @throws FileNotFoundException 文件找不到异常
 	 */
-	public static @NotNull InputStream fileToInputStream(@NotNull File file) throws FileNotFoundException {
+	@Deprecated
+	public static @NotNull FileInputStream fileToInputStream(@NotNull File file) throws FileNotFoundException {
 		return new FileInputStream(file);
 	}
 
-	@SneakyThrows
-	public static @Nullable InputStream readFile(String path) {
-		File file = new File(path);
-		if (file.exists()) {
-			return new FileInputStream(file);
-		}
-		return null;
+	@Deprecated
+	public static @NotNull FileInputStream readFile(@NotNull String path) throws FileNotFoundException {
+		return new FileInputStream(path);
 	}
 
 	/**
@@ -227,15 +219,10 @@ public class FileUtils {
 	 * @return 输出流
 	 * @throws IOException io异常
 	 */
-	public static @Nullable ByteArrayOutputStream parse(@NotNull InputStream in) throws IOException {
-		byte[] io = new byte[in.available()];
-		int ch = in.read(io);
-		if (ch > 0) {
-			ByteArrayOutputStream swapStream = new ByteArrayOutputStream(io.length);
-			swapStream.write(io, 0, io.length);
-			return swapStream;
-		}
-		return null;
+	public static @NotNull ByteArrayOutputStream parse(@NotNull InputStream in) throws IOException {
+		ByteArrayOutputStream byteArr = new ByteArrayOutputStream(in.available());
+		parse(in, byteArr);
+		return byteArr;
 	}
 
 	/**
@@ -245,10 +232,7 @@ public class FileUtils {
 	 * @param os 输出流
 	 * @throws IOException io异常
 	 */
-	public static void parse(InputStream in, OutputStream os) throws IOException {
-		if (Objects.isNull(in)) {
-			return;
-		}
+	public static void parse(@NotNull InputStream in, OutputStream os) throws IOException {
 		byte[] io = new byte[in.available()];
 		int ch = in.read(io);
 		if (ch > 0) {

@@ -1,6 +1,7 @@
 package com.wobangkj.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.util.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -102,5 +103,4 @@ public class Md5Utils {
 		byte[] byteArray = md5.digest(password.getBytes(enc));
 		return HexUtils.bytes2Hex(byteArray);
 	}
-
 }

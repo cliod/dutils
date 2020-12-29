@@ -57,7 +57,7 @@ public abstract class Authenticate {
 	}
 
 	private static String genToken(String ip, String id) {
-		return KeyUtils.md5(String.format("%s,%s,%s", LocalDate.now().toString(), ip, id));
+		return KeyUtils.md5Hex(String.format("%s,%s,%s", LocalDate.now().toString(), ip, id));
 	}
 
 	private static void init() {

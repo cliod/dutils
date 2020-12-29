@@ -96,7 +96,18 @@ public class KeyUtils {
 	 * @param value 字符串
 	 * @return MD5值
 	 */
-	public static @NotNull String md5(@NotNull String value) {
+	public static byte[] md5(@NotNull String value) {
+		return DigestUtils.md5(value.getBytes(StandardCharsets.UTF_8));
+	}
+
+	/**
+	 * MD5 计算
+	 * 等效于{@link} com.wobangkj.util.Md5Utils.encode32()
+	 *
+	 * @param value 字符串
+	 * @return MD5值
+	 */
+	public static @NotNull String md5Hex(@NotNull String value) {
 		return DigestUtils.md5Hex(value.getBytes(StandardCharsets.UTF_8));
 	}
 
@@ -107,17 +118,17 @@ public class KeyUtils {
 	 * @return 加密字符串
 	 */
 	private static @NotNull String byte2Hex(byte[] bytes) {
-		StringBuilder stringBuffer = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 		String temp;
 		for (byte b : bytes) {
 			temp = Integer.toHexString(b & 0xFF);
 			if (temp.length() == 1) {
 				// 1得到一位的进行补0操作
-				stringBuffer.append("0");
+				builder.append("0");
 			}
-			stringBuffer.append(temp);
+			builder.append(temp);
 		}
-		return stringBuffer.toString();
+		return builder.toString();
 	}
 
 	/**
@@ -125,6 +136,7 @@ public class KeyUtils {
 	 *
 	 * @return id
 	 */
+	@Deprecated
 	public static @NotNull String generateTimeKey() {
 		return System.currentTimeMillis() + randNum(6);
 	}
