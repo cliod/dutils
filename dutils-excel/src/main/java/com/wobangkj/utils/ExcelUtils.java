@@ -40,9 +40,7 @@ import java.util.function.Consumer;
  */
 public class ExcelUtils {
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-	private final static String DEFAULT_PATH = System.getProperty("user.home") + "/file/excel/";
-	private final static String FILE_DEFAULT_NAME_PRE = "data_" + DateUtils.format(new Date(), "yyyyMMddHHmm");
+	private static final String DEFAULT_PATH = System.getProperty("user.home") + "/file/excel/";
 
 	private ExcelUtils() {
 	}
@@ -55,11 +53,7 @@ public class ExcelUtils {
 	 * @throws IOException io异常
 	 */
 	public static @NotNull File write(List<?> data) throws IOException {
-		Class<?> type;
-		if (data.isEmpty()) {type = null; } else {
-			type = data.get(0).getClass();
-		}
-		return write(data, type);
+		return write(data, null);
 	}
 
 	/**
@@ -181,7 +175,7 @@ public class ExcelUtils {
 	 * @param sheetName 表格名称
 	 * @param head      导出对象类型
 	 */
-	public static void write(OutputStream os, List<?> data, Class<?> head, String sheetName, ExcelTypeEnum fileType) {
+	public static void write(OutputStream os, List<?> data, Class<?> head, String sheetName, @NotNull ExcelTypeEnum fileType) {
 		EasyExcel.write(os, head)
 				.excelType(fileType).sheet(sheetName).registerWriteHandler(getStyleStrategy()).doWrite(data);
 	}
@@ -376,16 +370,18 @@ public class ExcelUtils {
 	 * @return 结果
 	 */
 	public static String getName(Class<?> head) {
+		String defaultFileName = "data_" + DateUtils.format(new Date(), "yyyyMMddHHmm");
 		if (Objects.isNull(head)) {
-			return FILE_DEFAULT_NAME_PRE;
+			return defaultFileName;
 		}
 		Name name = head.getDeclaredAnnotation(Name.class);
 		if (Objects.isNull(name)) {
-			return FILE_DEFAULT_NAME_PRE;
+			return defaultFileName;
 		}
-		return StringUtils.isBlank(name.value()) ? FILE_DEFAULT_NAME_PRE : name.value();
+		return StringUtils.isBlank(name.value()) ? defaultFileName : name.value();
 	}
 
+	@Deprecated
 	public static @NotNull CellWriteHandler getStyleStrategy() {
 		return new LongestMatchColumnWidthStyleStrategy();
 	}

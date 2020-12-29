@@ -20,8 +20,11 @@ public class KeyUtils {
 
 	/**
 	 * 随机数
+	 * 当len小于等于0时，结果为 "0"
+	 * 当len在1~10之间，有正常结果
+	 * 当len大于10，结果长度为10
 	 *
-	 * @param len 长度
+	 * @param len 长度，取值 0~10
 	 * @return 随机数
 	 */
 	public static @NotNull String randNum(int len) {
@@ -34,10 +37,7 @@ public class KeyUtils {
 	 * @param value 待解密字符
 	 * @return 解密字符
 	 */
-	public static @NotNull String decode(String value) {
-		if (StringUtils.isEmpty(value)) {
-			return "";
-		}
+	public static @NotNull String decode(@NotNull String value) {
 		return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
 	}
 
@@ -48,9 +48,6 @@ public class KeyUtils {
 	 * @return 解密字符
 	 */
 	public static @NotNull String decode(byte[] value) {
-		if (Objects.isNull(value) || value.length == 0) {
-			return "";
-		}
 		return new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
 	}
 
@@ -60,10 +57,7 @@ public class KeyUtils {
 	 * @param value 待加密字符
 	 * @return 加密字符
 	 */
-	public static @NotNull String encode(String value) {
-		if (StringUtils.isEmpty(value)) {
-			return "";
-		}
+	public static @NotNull String encode(@NotNull String value) {
 		return Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
 	}
 
@@ -74,9 +68,6 @@ public class KeyUtils {
 	 * @return 加密字符
 	 */
 	public static @NotNull String encode(byte[] value) {
-		if (ArrayUtils.isEmpty(value)) {
-			return "";
-		}
 		return Base64.getEncoder().encodeToString(value);
 	}
 
@@ -199,6 +190,7 @@ public class KeyUtils {
 	 * @param content 内容
 	 * @return 字节数
 	 */
+	@Deprecated
 	public static int getByteSize(String content) {
 		int size = 0;
 		if (null != content) {

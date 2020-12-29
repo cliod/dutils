@@ -33,7 +33,7 @@ public class JsonUtils {
 
 	@Deprecated
 	public static @NotNull ObjectMapper getJackson() {
-		if (flat != 0) {
+		if (flat != 0 && !(JSON instanceof JacksonJsonImpl)) {
 			throw new UnsupportedOperationException("不存在此对象");
 		}
 		return ((JacksonJsonImpl) JSON).getObjectMapper();
@@ -41,7 +41,7 @@ public class JsonUtils {
 
 	@Deprecated
 	public static @NotNull Gson getGoogleJson() {
-		if (flat != 1) {
+		if (flat != 1 && !(JSON instanceof GsonJsonImpl)) {
 			throw new UnsupportedOperationException("不存在此对象");
 		}
 		return ((GsonJsonImpl) JSON).getGson();
@@ -50,7 +50,11 @@ public class JsonUtils {
 	@Deprecated
 	public static void setObjectMapper(@NotNull ObjectMapper objectMapper) {
 		setFlat(0);
-		((JacksonJsonImpl) JSON).setObjectMapper(objectMapper);
+		if (JSON instanceof JacksonJsonImpl) {
+			((JacksonJsonImpl) JSON).setObjectMapper(objectMapper);
+		} else {
+			JSON = new JacksonJsonImpl(objectMapper);
+		}
 	}
 
 	@Deprecated
@@ -61,7 +65,11 @@ public class JsonUtils {
 	@Deprecated
 	public static void setGson(@NotNull Gson gson) {
 		setFlat(1);
-		((GsonJsonImpl) JSON).setGson(gson);
+		if (JSON instanceof GsonJsonImpl) {
+			((GsonJsonImpl) JSON).setGson(gson);
+		}else {
+			JSON = new GsonJsonImpl(gson);
+		}
 	}
 
 	/**
@@ -72,7 +80,6 @@ public class JsonUtils {
 	 * @param <T>   类型
 	 * @return java对象
 	 */
-	@SneakyThrows
 	public static <T> T fromJson(String json, Class<T> clazz) {
 		return JSON.toObject(json, clazz);
 	}
@@ -93,7 +100,6 @@ public class JsonUtils {
 	 * @param json json字符串
 	 * @return Map对象
 	 */
-	@SneakyThrows
 	public static Map<String, Object> toMap(String json) {
 		return JSON.toMap(json);
 	}
@@ -105,7 +111,6 @@ public class JsonUtils {
 	 * @param json json字符串
 	 * @return List::Map对象
 	 */
-	@SneakyThrows
 	public static <T> List<T> toList(String json) {
 		return JSON.toList(json);
 	}
@@ -116,7 +121,6 @@ public class JsonUtils {
 	 * @param obj 对象
 	 * @return 字符串
 	 */
-	@SneakyThrows
 	public static String toJson(Object obj) {
 		return JSON.toJson(obj);
 	}

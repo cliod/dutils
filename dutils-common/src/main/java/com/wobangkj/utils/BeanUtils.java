@@ -30,7 +30,7 @@ public class BeanUtils {
 	 * @see com.wobangkj.api.asserts.Assert#isNull(Object, String)
 	 */
 	@Deprecated
-	public static <T> void verifyNonNull(T obj, @NotNull EnumTextMsg e) {
+	public static <T> void verifyNonNull(T obj, @NotNull Supplier<String> e) {
 		if (isNull(obj) || isEmpty(obj)) {
 			throw new NullPointerException(e.get());
 		}
@@ -46,7 +46,7 @@ public class BeanUtils {
 	 * @see Objects#requireNonNull(Object, Supplier)
 	 */
 	@Deprecated
-	public static <T> T requireNonNull(T obj, @NotNull EnumTextMsg e) {
+	public static <T> T requireNonNull(T obj, @NotNull Supplier<String> e) {
 		if (isNull(obj)) {
 			throw new NullPointerException(e.get());
 		}
@@ -72,7 +72,9 @@ public class BeanUtils {
 	 * @param obj 对象
 	 * @param <T> 对象类型
 	 * @return 是否为空
+	 * @see Objects#isNull(Object)
 	 */
+	@Deprecated
 	public static <T> boolean isNull(T obj) {
 		return Objects.isNull(obj);
 	}
