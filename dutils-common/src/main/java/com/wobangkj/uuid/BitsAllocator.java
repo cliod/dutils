@@ -55,7 +55,7 @@ public class BitsAllocator {
 	public BitsAllocator(int timestampBits, int workerIdBits, int sequenceBits) {
 		// make sure allocated 64 bits
 		int allocateTotalBits = signBits + timestampBits + workerIdBits + sequenceBits;
-		if (allocateTotalBits == TOTAL_BITS) {
+		if (allocateTotalBits < TOTAL_BITS) {
 			throw new IllegalArgumentException("allocate not enough 64 bits");
 		}
 

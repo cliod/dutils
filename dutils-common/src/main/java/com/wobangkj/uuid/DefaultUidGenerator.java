@@ -18,10 +18,12 @@ package com.wobangkj.uuid;
 import com.wobangkj.exception.UidGenerateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -56,6 +58,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DefaultUidGenerator implements UidGenerator {
 
+	private static final DefaultUidGenerator instance;
+
+	static {
+		instance = new DefaultUidGenerator(() -> 1L);
+		instance.afterPropertiesSet();
+	}
+
 	private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	/**
 	 * Bits allocate
@@ -63,33 +72,47 @@ public class DefaultUidGenerator implements UidGenerator {
 	protected int timeBits = 28;
 	protected int workerBits = 22;
 	protected int seqBits = 13;
-
 	/**
 	 * Customer epoch, unit as second. For example 2016-05-20 (ms: 1463673600000)
 	 */
 	protected String epochStr = "2016-05-20";
 	protected long epochSeconds = TimeUnit.MILLISECONDS.toSeconds(1463673600000L);
-
 	/**
 	 * Stable fields after spring bean initializing
 	 */
 	protected BitsAllocator bitsAllocator;
 	protected long workerId;
-
 	/**
 	 * Volatile fields caused by nextId()
 	 */
 	protected long sequence = 0L;
 	protected long lastSecond = -1L;
-
 	/**
 	 * Spring property
 	 */
 	protected WorkerIdAssigner workerIdAssigner;
 
+	private DefaultUidGenerator() {
+	}
+
+	public DefaultUidGenerator(@NotNull WorkerIdAssigner workerIdAssigner) {
+		this.workerIdAssigner = workerIdAssigner;
+	}
+
+	public DefaultUidGenerator(BitsAllocator bitsAllocator, @NotNull WorkerIdAssigner workerIdAssigner) {
+		this.bitsAllocator = bitsAllocator;
+		this.workerIdAssigner = workerIdAssigner;
+	}
+
+	public static DefaultUidGenerator getInstance() {
+		return instance;
+	}
+
 	public void afterPropertiesSet() {
 		// initialize bits allocator
-		bitsAllocator = new BitsAllocator(timeBits, workerBits, seqBits);
+		if (Objects.isNull(bitsAllocator)) {
+			bitsAllocator = new BitsAllocator(timeBits, workerBits, seqBits);
+		}
 
 		// initialize worker id
 		workerId = workerIdAssigner.assignWorkerId();
@@ -127,7 +150,7 @@ public class DefaultUidGenerator implements UidGenerator {
 		String thatTimeStr = format.format(thatTime);
 
 		// format as string
-		return String.format("{\"UID\":\"%d\",\"timestamp\":\"%s\",\"workerId\":\"%d\",\"sequence\":\"%d\"}",
+		return String.format("{\"uid\":\"%d\",\"timestamp\":\"%s\",\"workerId\":\"%d\",\"sequence\":\"%d\"}",
 				uid, thatTimeStr, workerId, sequence);
 	}
 

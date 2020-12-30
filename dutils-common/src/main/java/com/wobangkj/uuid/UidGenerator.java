@@ -22,22 +22,35 @@ import com.wobangkj.exception.UidGenerateException;
  *
  * @author yutianbao
  */
+@FunctionalInterface
 public interface UidGenerator {
 
-    /**
-     * Get a unique ID
-     *
-     * @return UID
-     * @throws UidGenerateException 异常
-     */
-    long getUid() throws UidGenerateException;
+	/**
+	 * Get a unique ID
+	 *
+	 * @return UID
+	 * @throws UidGenerateException 异常
+	 */
+	long getUid() throws UidGenerateException;
 
-    /**
-     * Parse the UID into elements which are used to generate the UID. <br>
-     * Such as timestamp & workerId & sequence...
-     *
-     * @param uid uid
-     * @return Parsed info
-     */
-    String parseUid(long uid);
+	/**
+	 * Parse the UID into elements which are used to generate the UID. <br>
+	 * Such as timestamp & workerId & sequence...
+	 *
+	 * @param uid uid
+	 * @return Parsed info
+	 */
+	default String parseUid(long uid) {
+		return String.format("{\"uid\": \"%d\"}", getUid());
+	}
+
+	/**
+	 * Parse the UID into elements which are used to generate the UID. <br>
+	 * Such as timestamp & workerId & sequence...
+	 *
+	 * @return Parsed info
+	 */
+	default String parseUid() {
+		return parseUid(getUid());
+	}
 }
