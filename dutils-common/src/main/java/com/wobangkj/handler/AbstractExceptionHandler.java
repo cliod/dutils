@@ -2,10 +2,7 @@ package com.wobangkj.handler;
 
 import com.wobangkj.api.Response;
 import com.wobangkj.bean.Res;
-import com.wobangkj.enums.ResEnum;
-import com.wobangkj.exception.AccessException;
 import com.wobangkj.exception.AppException;
-import com.wobangkj.exception.AuthorizeException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -44,40 +41,6 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 
 	@Getter
 	protected int code = 217;
-
-	/**
-	 * 自定义授权异常
-	 *
-	 * @param e 异常
-	 * @return 结果消息
-	 */
-	@Deprecated
-	@ExceptionHandler(AuthorizeException.class)
-	public Object authorizeException(AuthorizeException e) {
-		Res r = Res.empty();
-		r.setStatus(this.getCode());
-		r.setMsg(ResEnum.NOT_AUTH.getMsg());
-		r.setErr(e.getAuth());
-		log.warn(e.getMessage());
-		return r;
-	}
-
-	/**
-	 * 自定义访问异常
-	 *
-	 * @param e 异常
-	 * @return 结果消息
-	 */
-	@Deprecated
-	@ExceptionHandler(AccessException.class)
-	public Object accessException(AccessException e) {
-		Res r = Res.empty();
-		r.setStatus(this.getCode());
-		r.setMsg(e.getMessage());
-		r.setErr(e.getAccess());
-		log.warn(e.getMessage());
-		return r;
-	}
 
 	/**
 	 * 自定义访问异常

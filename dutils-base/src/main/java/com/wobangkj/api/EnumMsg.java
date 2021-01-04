@@ -46,6 +46,6 @@ public interface EnumMsg extends SessionSerializable {
 	 * @return 可抛出的异常
 	 */
 	default Throwable toThrowable() {
-		return new AppException(getCode(), getMsg());
+		return new AppException(this);
 	}
 }

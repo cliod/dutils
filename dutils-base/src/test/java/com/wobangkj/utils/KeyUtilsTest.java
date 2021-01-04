@@ -46,8 +46,8 @@ public class KeyUtilsTest {
 
 	@Test
 	public void md5() {
-		System.out.println(KeyUtils.md5(""));
-		System.out.println(KeyUtils.md5("123"));
+		System.out.println(KeyUtils.md5Hex(""));
+		System.out.println(KeyUtils.md5Hex("123"));
 	}
 
 	@Test
