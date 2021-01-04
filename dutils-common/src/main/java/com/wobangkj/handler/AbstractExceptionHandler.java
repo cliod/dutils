@@ -4,6 +4,7 @@ import com.wobangkj.api.Response;
 import com.wobangkj.bean.Res;
 import com.wobangkj.enums.ResEnum;
 import com.wobangkj.exception.AccessException;
+import com.wobangkj.exception.AppException;
 import com.wobangkj.exception.AuthorizeException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +75,21 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		r.setStatus(this.getCode());
 		r.setMsg(e.getMessage());
 		r.setErr(e.getAccess());
+		log.warn(e.getMessage());
+		return r;
+	}
+
+	/**
+	 * 自定义访问异常
+	 *
+	 * @param e 异常
+	 * @return 结果消息
+	 */
+	@ExceptionHandler(AppException.class)
+	public Object appException(AppException e) {
+		Res r = Res.empty();
+		r.setStatus(e.getCode());
+		r.setMsg(e.getMessage());
 		log.warn(e.getMessage());
 		return r;
 	}

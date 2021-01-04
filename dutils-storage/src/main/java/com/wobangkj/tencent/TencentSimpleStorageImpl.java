@@ -40,7 +40,7 @@ public class TencentSimpleStorageImpl implements CloudStorage {
 	private final String secretKey;
 	@Getter
 	private String bucketName;
-	private String preUrl;
+	private String prefixUrl;
 	private COSClient client;
 
 	public TencentSimpleStorageImpl(String region, String secretId, String secretKey, String bucketName) {
@@ -48,13 +48,13 @@ public class TencentSimpleStorageImpl implements CloudStorage {
 		this.secretKey = secretKey;
 		this.region = region;
 		this.bucketName = bucketName;
-		this.preUrl = bucketName + "." + region;
+		this.prefixUrl = bucketName + "." + region;
 		init(true);
 	}
 
 	public void setBucketName(String bucketName) {
 		this.bucketName = bucketName;
-		this.preUrl = bucketName + "." + region;
+		this.prefixUrl = bucketName + "." + region;
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class TencentSimpleStorageImpl implements CloudStorage {
 		String key = LocalDate.now().format(formatter) + File.separator + fileName;
 		PutObjectResult result = client.putObject(this.bucketName, key, is, new ObjectMetadata());
 		log.debug("[OSS文件存入成功]: {}", result.getETag());
-		return this.preUrl + key;
+		return this.prefixUrl + key;
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class TencentSimpleStorageImpl implements CloudStorage {
 		String key = LocalDate.now().format(formatter) + File.separator + file.getName();
 		PutObjectResult result = client.putObject(this.bucketName, key, file);
 		log.debug("[OSS文件存入成功]: {}", result.getETag());
-		return this.preUrl + key;
+		return this.prefixUrl + key;
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class TencentSimpleStorageImpl implements CloudStorage {
 		// 查看Bucket中的Object。
 		ObjectListing objectListing = client.listObjects(bucketName);
 		return objectListing.getObjectSummaries().stream().map(e ->
-				Summary.of(e.getSize(), preUrl + e.getKey(), e.getStorageClass(), Summary.Owner.of(e.getOwner()), e.getLastModified())
+				Summary.of(e.getSize(), prefixUrl + e.getKey(), e.getStorageClass(), com.wobangkj.bean.Owner.of(e.getOwner()), e.getLastModified())
 		).collect(Collectors.toList());
 	}
 

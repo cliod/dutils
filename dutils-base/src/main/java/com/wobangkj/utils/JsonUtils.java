@@ -8,7 +8,6 @@ import com.wobangkj.impl.GsonJsonImpl;
 import com.wobangkj.impl.JacksonJsonImpl;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -67,7 +66,7 @@ public class JsonUtils {
 		setFlat(1);
 		if (JSON instanceof GsonJsonImpl) {
 			((GsonJsonImpl) JSON).setGson(gson);
-		}else {
+		} else {
 			JSON = new GsonJsonImpl(gson);
 		}
 	}
@@ -81,6 +80,18 @@ public class JsonUtils {
 	 * @return java对象
 	 */
 	public static <T> T fromJson(String json, Class<T> clazz) {
+		return JSON.fromJson(json, clazz);
+	}
+
+	/**
+	 * json转javabean
+	 *
+	 * @param json  json字符串
+	 * @param clazz 类
+	 * @param <T>   类型
+	 * @return java对象
+	 */
+	public static <T> T toObject(String json, Class<T> clazz) {
 		return JSON.toObject(json, clazz);
 	}
 

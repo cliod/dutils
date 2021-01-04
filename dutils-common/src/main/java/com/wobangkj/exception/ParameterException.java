@@ -7,8 +7,10 @@ import org.jetbrains.annotations.NotNull;
  * 通用参数异常
  *
  * @author cliod
+ * @see IllegalArgumentException
  * @since 11/28/20 10:10 AM
  */
+@Deprecated
 public class ParameterException extends AppException {
 
 	public ParameterException(@NotNull EnumMsg re) {

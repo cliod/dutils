@@ -37,17 +37,24 @@ public class RefUtils {
 	 * @param fieldName 字段
 	 * @return 值
 	 */
-	public static Object getFieldValue(@NotNull Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+	public static @NotNull Object getFieldValue(@NotNull Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
 		Field field = obj.getClass().getDeclaredField(fieldName);
 		field.setAccessible(true);
 		return field.get(obj);
 	}
 
-	public static <V> V getFieldValue(@NotNull Object obj, String fieldName, Class<V> type) throws IllegalAccessException, NoSuchFieldException {
+	/**
+	 * 获取对象字段值
+	 *
+	 * @param obj       对象
+	 * @param fieldName 字段
+	 * @return 值
+	 */
+	public static @NotNull <V> V getFieldValue(@NotNull Object obj, String fieldName, Class<V> type) throws IllegalAccessException, NoSuchFieldException {
 		Field field = obj.getClass().getDeclaredField(fieldName);
 		field.setAccessible(true);
-		if (!field.getType().equals(type)) {
-			return null;
+		if (!field.getType().isAssignableFrom(type)) {
+			throw new IllegalAccessException("类型不匹配");
 		} else {
 			@SuppressWarnings("unchecked")
 			V v = (V) field.get(obj);
@@ -418,7 +425,7 @@ public class RefUtils {
 	 * @param <T>   类型
 	 * @return 结果对象
 	 */
-	public static @NotNull <T> T newInstance(@NotNull Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+	public static @NotNull <T> T newInstance(@NotNull Class<T> clazz) throws ReflectiveOperationException {
 		return clazz.getConstructor().newInstance();
 	}
 
@@ -429,7 +436,7 @@ public class RefUtils {
 	 * @param <T>       类型
 	 * @return 结果对象
 	 */
-	public static @NotNull <T> T newInstance(@NotNull String className) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
+	public static @NotNull <T> T newInstance(@NotNull String className) throws ReflectiveOperationException {
 		@SuppressWarnings("unchecked")
 		Class<T> clazz = (Class<T>) Class.forName(className);
 		return newInstance(clazz);

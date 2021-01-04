@@ -61,7 +61,7 @@ public class DefaultUidGenerator implements UidGenerator {
 	private static final DefaultUidGenerator instance;
 
 	static {
-		instance = new DefaultUidGenerator(() -> 1L);
+		instance = new DefaultUidGenerator();
 		instance.afterPropertiesSet();
 	}
 
@@ -93,6 +93,7 @@ public class DefaultUidGenerator implements UidGenerator {
 	protected WorkerIdAssigner workerIdAssigner;
 
 	private DefaultUidGenerator() {
+		this(() -> 1L);
 	}
 
 	public DefaultUidGenerator(@NotNull WorkerIdAssigner workerIdAssigner) {

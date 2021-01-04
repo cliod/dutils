@@ -38,23 +38,4 @@ public class Summary {
 		this.owner = owner;
 		this.lastModified = lastModified;
 	}
-
-	/**
-	 * owner兼容对象
-	 */
-	@Data
-	public static class Owner implements Serializable {
-		private static final long serialVersionUID = -627349170629705388L;
-		private String displayName;
-		private String id;
-
-		@SneakyThrows
-		public static Owner of(Object obj) {
-			Owner owner = new Owner();
-			Map<String, Object> o = RefUtils.getFieldValues(obj);
-			owner.setDisplayName((String) o.get("displayName"));
-			owner.setId((String) o.get("id"));
-			return owner;
-		}
-	}
 }

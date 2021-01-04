@@ -117,7 +117,7 @@ public class KeyUtils {
 	 * @param bytes 字符byte
 	 * @return 加密字符串
 	 */
-	private static @NotNull String byte2Hex(byte[] bytes) {
+	public static @NotNull String byte2Hex(byte[] bytes) {
 		StringBuilder builder = new StringBuilder();
 		String temp;
 		for (byte b : bytes) {

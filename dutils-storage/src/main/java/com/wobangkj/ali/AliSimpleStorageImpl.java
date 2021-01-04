@@ -38,7 +38,7 @@ public class AliSimpleStorageImpl implements CloudStorage {
 	private final String accessKeySecret;
 	@Getter
 	private String bucketName;
-	private String preUrl;
+	private String prefixUrl;
 	private OSSClient client;
 
 	public AliSimpleStorageImpl(String endpoint, String accessKeyId, String accessKeySecret, String bucketName) {
@@ -46,13 +46,13 @@ public class AliSimpleStorageImpl implements CloudStorage {
 		this.accessKeySecret = accessKeySecret;
 		this.endpoint = endpoint;
 		this.bucketName = bucketName;
-		this.preUrl = bucketName + "." + endpoint;
+		this.prefixUrl = bucketName + "." + endpoint;
 		init(true);
 	}
 
 	public void setBucketName(String bucketName) {
 		this.bucketName = bucketName;
-		this.preUrl = bucketName + "." + endpoint;
+		this.prefixUrl = bucketName + "." + endpoint;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class AliSimpleStorageImpl implements CloudStorage {
 		String suffix = LocalDate.now().format(formatter) + File.separator + fileName;
 		PutObjectResult result = client.putObject(this.bucketName, suffix, is);
 		log.debug("[OSS文件存入成功]: {}", result.getETag());
-		return this.preUrl + suffix;
+		return this.prefixUrl + suffix;
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class AliSimpleStorageImpl implements CloudStorage {
 		// 查看Bucket中的Object。
 		ObjectListing objectListing = client.listObjects(bucketName);
 		return objectListing.getObjectSummaries().stream().map(e ->
-				Summary.of(e.getSize(), preUrl + e.getKey(), e.getStorageClass(), Summary.Owner.of(e.getOwner()), e.getLastModified())
+				Summary.of(e.getSize(), prefixUrl + e.getKey(), e.getStorageClass(), com.wobangkj.bean.Owner.of(e.getOwner()), e.getLastModified())
 		).collect(Collectors.toList());
 	}
 

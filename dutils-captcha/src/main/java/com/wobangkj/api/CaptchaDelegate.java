@@ -3,7 +3,6 @@ package com.wobangkj.api;
 import cn.hutool.captcha.AbstractCaptcha;
 import cn.hutool.captcha.ICaptcha;
 import cn.hutool.captcha.generator.CodeGenerator;
-import lombok.SneakyThrows;
 
 import java.awt.*;
 
@@ -27,8 +26,7 @@ public class CaptchaDelegate extends BaseCustomCaptcha implements ICaptcha {
 	 * @param codeCount      字符个数
 	 * @param interfereCount 验证码干扰元素个数
 	 */
-	@SneakyThrows
-	public CaptchaDelegate(int width, int height, int codeCount, int interfereCount, Class<? extends AbstractCaptcha> delegate) {
+	public CaptchaDelegate(int width, int height, int codeCount, int interfereCount, Class<? extends AbstractCaptcha> delegate) throws ReflectiveOperationException {
 		super(width, height, codeCount, interfereCount);
 		this.delegate = delegate.getConstructor(int.class, int.class, int.class, int.class).newInstance(width, height, codeCount, interfereCount);
 	}
@@ -41,8 +39,7 @@ public class CaptchaDelegate extends BaseCustomCaptcha implements ICaptcha {
 	 * @param generator      验证码生成器
 	 * @param interfereCount 验证码干扰元素个数
 	 */
-	@SneakyThrows
-	public CaptchaDelegate(int width, int height, CodeGenerator generator, int interfereCount, Class<? extends AbstractCaptcha> delegate) {
+	public CaptchaDelegate(int width, int height, CodeGenerator generator, int interfereCount, Class<? extends AbstractCaptcha> delegate) throws ReflectiveOperationException {
 		super(width, height, generator, interfereCount);
 		this.delegate = delegate.getConstructor(int.class, int.class, CodeGenerator.class, int.class).newInstance(width, height, generator, interfereCount);
 	}
