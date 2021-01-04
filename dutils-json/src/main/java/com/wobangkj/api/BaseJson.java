@@ -2,7 +2,6 @@ package com.wobangkj.api;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Json序列化
@@ -29,7 +28,20 @@ public abstract class BaseJson implements IJson {
 	 * @param <T>  泛型
 	 * @return java对象
 	 */
+	@Override
 	public abstract <T> T toObject(CharSequence str, Class<T> type);
+
+	/**
+	 * json字符串转指定类型java对象
+	 *
+	 * @param str  json字符串
+	 * @param type 类型
+	 * @param <T>  泛型
+	 * @return java对象
+	 */
+	public <T> T fromJson(CharSequence str, Class<T> type) {
+		return this.toObject(str, type);
+	}
 
 	/**
 	 * json字符串转java对象

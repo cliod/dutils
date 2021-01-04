@@ -1,5 +1,7 @@
 package com.wobangkj.api;
 
+import java.util.Map;
+
 /**
  * 通用封装 Json接口
  *
@@ -33,7 +35,7 @@ public interface IJson {
 	 * @return java对象
 	 */
 	default Object toObject(CharSequence str) {
-		return this.toObject(str, Object.class);
+		return this.toObject(str, Map.class);
 	}
 
 	/**

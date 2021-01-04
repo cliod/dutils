@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>spring-boot-starters</artifactId>
-        <version>5.2.6</version>
+        <version>5.2.7</version>
     </parent>
 
     <artifactId>starter-dutils-sms</artifactId>
@@ -37,28 +37,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring.boot.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <!--短信sdk-->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>[4.5.6,)</version>
-            <optional>true</optional>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-dysmsapi -->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
-            <version>2.1.0</version>
-            <optional>true</optional>
-        </dependency>
-        <!-- 请到https://search.maven.org/search?q=tencentcloud-sdk-java查询最新版本 -->
-        <dependency>
-            <groupId>com.tencentcloudapi</groupId>
-            <artifactId>tencentcloud-sdk-java</artifactId>
-            <version>3.1.147</version>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>
