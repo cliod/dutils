@@ -75,7 +75,7 @@ public final class Response {
 	 * @return 用于快速返回Res
 	 */
 	public static @NotNull Res ok(Maps<String, Object> res) {
-		return ok().addAll(res);
+		return Res.from(res).add("status", SUCCESS_CODE).add("msg", "请求成功");
 	}
 
 	/**
