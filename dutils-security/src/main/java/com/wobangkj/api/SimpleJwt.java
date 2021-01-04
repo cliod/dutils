@@ -1,12 +1,9 @@
 package com.wobangkj.api;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
@@ -24,23 +21,24 @@ public class SimpleJwt extends Jwt implements Signable {
 	 */
 	protected boolean isInitialize;
 
+	@SneakyThrows
 	protected SimpleJwt() {
 		super();
-		isInitialize = false;
+		isInitialize = true;
 	}
 
-	@SneakyThrows
+	public SimpleJwt(KeyGenerator generator) throws NoSuchAlgorithmException {
+		super(generator);
+		isInitialize = true;
+	}
+
 	public static @NotNull SimpleJwt getInstance() {
-		SimpleJwt jwt = INSTANCE;
-		jwt.initialize();
-		return jwt;
+		return INSTANCE;
 	}
 
 	@Deprecated
-	public static @NotNull SimpleJwt init() throws NoSuchAlgorithmException {
-		SimpleJwt jwt = INSTANCE;
-		jwt.initialize(KeyGenerator.getInstance(MAC_NAME));
-		return jwt;
+	public static @NotNull SimpleJwt init() {
+		return INSTANCE;
 	}
 
 	/**
@@ -90,13 +88,8 @@ public class SimpleJwt extends Jwt implements Signable {
 	}
 
 	@Override
-	protected void initialize() {
-		SecretKey secretKey = keyGenerator.generateKey();
-		algorithm = Algorithm.HMAC256(secretKey.getEncoded());
-		/*
-		 * 校验器 用于生成 JWTVerifier 校验器
-		 */
-		verifier = JWT.require(algorithm).build();
+	protected void initialize() throws NoSuchAlgorithmException {
 		this.isInitialize = true;
+		super.initialize();
 	}
 }

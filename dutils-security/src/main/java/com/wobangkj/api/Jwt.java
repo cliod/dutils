@@ -1,14 +1,15 @@
 package com.wobangkj.api;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.impl.NullClaim;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Objects;
@@ -46,9 +47,12 @@ public abstract class Jwt implements Signable {
 	 */
 	protected KeyGenerator keyGenerator;
 
-	@SneakyThrows
-	protected Jwt() {
-		keyGenerator = KeyGenerator.getInstance(MAC_NAME);
+	protected Jwt() throws NoSuchAlgorithmException {
+		this.initialize();
+	}
+
+	public Jwt(KeyGenerator keyGenerator) throws NoSuchAlgorithmException {
+		this.initialize(keyGenerator);
 	}
 
 	/**
@@ -87,8 +91,7 @@ public abstract class Jwt implements Signable {
 	 * @return 实例对象
 	 */
 	@Override
-	public @NotNull
-	Claim unsign(String jwt) {
+	public @NotNull Claim unsign(String jwt) {
 		final DecodedJWT claims = verifier.verify(jwt);
 		Date date = claims.getExpiresAt();
 		long exp = date.getTime();
@@ -105,18 +108,31 @@ public abstract class Jwt implements Signable {
 				.withClaim(PAYLOAD, obj).sign(algorithm);
 	}
 
+	/**
+	 * 初始化
+	 *
+	 * @param generator 秘钥生成器
+	 * @throws NoSuchAlgorithmException 没有这样的算法异常
+	 */
 	protected void initialize(KeyGenerator generator) throws NoSuchAlgorithmException {
-		if (!Objects.isNull(generator)) {
+		if (Objects.nonNull(generator)) {
 			this.keyGenerator = generator;
 		}
-		if (null == this.keyGenerator) {
+		if (Objects.isNull(this.keyGenerator)) {
 			this.keyGenerator = KeyGenerator.getInstance(MAC_NAME);
 		}
-		this.initialize();
+		SecretKey secretKey = keyGenerator.generateKey();
+		algorithm = Algorithm.HMAC256(secretKey.getEncoded());
+		/*
+		 * 校验器 用于生成 JWTVerifier 校验器
+		 */
+		verifier = JWT.require(algorithm).build();
 	}
 
 	/**
 	 * 初始化
 	 */
-	protected abstract void initialize();
+	protected void initialize() throws NoSuchAlgorithmException {
+		initialize(KeyGenerator.getInstance(MAC_NAME));
+	}
 }

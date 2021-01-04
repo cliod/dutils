@@ -1,14 +1,16 @@
 package com.wobangkj.api;
 
+import com.wobangkj.exception.SecretException;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -19,24 +21,32 @@ import java.security.NoSuchAlgorithmException;
  */
 public class FileStorageJwt extends StorageJwt implements Signable {
 
-	private static final FileStorageJwt INSTANCE = new FileStorageJwt("secret.key");
+	private static final FileStorageJwt INSTANCE = new FileStorageJwt();
+
 	@Getter
 	@Setter
 	private String filename;
 
-	protected FileStorageJwt(String filename) {
+	@SneakyThrows
+	private FileStorageJwt() {
+		this("jwt.secret.key");
+	}
+
+	protected FileStorageJwt(String filename) throws NoSuchAlgorithmException {
 		super();
 		this.filename = filename;
 	}
 
-	@SneakyThrows
-	public static @NotNull FileStorageJwt getInstance() {
-		FileStorageJwt jwt = INSTANCE;
-		jwt.initialize();
-		return jwt;
+	public FileStorageJwt(KeyGenerator generator, String filename) throws NoSuchAlgorithmException {
+		super(generator);
+		this.filename = filename;
 	}
 
-	@SneakyThrows
+	public static @NotNull FileStorageJwt getInstance() {
+		return INSTANCE;
+	}
+
+	@Deprecated
 	public static @NotNull FileStorageJwt getInstance(String filename) {
 		FileStorageJwt jwt = INSTANCE;
 		jwt.setFilename(filename);
@@ -45,33 +55,34 @@ public class FileStorageJwt extends StorageJwt implements Signable {
 	}
 
 	@Deprecated
-	public static @NotNull FileStorageJwt init() throws NoSuchAlgorithmException {
-		FileStorageJwt jwt = INSTANCE;
-		jwt.initialize(KeyGenerator.getInstance(MAC_NAME));
-		return jwt;
+	public static @NotNull FileStorageJwt init() {
+		return INSTANCE;
 	}
 
 	@Override
-	protected byte[] getSecret() {
-		File file = new File(filename);
-		byte[] bytes = new byte[Math.toIntExact(file.length())];
-		try (FileInputStream fis = new FileInputStream(file)) {
+	protected byte[] getSecret() throws SecretException {
+		byte[] bytes;
+		try (FileInputStream fis = new FileInputStream(this.filename)) {
+			bytes = new byte[Math.toIntExact(fis.available())];
 			int i = fis.read(bytes);
 			if (i > 0) {
 				return bytes;
 			}
-		} catch (Exception ignore) {}
+		} catch (IOException e) {
+			throw new SecretException(217, e);
+		}
 		return bytes;
 	}
 
 	@Override
-	protected void setSecret(byte[] data) {
+	protected void setSecret(byte[] data) throws SecretException {
 		if (data != null) {
-			File file = new File(filename);
-			try (FileOutputStream fos = new FileOutputStream(file)) {
+			try (FileOutputStream fos = new FileOutputStream(this.filename)) {
 				fos.write(data, 0, data.length);
 				fos.flush();
-			} catch (Exception ignore) {}
+			} catch (Exception e) {
+				throw new SecretException(217, e);
+			}
 		}
 	}
 }
