@@ -55,6 +55,16 @@ public final class Response {
 	}
 
 	/**
+	 * 从Maps的对象
+	 *
+	 * @param res 原对象
+	 * @return 成功对象
+	 */
+	public static @NotNull Res ok(Maps<String, Object> res) {
+		return Res.from(res).addAll(OK);
+	}
+
+	/**
 	 * 分页返回
 	 *
 	 * @param pager 分页结果
