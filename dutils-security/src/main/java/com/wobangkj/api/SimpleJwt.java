@@ -1,6 +1,6 @@
 package com.wobangkj.api;
 
-import lombok.SneakyThrows;
+import com.wobangkj.exception.SecretException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
@@ -15,14 +15,22 @@ import java.util.Date;
  */
 public class SimpleJwt extends Jwt implements Signable {
 
-	protected static SimpleJwt INSTANCE = new SimpleJwt();
+	protected static SimpleJwt INSTANCE;
+
+	static {
+		try {
+			INSTANCE = new SimpleJwt();
+		} catch (NoSuchAlgorithmException e) {
+			throw new SecretException((EnumTextMsg) () -> "初始化失败", e);
+		}
+	}
+
 	/**
 	 * 是否初始化
 	 */
 	protected boolean isInitialize;
 
-	@SneakyThrows
-	protected SimpleJwt() {
+	protected SimpleJwt() throws NoSuchAlgorithmException {
 		super();
 		isInitialize = true;
 	}

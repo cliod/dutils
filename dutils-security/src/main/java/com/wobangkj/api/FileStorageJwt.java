@@ -1,10 +1,8 @@
 package com.wobangkj.api;
 
 import com.wobangkj.exception.SecretException;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
@@ -21,14 +19,21 @@ import java.security.NoSuchAlgorithmException;
  */
 public class FileStorageJwt extends StorageJwt implements Signable {
 
-	private static final FileStorageJwt INSTANCE = new FileStorageJwt();
+	private static final FileStorageJwt INSTANCE;
+
+	static {
+		try {
+			INSTANCE = new FileStorageJwt();
+		} catch (NoSuchAlgorithmException e) {
+			throw new SecretException((EnumTextMsg) () -> "初始化失败", e);
+		}
+	}
 
 	@Getter
 	@Setter
 	private String filename;
 
-	@SneakyThrows
-	private FileStorageJwt() {
+	private FileStorageJwt() throws NoSuchAlgorithmException {
 		this("jwt.secret.key");
 	}
 
