@@ -9,13 +9,13 @@
     <parent>
         <artifactId>dutils</artifactId>
         <groupId>com.wobangkj</groupId>
-        <version>5.2.12</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>spring-boot-starters</artifactId>
 
     <modules>
-        <module>starter-dutils-sms</module>
+        <module>dutils-spring-boot-starter</module>
     </modules>
 
     <dependencies>

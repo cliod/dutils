@@ -23,7 +23,7 @@ import static com.wobangkj.api.Response.*;
  * @since 10/20/20 10:22 AM
  */
 @Slf4j
-@RestController
+@RestController("sms")
 @ConditionalOnClass(value = DefaultAcsClient.class)
 public class SmsController {
 
@@ -47,7 +47,7 @@ public class SmsController {
 			if (Objects.equals(response.getHttpStatus(), SUCCESS_CODE)) {
 				return ok();
 			} else {
-				log.error(response.getData());
+				log.warn(response.getData());
 				return fail("短信发送失败");
 			}
 		} catch (ClientException e) {

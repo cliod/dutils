@@ -11,13 +11,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * 自动装配
+ *
  * @author cliod
  * @since 10/20/20 10:04 AM
  */
 @Configuration
 @ConditionalOnClass(value = DefaultAcsClient.class)
 @EnableConfigurationProperties({AliProperties.class, TencentProperties.class})
-public class AliSmsAutoConfiguration {
+public class SmsAutoConfiguration {
 
 	@Bean
 	public AcsSms acsSms(AliProperties aliProperties) {
