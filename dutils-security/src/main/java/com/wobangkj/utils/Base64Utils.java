@@ -65,6 +65,26 @@ public class Base64Utils {
 	 * @param str 需要解密的字符串
 	 * @return base64解密后的结果
 	 */
+	public static String decodeToString(String str) {
+		return new String(decode(str));
+	}
+
+	/**
+	 * 用base64算法进行解密
+	 *
+	 * @param str 需要解密的字符串
+	 * @return base64解密后的结果
+	 */
+	public static String decodeToString(byte[] str) {
+		return new String(decode(str));
+	}
+
+	/**
+	 * 用base64算法进行解密
+	 *
+	 * @param str 需要解密的字符串
+	 * @return base64解密后的结果
+	 */
 	public static byte[] decode(String str) {
 		return Base64.getDecoder().decode(str);
 	}
