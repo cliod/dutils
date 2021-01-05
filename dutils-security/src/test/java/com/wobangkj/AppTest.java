@@ -18,18 +18,5 @@ public class AppTest {
     @Test
     public void shouldAnswerWithTrue() {
         assertTrue(true);
-
-        Jwt jwt = SimpleJwt.getInstance();
-        String a = jwt.sign("1", 10000);
-        System.out.println(a);
-        System.out.println(jwt.unsign(a).asString());
-
-        String b = jwt.sign(1, 10000);
-        System.out.println(b);
-        System.out.println(jwt.unsign(b).asInt());
-
-        String d = jwt.sign(new HashMap<String, Object>(4) {{put("value", 1);}}, 10000);
-        System.out.println(d);
-        System.out.println(jwt.unsignToMap(d));
     }
 }

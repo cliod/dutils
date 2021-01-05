@@ -13,6 +13,8 @@ import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.wobangkj.api.Name;
 import com.wobangkj.api.SyncSaveListener;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
@@ -40,7 +42,20 @@ import java.util.function.Consumer;
  */
 public class ExcelUtils {
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
-	private static final String DEFAULT_PATH = System.getProperty("user.home") + "/file/excel/";
+	private static final String DEFAULT_PATH = System.getProperty("user.dir") + "/file/excel/";
+
+	private static String ROOT_PATH;
+
+	public static String getRootPath() {
+		if (StringUtils.isEmpty(ROOT_PATH)) {
+			return DEFAULT_PATH;
+		}
+		return ROOT_PATH;
+	}
+
+	public static void setRootPath(String rootPath) {
+		ROOT_PATH = rootPath;
+	}
 
 	private ExcelUtils() {
 	}
@@ -80,7 +95,7 @@ public class ExcelUtils {
 	public static @NotNull File write(List<?> data, Class<?> head, @NotNull ExcelTypeEnum fileType) throws IOException {
 		String path = LocalDate.now().format(FORMATTER) + "/" + getName(head) + "/";
 		String name = KeyUtils.get32uuid();
-		String filePath = DEFAULT_PATH + path;
+		String filePath = getRootPath() + path;
 		String fileName = filePath + name + fileType.getValue();
 		File file = createFile(filePath, fileName);
 		write(file, data, head, fileType);
