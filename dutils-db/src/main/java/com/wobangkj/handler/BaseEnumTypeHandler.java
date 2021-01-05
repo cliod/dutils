@@ -1,4 +1,4 @@
-package com.wobangkj.mybatis;
+package com.wobangkj.handler;
 
 import com.wobangkj.api.EnumType;
 import lombok.extern.slf4j.Slf4j;

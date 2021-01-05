@@ -65,6 +65,24 @@ public abstract class ServiceImpl<T> implements IService<T> {
 	}
 
 	/**
+	 * 新增数据
+	 *
+	 * @param t 实例对象
+	 * @return 实例对象
+	 */
+	@Override
+	public abstract T insert(T t);
+
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 是否成功
+	 */
+	@Override
+	public abstract boolean deleteById(Long id);
+
+	/**
 	 * 查找行数
 	 *
 	 * @param t 实例对象

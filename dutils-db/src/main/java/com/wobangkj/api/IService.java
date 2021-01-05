@@ -10,6 +10,12 @@ import com.wobangkj.bean.Pager;
  * @since 9/4/20 11:03 AM
  */
 public interface IService<T> {
+	/**
+	 * 获取Dao
+	 *
+	 * @return 通用dao
+	 */
+	IDao<T> getDao();
 
 	/**
 	 * 通过ID查询单条数据

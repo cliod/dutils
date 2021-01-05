@@ -6,28 +6,9 @@ package com.wobangkj.api;
  * @author cliod
  * @since 9/4/20 11:07 AM
  */
-public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> implements IService<T> {
-
-	protected final D dao;
-
+@Deprecated
+public class TkServiceImpl<D extends IMapper<T>, T> extends com.wobangkj.impl.TkServiceImpl<D, T> {
 	public TkServiceImpl(D dao) {
-		this.dao = dao;
+		super(dao);
 	}
-
-	@Override
-	public D getDao() {
-		return this.dao;
-	}
-
-	@Override
-	public T insert(T t) {
-		this.dao.insertSelective(t);
-		return t;
-	}
-
-	@Override
-	public boolean deleteById(Long id) {
-		return this.dao.deleteById(id) > 0;
-	}
-
 }
