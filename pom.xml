@@ -25,7 +25,7 @@
         <module>dutils-security</module>
         <module>dutils-sms</module>
         <module>dutils-storage</module>
-        <module>spring-boot-starters</module>
+        <module>dutils-spring-boot-starters</module>
     </modules>
 
     <name>dutils</name>
