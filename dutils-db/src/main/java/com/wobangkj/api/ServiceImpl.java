@@ -1,7 +1,12 @@
 package com.wobangkj.api;
 
-import com.wobangkj.bean.Pageable;
 import com.wobangkj.bean.Pager;
+import com.wobangkj.domain.Columns;
+import com.wobangkj.domain.Pageable;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 抽象实现
@@ -10,6 +15,20 @@ import com.wobangkj.bean.Pager;
  * @since 11/24/20 5:04 PM
  */
 public abstract class ServiceImpl<T> implements IService<T> {
+
+	protected int maxSize = 100;
+	/**
+	 * 用户缓存Entity对应的数据库字段
+	 */
+	protected final HashMap<Integer, Columns> fieldCacheMaps = new LinkedHashMap<Integer, Columns>() {
+		/**
+		 * 当满足条件删除最末的数据
+		 */
+		@Override
+		protected boolean removeEldestEntry(Map.Entry eldest) {
+			return this.size() > maxSize;
+		}
+	};
 
 	/**
 	 * 获取Dao
