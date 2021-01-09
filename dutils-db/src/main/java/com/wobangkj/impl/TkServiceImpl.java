@@ -10,9 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -58,7 +55,11 @@ public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> imple
 			return super.queryAll(t, pageable);
 		}
 		Example example = Example.builder(t.getClass()).build();
-		example.setOrderByClause(pageable.getOrder());
+		if (StringUtils.isNotEmpty(pageable.getOrder())) {
+			example.setOrderByClause(pageable.getOrder());
+		} else {
+			example.setOrderByClause("id desc");
+		}
 		Example.Criteria criteria = example.createCriteria();
 		if (StringUtils.isNotEmpty(pageable.getKey())) {
 			Columns columns = fieldCacheMaps.get(t.hashCode());
@@ -67,6 +68,9 @@ public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> imple
 				fieldCacheMaps.put(t.hashCode(), columns);
 			}
 			for (String column : columns.getColumns()) {
+				if (StringUtils.isEmpty(column)) {
+					continue;
+				}
 				criteria.andLike(column, pageable.getKey());
 			}
 		}
