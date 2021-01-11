@@ -125,6 +125,12 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 				}
 			}
 		}
+		// 原生条件，会有sql注入的风险
+		if (!BeanUtils.isEmpty(pageable.getQueries())) {
+			for (String query : pageable.getQueries()) {
+				wrapper.apply(query);
+			}
+		}
 		Page<T> res = this.service.page(page.addOrder(OrderItem.desc("id")), wrapper);
 		return Pager.of(res.getTotal(), pageable, res.getRecords());
 	}

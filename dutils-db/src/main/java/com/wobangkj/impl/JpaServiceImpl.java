@@ -37,7 +37,7 @@ public class JpaServiceImpl<D extends IRepository<T>, T> extends ServiceImpl<T> 
 	 * @return 通用dao
 	 */
 	@Override
-	public IDao<T> getDao() {
+	public D getDao() {
 		return this.dao;
 	}
 

@@ -7,7 +7,7 @@ package com.wobangkj.api;
  * @since 9/4/20 11:07 AM
  */
 @Deprecated
-public class BaseService<D extends IRepository<T>, T> extends com.wobangkj.impl.JpaServiceImpl<D, T> {
+public class BaseService<D extends IRepository<T>, T> extends JpaServiceImpl<D, T> {
 	public BaseService(D dao) {
 		super(dao);
 	}

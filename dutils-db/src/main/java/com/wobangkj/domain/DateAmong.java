@@ -24,14 +24,6 @@ public class DateAmong extends Among<Long> {
 		return dateAmong;
 	}
 
-	public void setFloor(Long start) {
-		this.floor = start;
-	}
-
-	public void setCeiling(Long end) {
-		this.ceiling = end;
-	}
-
 	public Date getDateFloor() {
 		return new Date(super.getFloor());
 	}

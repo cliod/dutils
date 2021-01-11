@@ -104,6 +104,12 @@ public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> imple
 				}
 			}
 		}
+		// 原生条件，会有sql注入的风险
+		if (!BeanUtils.isEmpty(pageable.getQueries())) {
+			for (String query : pageable.getQueries()) {
+				criteria.andCondition(query);
+			}
+		}
 		long count = this.dao.selectCountByExample(example);
 		if (count == 0) {
 			return Pager.empty();

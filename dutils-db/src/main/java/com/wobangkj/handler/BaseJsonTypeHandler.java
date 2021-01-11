@@ -19,7 +19,6 @@ import java.util.Objects;
  * @author cliod
  * @since 2020-06-21
  */
-@Slf4j
 public abstract class BaseJsonTypeHandler<E extends Serializable> extends BaseTypeHandler<E> {
 
 	/**
@@ -39,22 +38,28 @@ public abstract class BaseJsonTypeHandler<E extends Serializable> extends BaseTy
 
 	@Override
 	public final E getNullableResult(@NotNull ResultSet resultSet, String s) throws SQLException {
-		return this.get(resultSet.getInt(s));
+		return this.get(resultSet.getString(s));
 	}
 
 	@Override
 	public final E getNullableResult(@NotNull ResultSet resultSet, int i) throws SQLException {
-		return this.get(resultSet.getInt(i));
+		return this.get(resultSet.getString(i));
 	}
 
 	@Override
 	public final E getNullableResult(@NotNull CallableStatement callableStatement, int i) throws SQLException {
-		return this.get(callableStatement.getInt(i));
+		return this.get(callableStatement.getString(i));
 	}
 
-	protected abstract E get(Object v);
+	/**
+	 * 返回映射的对象
+	 *
+	 * @param json 字符串
+	 * @return 对象
+	 */
+	protected abstract E get(String json);
 
-	protected E get(String v, Class<E> clazz) {
-		return JsonUtils.fromJson(v, clazz);
+	protected E get(String json, Class<E> clazz) {
+		return JsonUtils.fromJson(json, clazz);
 	}
 }

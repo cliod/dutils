@@ -79,8 +79,10 @@ public abstract class ServiceImpl<T> implements IService<T> {
 	 */
 	@Override
 	public T update(T t) {
-		this.getDao().update(t);
-		return this.queryOne(t);
+		if (this.getDao().update(t) > 0) {
+			return this.queryOne(t);
+		}
+		return t;
 	}
 
 	/**

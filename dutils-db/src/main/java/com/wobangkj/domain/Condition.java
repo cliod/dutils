@@ -19,10 +19,21 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Condition extends com.wobangkj.bean.Pageable {
-
-	private String order;
+	/**
+	 * 模糊查询
+	 */
 	private String key;
+	/**
+	 * 排序
+	 */
+	private String order;
+	/**
+	 * 分页，字段兼容
+	 */
 	private Integer clientPage;
+	/**
+	 * 分页，字段兼容
+	 */
 	private Integer everyPage;
 	/**
 	 * 匹配
@@ -32,6 +43,10 @@ public class Condition extends com.wobangkj.bean.Pageable {
 	 * 大小
 	 */
 	private List<Among<?>> among;
+	/**
+	 * 原生sql查询(条件)
+	 */
+	private List<String> queries;
 
 	@Override
 	public Integer getSize() {
