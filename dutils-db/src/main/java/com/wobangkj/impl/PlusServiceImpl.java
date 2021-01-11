@@ -8,8 +8,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wobangkj.api.IPlusMapper;
 import com.wobangkj.api.IService;
 import com.wobangkj.bean.Pager;
+import com.wobangkj.domain.Among;
 import com.wobangkj.domain.Columns;
+import com.wobangkj.domain.DateAmong;
 import com.wobangkj.domain.Pageable;
+import com.wobangkj.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
@@ -96,6 +99,30 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 			}
 			for (String column : columns.getColumns()) {
 				wrapper.like(column, pageable.getKey());
+			}
+		}
+		if (!BeanUtils.isEmpty(pageable.getMatch())) {
+			wrapper.allEq(pageable.getMatch());
+		}
+		if (!BeanUtils.isEmpty(pageable.getAmong())) {
+			for (Among<?> among : pageable.getAmong()) {
+				if (among instanceof DateAmong) {
+					if (Objects.isNull(among.getCeiling())) {
+						wrapper.ge(among.getColumn(), ((DateAmong) among).getDateFloor());
+					} else if (Objects.isNull(among.getFloor())) {
+						wrapper.lt(among.getColumn(), ((DateAmong) among).getDateCeiling());
+					} else {
+						wrapper.between(among.getColumn(), ((DateAmong) among).getDateFloor(), ((DateAmong) among).getDateCeiling());
+					}
+					continue;
+				}
+				if (Objects.isNull(among.getCeiling())) {
+					wrapper.ge(among.getColumn(), among.getFloor());
+				} else if (Objects.isNull(among.getFloor())) {
+					wrapper.lt(among.getColumn(), among.getCeiling());
+				} else {
+					wrapper.between(among.getColumn(), among.getFloor(), among.getCeiling());
+				}
 			}
 		}
 		Page<T> res = this.service.page(page.addOrder(OrderItem.desc("id")), wrapper);

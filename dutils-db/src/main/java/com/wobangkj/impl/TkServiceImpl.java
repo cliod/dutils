@@ -4,12 +4,16 @@ import com.wobangkj.api.IMapper;
 import com.wobangkj.api.IService;
 import com.wobangkj.api.ServiceImpl;
 import com.wobangkj.bean.Pager;
+import com.wobangkj.domain.Among;
 import com.wobangkj.domain.Columns;
+import com.wobangkj.domain.DateAmong;
 import com.wobangkj.domain.Pageable;
+import com.wobangkj.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -72,6 +76,32 @@ public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> imple
 					continue;
 				}
 				criteria.andLike(column, pageable.getKey());
+			}
+		}
+		if (!BeanUtils.isEmpty(pageable.getMatch())) {
+			for (Map.Entry<String, Object> entry : pageable.getMatch().entrySet()) {
+				criteria.andEqualTo(entry.getKey(), entry.getValue());
+			}
+		}
+		if (!BeanUtils.isEmpty(pageable.getAmong())) {
+			for (Among<?> among : pageable.getAmong()) {
+				if (among instanceof DateAmong) {
+					if (Objects.isNull(among.getCeiling())) {
+						criteria.andGreaterThanOrEqualTo(among.getColumn(), ((DateAmong) among).getDateFloor());
+					} else if (Objects.isNull(among.getFloor())) {
+						criteria.andLessThan(among.getColumn(), ((DateAmong) among).getDateCeiling());
+					} else {
+						criteria.andBetween(among.getColumn(), ((DateAmong) among).getDateFloor(), ((DateAmong) among).getDateCeiling());
+					}
+					continue;
+				}
+				if (Objects.isNull(among.getCeiling())) {
+					criteria.andGreaterThanOrEqualTo(among.getColumn(), among.getFloor());
+				} else if (Objects.isNull(among.getFloor())) {
+					criteria.andLessThan(among.getColumn(), among.getCeiling());
+				} else {
+					criteria.andBetween(among.getColumn(), among.getFloor(), among.getCeiling());
+				}
 			}
 		}
 		long count = this.dao.selectCountByExample(example);
