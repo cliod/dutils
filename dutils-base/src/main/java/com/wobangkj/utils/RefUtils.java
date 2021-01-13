@@ -2,8 +2,8 @@ package com.wobangkj.utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.function.Function;
@@ -76,6 +76,18 @@ public class RefUtils {
 	 * 获取对象字段值
 	 *
 	 * @param obj         对象
+	 * @param annotations 注解
+	 * @return 值
+	 */
+	@SafeVarargs
+	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj, Class<? extends Annotation>... annotations) throws IllegalAccessException {
+		return getFieldValues(obj, Arrays.asList(Modifier.STATIC, Modifier.FINAL), Collections.emptyList(), Arrays.asList(annotations));
+	}
+
+	/**
+	 * 获取对象字段值
+	 *
+	 * @param obj         对象
 	 * @param excludeMods 排除不获取指定修饰符的字段
 	 * @return 值
 	 */
@@ -113,12 +125,28 @@ public class RefUtils {
 	 * @return 值
 	 */
 	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj, List<Integer> excludeMods, List<String> excludeFieldNames) throws IllegalAccessException {
+		return getFieldValues(obj, excludeMods, excludeFieldNames, Collections.emptyList());
+	}
+
+	/**
+	 * 获取对象字段值
+	 *
+	 * @param obj               对象
+	 * @param excludeFieldNames 排除不获取指定名称的字段
+	 * @return 值
+	 */
+	public static @NotNull Map<String, Object> getFieldValues(@NotNull Object obj, List<Integer> excludeMods, List<String> excludeFieldNames,
+	                                                          List<Class<? extends Annotation>> excludeAnnotations) throws IllegalAccessException {
 		Field[] fields = obj.getClass().getDeclaredFields();
 		Map<String, Object> map = new HashMap<>(fields.length);
 		boolean mods = excludeMods.isEmpty();
+		boolean ann = excludeAnnotations.isEmpty();
 		boolean names = excludeFieldNames.isEmpty();
 		boolean exclude = false;
 		for (Field field : fields) {
+			if (!ann) {
+				exclude = containsAnnotation(field, excludeAnnotations);
+			}
 			if (!mods) {
 				exclude = containsExcludeMods(excludeMods, field.getModifiers());
 			}
@@ -136,6 +164,15 @@ public class RefUtils {
 	private static boolean containsExcludeMods(Collection<Integer> excludeMods, int modifiers) {
 		for (Integer mod : excludeMods) {
 			if ((mod & modifiers) != 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean containsAnnotation(Field field, Collection<Class<? extends Annotation>> annotations) {
+		for (Class<? extends Annotation> annotation : annotations) {
+			if (field.isAnnotationPresent(annotation)) {
 				return true;
 			}
 		}
@@ -221,24 +258,24 @@ public class RefUtils {
 	/**
 	 * 获取字段名称
 	 *
+	 * @param obj               对象
+	 * @param excludeFieldNames 忽略指定字段
+	 * @return 结果
+	 */
+	@SafeVarargs
+	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, Class<? extends Annotation>... excludeFieldNames) {
+		return getFieldNames(obj, Collections.emptyList(), Collections.emptyList(), Arrays.asList(excludeFieldNames));
+	}
+
+	/**
+	 * 获取字段名称
+	 *
 	 * @param obj         对象
 	 * @param excludeMods 忽略指定的修饰符
 	 * @return 结果
 	 */
 	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, Collection<Integer> excludeMods) {
-		Field[] fields = obj.getDeclaredFields();
-		List<String> result = new ArrayList<>(fields.length);
-		boolean mods = excludeMods.isEmpty();
-		boolean exclude = false;
-		for (Field field : fields) {
-			if (!mods) {
-				exclude = containsExcludeMods(excludeMods, field.getModifiers());
-			}
-			if (!exclude) {
-				result.add(covert.apply(field.getName()));
-			}
-		}
-		return result;
+		return getFieldNames(obj, excludeMods, Collections.emptyList(), Collections.emptyList());
 	}
 
 	/**
@@ -249,13 +286,34 @@ public class RefUtils {
 	 * @return 结果
 	 */
 	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, List<String> excludeFieldNames) {
+		return getFieldNames(obj, Collections.emptyList(), excludeFieldNames, Collections.emptyList());
+	}
+
+	/**
+	 * 获取字段名称
+	 *
+	 * @param obj               对象
+	 * @param excludeMods       忽略指定的修饰符
+	 * @param excludeFieldNames 忽略指定字段
+	 * @return 结果
+	 */
+	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, Collection<Integer> excludeMods, Collection<String> excludeFieldNames,
+	                                                  Collection<Class<? extends Annotation>> excludeAnnotations) {
 		Field[] fields = obj.getDeclaredFields();
 		List<String> result = new ArrayList<>(fields.length);
+		boolean ann = excludeAnnotations.isEmpty();
 		boolean names = excludeFieldNames.isEmpty();
+		boolean mods = excludeMods.isEmpty();
 		boolean exclude = false;
 		for (Field field : fields) {
 			if (!names) {
 				exclude = exclude || (excludeFieldNames.contains(field.getName()) || excludeFieldNames.contains(covert.apply(field.getName())));
+			}
+			if (!mods) {
+				exclude = containsExcludeMods(excludeMods, field.getModifiers());
+			}
+			if (!ann) {
+				exclude = containsAnnotation(field, excludeAnnotations);
 			}
 			if (!exclude) {
 				result.add(covert.apply(field.getName()));

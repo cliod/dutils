@@ -1,8 +1,8 @@
 package com.wobangkj.domain;
 
-import lombok.*;
+import lombok.SneakyThrows;
 
-import java.util.Objects;
+import java.util.List;
 
 /**
  * 分页、排序和模糊查询
@@ -39,5 +39,16 @@ public class Pageable extends Condition {
 	@Override
 	protected Pageable clone() throws CloneNotSupportedException {
 		return (Pageable) super.clone();
+	}
+
+	/**
+	 * 原生sql查询(条件)，可能会导致sql注入，不建议使用
+	 *
+	 * @param queries 原生查询
+	 */
+	@Override
+	@Deprecated
+	public void setQueries(List<String> queries) {
+		throw new UnsupportedOperationException("避免Sql注入");
 	}
 }

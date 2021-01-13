@@ -44,7 +44,7 @@ public class Condition extends com.wobangkj.bean.Pageable {
 	 */
 	private List<Among<?>> among;
 	/**
-	 * 原生sql查询(条件)
+	 * 原生sql查询(条件)，可能会发生sql注入
 	 */
 	private List<String> queries;
 

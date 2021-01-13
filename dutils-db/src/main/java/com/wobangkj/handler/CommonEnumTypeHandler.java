@@ -13,25 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 public class CommonEnumTypeHandler extends BaseEnumTypeHandler<EnumType> {
 	@Override
 	protected EnumType get(Integer v) {
-		return Inner.NULL;
-	}
-
-	private enum Inner implements EnumType {
-		NULL;
-
-		@Override
-		public Integer getCode() {
-			return null;
-		}
-
-		@Override
-		public String getDesc() {
-			return null;
-		}
-
-		@Override
-		public EnumType get(Integer code) {
-			return null;
-		}
+		return null;
 	}
 }

@@ -1,13 +1,9 @@
 package com.wobangkj.domain;
 
-import com.wobangkj.utils.HumpUtils;
 import com.wobangkj.utils.RefUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.Column;
 import javax.persistence.Transient;
-import java.lang.reflect.Field;
 
 /**
  * 数据库字段
@@ -25,25 +21,7 @@ public class Columns {
 	}
 
 	public static Columns of(Class<?> type) {
-//		Field[] fields = type.getDeclaredFields();
-//		String[] columns = new String[fields.length];
-//		int i = 0;
-//		for (Field field : fields) {
-//			if (field.isAnnotationPresent(Transient.class)) {
-//				continue;
-//			}
-//			if (field.isAnnotationPresent(Column.class)) {
-//				Column column = field.getAnnotation(Column.class);
-//				if (StringUtils.isNotEmpty(column.name())) {
-//					columns[i] = column.name();
-//				} else {
-//					columns[i] = HumpUtils.humpToLine(field.getName());
-//				}
-//			} else {
-//				columns[i] = HumpUtils.humpToLine(field.getName());
-//			}
-//			i++;
-//		}
-		return new Columns(RefUtils.getFieldNames(type));
+		String[] fields = RefUtils.getFieldNames(type, Transient.class).toArray(new String[0]);
+		return new Columns(fields);
 	}
 }
