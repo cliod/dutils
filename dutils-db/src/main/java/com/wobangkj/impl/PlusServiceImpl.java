@@ -8,10 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wobangkj.api.IPlusMapper;
 import com.wobangkj.api.IService;
 import com.wobangkj.bean.Pager;
-import com.wobangkj.domain.Among;
-import com.wobangkj.domain.Columns;
-import com.wobangkj.domain.DateAmong;
-import com.wobangkj.domain.Pageable;
+import com.wobangkj.domain.*;
 import com.wobangkj.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -127,8 +124,12 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 		}
 		// 原生条件，会有sql注入的风险
 		if (!BeanUtils.isEmpty(pageable.getQueries())) {
-			for (String query : pageable.getQueries()) {
-				wrapper.apply(query);
+			for (Query query : pageable.getQueries()) {
+				if (query.getRelated().equals("or")) {
+					wrapper.or().apply(query.getQuery());
+				} else {
+					wrapper.apply(query.getQuery());
+				}
 			}
 		}
 		Page<T> res = this.service.page(page.addOrder(OrderItem.desc("id")), wrapper);

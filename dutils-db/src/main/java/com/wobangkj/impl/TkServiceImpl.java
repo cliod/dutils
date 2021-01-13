@@ -4,10 +4,7 @@ import com.wobangkj.api.IMapper;
 import com.wobangkj.api.IService;
 import com.wobangkj.api.ServiceImpl;
 import com.wobangkj.bean.Pager;
-import com.wobangkj.domain.Among;
-import com.wobangkj.domain.Columns;
-import com.wobangkj.domain.DateAmong;
-import com.wobangkj.domain.Pageable;
+import com.wobangkj.domain.*;
 import com.wobangkj.utils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
@@ -106,8 +103,12 @@ public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> imple
 		}
 		// 原生条件，会有sql注入的风险
 		if (!BeanUtils.isEmpty(pageable.getQueries())) {
-			for (String query : pageable.getQueries()) {
-				criteria.andCondition(query);
+			for (Query query : pageable.getQueries()) {
+				if (query.getRelated().equals("or")) {
+					criteria.orCondition(query.getQuery());
+				} else {
+					criteria.andCondition(query.getQuery());
+				}
 			}
 		}
 		long count = this.dao.selectCountByExample(example);

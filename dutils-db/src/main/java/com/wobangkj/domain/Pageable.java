@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2021-01-08 10:59:35
  */
 @Deprecated
-public class Pageable extends Condition {
+public final class Pageable extends Condition {
 
 	protected static Pageable DEFAULT = new Pageable();
 
@@ -47,8 +47,31 @@ public class Pageable extends Condition {
 	 * @param queries 原生查询
 	 */
 	@Override
+	public void setQueries(List<Query> queries) {
+		super.setQueries(queries);
+	}
+
+	/**
+	 * 关联sql查询语句
+	 *
+	 * @param related 关联词
+	 * @param sql     query查询
+	 */
+	@Override
 	@Deprecated
-	public void setQueries(List<String> queries) {
-		throw new UnsupportedOperationException("避免Sql注入");
+	public void addQuery(String related, String sql) {
+		super.addQuery(related, sql);
+	}
+
+	@Override
+	@Deprecated
+	public void andQuery(String sql) {
+		super.andQuery(sql);
+	}
+
+	@Override
+	@Deprecated
+	public void orQuery(String sql) {
+		super.orQuery(sql);
 	}
 }
