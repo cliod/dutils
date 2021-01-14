@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>5.2.19</version>
+        <version>5.2.20</version>
     </parent>
 
     <artifactId>dutils-common</artifactId>
@@ -51,6 +51,13 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>30.0-jre</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.13</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

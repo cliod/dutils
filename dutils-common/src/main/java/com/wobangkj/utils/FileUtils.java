@@ -1,5 +1,6 @@
 package com.wobangkj.utils;
 
+import com.wobangkj.thread.WorkThreadFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,11 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 /**
@@ -32,6 +33,21 @@ public class FileUtils {
 	private static final Pattern WIN_PATH_SRC = Pattern.compile("(^[A-Z]:(([\\\\/])([a-zA-Z0-9\\-_]){1,255}){1,255}|([A-Z]:([\\\\/])))");
 	private static final Pattern LINUX_PATH_SRC = Pattern.compile("(/([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255}/)*([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255})|/)");
 	public static String[] imgType = new String[]{".png", ".jpg", ".jpeg"};
+	/**
+	 * 文件处理线程管理
+	 */
+	public static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), new WorkThreadFactory("文件处理"));
+
+	/**
+	 * 文件上传
+	 *
+	 * @param file     文件
+	 * @return 返回相对路径
+	 * @throws IOException IO异常
+	 */
+	public static @NotNull String upload(@NotNull MultipartFile file) throws IOException {
+		return upload(file, "", "");
+	}
 
 	/**
 	 * 文件上传
@@ -90,9 +106,11 @@ public class FileUtils {
 		String extendName = originalFilename.substring(originalFilename.lastIndexOf("."));
 
 		//文件新名字
-		String fileName = customName;
-		if (StringUtils.isEmpty(fileName)) {
+		final String fileName;
+		if (StringUtils.isEmpty(customName)) {
 			fileName = KeyUtils.get32uuid() + extendName;
+		} else {
+			fileName = customName;
 		}
 		transferToFile(file, filePath, fileName);
 		if (!Arrays.asList(imgType).contains(extendName)) {
@@ -100,8 +118,15 @@ public class FileUtils {
 			isImgCompress = false;
 		}
 		if (isImgCompress) {
-			String realFile = filePath + File.separator + fileName;
-			ImageUtils.compressImage(realFile, width, height, true, extendName, Files.newOutputStream(Paths.get(realFile)));
+			executor.execute(()->{
+				String realFile = filePath + File.separator + fileName;
+				try {
+					ImageUtils.compressImage(realFile, width, height);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+
 		}
 		return path + fileName;
 	}

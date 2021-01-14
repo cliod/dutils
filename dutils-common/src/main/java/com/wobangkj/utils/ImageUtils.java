@@ -12,6 +12,8 @@ import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * 图像处理<br>
@@ -21,6 +23,8 @@ import java.io.*;
  * @since 2020-11-30
  */
 public class ImageUtils {
+	private ImageUtils() {
+	}
 
 	@Deprecated
 	public static final float DEFAULT_QUALITY = 0.2125f;
@@ -191,6 +195,19 @@ public class ImageUtils {
 	 * @param imgPath      待处理图片
 	 * @param width        输出图片的宽度    输入负数参数表示用原来图片宽
 	 * @param height       输出图片的高度    输入负数参数表示用原来图片高
+	 * @throws IOException IO异常：压缩图片操作异常
+	 */
+	public static void compressImage(String imgPath, int width, int height) throws IOException {
+		BufferedImage bufferedImage = compressImage(imgPath, width, height, true);
+		ImageIO.write(bufferedImage, imageFormat(imgPath), Files.newOutputStream(Paths.get(imgPath)));
+	}
+
+	/**
+	 * 压缩图片操作(文件物理存盘,可自定义格式)
+	 *
+	 * @param imgPath      待处理图片
+	 * @param width        输出图片的宽度    输入负数参数表示用原来图片宽
+	 * @param height       输出图片的高度    输入负数参数表示用原来图片高
 	 * @param autoSize     是否等比缩放 true表示进行等比缩放 false表示不进行等比缩放
 	 * @param format       压缩后存储的格式
 	 * @param outputStream 文件输出流
@@ -222,14 +239,14 @@ public class ImageUtils {
 
 		BufferedImage targetImage;
 
-		BufferedImage img = ImageIO.read(new File(imgPath));
+		Image img = ImageIO.read(new File(imgPath));
 		//如果用户输入的图片参数合法则按用户定义的复制,负值参数表示执行默认值
 		int newWidth;
 		if (width > 0) {
 			newWidth = width;
 		} else {
 			autoSize = false;
-			newWidth = img.getWidth();
+			newWidth = img.getWidth(null);
 		}
 		//如果用户输入的图片参数合法则按用户定义的复制,负值参数表示执行默认值
 		int newHeight;
@@ -237,7 +254,7 @@ public class ImageUtils {
 			newHeight = height;
 		} else {
 			autoSize = false;
-			newHeight = img.getHeight();
+			newHeight = img.getHeight(null);
 		}
 		//如果是自适应大小则进行比例缩放
 		if (autoSize) {
