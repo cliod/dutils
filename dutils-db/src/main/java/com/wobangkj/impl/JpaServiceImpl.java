@@ -1,6 +1,5 @@
 package com.wobangkj.impl;
 
-import com.wobangkj.api.IDao;
 import com.wobangkj.api.IRepository;
 import com.wobangkj.api.IService;
 import com.wobangkj.api.ServiceImpl;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -25,10 +25,13 @@ import java.util.Locale;
  */
 public class JpaServiceImpl<D extends IRepository<T>, T> extends ServiceImpl<T> implements IService<T> {
 
-	protected final D dao;
+	protected D dao;
 
 	public JpaServiceImpl(D dao) {
 		this.dao = dao;
+	}
+
+	protected JpaServiceImpl() {
 	}
 
 	/**
@@ -39,6 +42,11 @@ public class JpaServiceImpl<D extends IRepository<T>, T> extends ServiceImpl<T> 
 	@Override
 	public D getDao() {
 		return this.dao;
+	}
+
+	@Resource
+	public void setDao(D dao) {
+		this.dao = dao;
 	}
 
 	@Override

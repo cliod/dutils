@@ -4,14 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wobangkj.api.IPlusMapper;
-import com.wobangkj.api.IService;
 import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.*;
 import com.wobangkj.utils.BeanUtils;
+import com.wobangkj.utils.RefUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -21,9 +23,16 @@ import java.util.Objects;
  * @author cliod
  * @since 11/24/20 1:44 PM
  */
-public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.api.ServiceImpl<T> implements IService<T> {
+public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.api.ServiceImpl<T> implements com.wobangkj.api.IService<T> {
 
-	protected ServiceImpl<M, T> service;
+	protected IService<T> service;
+
+	public PlusServiceImpl(IService<T> service) {
+		this.service = service;
+	}
+
+	protected PlusServiceImpl() {
+	}
 
 	/**
 	 * 获取Dao
@@ -33,6 +42,16 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 	@Override
 	public IPlusMapper<T> getDao() {
 		return PlusProvider.apply(this.service.getBaseMapper());
+	}
+
+	@Resource
+	public void setService(IService<T> service) {
+		this.service = service;
+	}
+
+	public void setService(M service) throws ReflectiveOperationException {
+		this.service = new ServiceImpl<>();
+		RefUtils.setFieldValue(this.service, "baseMapper", service);
 	}
 
 	/**

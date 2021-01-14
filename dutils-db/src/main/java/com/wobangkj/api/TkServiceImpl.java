@@ -8,7 +8,11 @@ package com.wobangkj.api;
  */
 @Deprecated
 public class TkServiceImpl<D extends IMapper<T>, T> extends com.wobangkj.impl.TkServiceImpl<D, T> {
+
 	public TkServiceImpl(D dao) {
 		super(dao);
+	}
+
+	protected TkServiceImpl() {
 	}
 }

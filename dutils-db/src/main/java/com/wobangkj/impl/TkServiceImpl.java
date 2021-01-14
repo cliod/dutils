@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,15 +22,23 @@ import java.util.Objects;
  */
 public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> implements IService<T> {
 
-	protected final D dao;
+	protected D dao;
 
 	public TkServiceImpl(D dao) {
 		this.dao = dao;
 	}
 
+	protected TkServiceImpl() {
+	}
+
 	@Override
 	public D getDao() {
 		return this.dao;
+	}
+
+	@Resource
+	public void setDao(D dao) {
+		this.dao = dao;
 	}
 
 	@Override

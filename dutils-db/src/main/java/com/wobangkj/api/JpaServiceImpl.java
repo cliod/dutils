@@ -11,4 +11,7 @@ public class JpaServiceImpl<D extends IRepository<T>, T> extends com.wobangkj.im
 	public JpaServiceImpl(D dao) {
 		super(dao);
 	}
+
+	protected JpaServiceImpl() {
+	}
 }
