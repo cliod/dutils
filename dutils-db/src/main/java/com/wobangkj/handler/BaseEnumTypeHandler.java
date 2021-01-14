@@ -65,5 +65,5 @@ public abstract class BaseEnumTypeHandler<E extends EnumType> extends BaseTypeHa
 	 * @param v 获取
 	 * @return 枚举对象
 	 */
-	protected abstract E get(Object v);
+	protected abstract E get(Integer v);
 }

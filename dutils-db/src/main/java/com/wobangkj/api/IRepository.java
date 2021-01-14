@@ -1,6 +1,6 @@
 package com.wobangkj.api;
 
-import com.wobangkj.bean.Pageable;
+import com.wobangkj.domain.Pageable;
 import com.wobangkj.bean.Pager;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;

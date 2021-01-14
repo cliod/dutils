@@ -11,10 +11,9 @@ import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * 图像处理<br>
@@ -24,6 +23,8 @@ import java.io.IOException;
  * @since 2020-11-30
  */
 public class ImageUtils {
+	private ImageUtils() {
+	}
 
 	@Deprecated
 	public static final float DEFAULT_QUALITY = 0.2125f;
@@ -189,6 +190,35 @@ public class ImageUtils {
 	}
 
 	/**
+	 * 压缩图片操作(文件物理存盘,可自定义格式)
+	 *
+	 * @param imgPath      待处理图片
+	 * @param width        输出图片的宽度    输入负数参数表示用原来图片宽
+	 * @param height       输出图片的高度    输入负数参数表示用原来图片高
+	 * @throws IOException IO异常：压缩图片操作异常
+	 */
+	public static void compressImage(String imgPath, int width, int height) throws IOException {
+		BufferedImage bufferedImage = compressImage(imgPath, width, height, true);
+		ImageIO.write(bufferedImage, imageFormat(imgPath), Files.newOutputStream(Paths.get(imgPath)));
+	}
+
+	/**
+	 * 压缩图片操作(文件物理存盘,可自定义格式)
+	 *
+	 * @param imgPath      待处理图片
+	 * @param width        输出图片的宽度    输入负数参数表示用原来图片宽
+	 * @param height       输出图片的高度    输入负数参数表示用原来图片高
+	 * @param autoSize     是否等比缩放 true表示进行等比缩放 false表示不进行等比缩放
+	 * @param format       压缩后存储的格式
+	 * @param outputStream 文件输出流
+	 * @throws IOException IO异常：压缩图片操作异常
+	 */
+	public static void compressImage(String imgPath, int width, int height, boolean autoSize, String format, OutputStream outputStream) throws IOException {
+		BufferedImage bufferedImage = compressImage(imgPath, width, height, autoSize);
+		ImageIO.write(bufferedImage, format, outputStream);
+	}
+
+	/**
 	 * 压缩图片操作,返回BufferedImage对象
 	 *
 	 * @param imgPath  待处理图片
@@ -211,25 +241,62 @@ public class ImageUtils {
 
 		Image img = ImageIO.read(new File(imgPath));
 		//如果用户输入的图片参数合法则按用户定义的复制,负值参数表示执行默认值
-		int newwidth = (width > 0) ? width : img.getWidth(null);
+		int newWidth;
+		if (width > 0) {
+			newWidth = width;
+		} else {
+			autoSize = false;
+			newWidth = img.getWidth(null);
+		}
 		//如果用户输入的图片参数合法则按用户定义的复制,负值参数表示执行默认值
-		int newheight = (height > 0) ? height : img.getHeight(null);
+		int newHeight;
+		if (height > 0) {
+			newHeight = height;
+		} else {
+			autoSize = false;
+			newHeight = img.getHeight(null);
+		}
 		//如果是自适应大小则进行比例缩放
 		if (autoSize) {
 			// 为等比缩放计算输出的图片宽度及高度
 			double widthRate = ((double) img.getWidth(null)) / (double) width + 0.1;
 			double heightRate = ((double) img.getHeight(null)) / (double) height + 0.1;
 			double rate = Math.max(widthRate, heightRate);
-			newwidth = (int) (((double) img.getWidth(null)) / rate);
-			newheight = (int) (((double) img.getHeight(null)) / rate);
+			newWidth = (int) (((double) img.getWidth(null)) / rate);
+			newHeight = (int) (((double) img.getHeight(null)) / rate);
 		}
 		//创建目标图像文件
-		targetImage = new BufferedImage(newwidth, newheight, BufferedImage.TYPE_INT_RGB);
+		targetImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = targetImage.createGraphics();
-		g.drawImage(img, 0, 0, newwidth, newheight, null);
+		g.drawImage(img, 0, 0, newWidth, newHeight, null);
 		//如果添加水印或者文字则继续下面操作,不添加的话直接返回目标文件----------------------
 		g.dispose();
 
+		return targetImage;
+	}
+
+	/**
+	 * 压缩图片操作,返回BufferedImage对象
+	 *
+	 * @param imgPath 待处理图片
+	 * @param factor  压缩因子，缩放倍数
+	 * @return 处理后的图片对象
+	 * @throws IOException IO异常：压缩图片操作异常
+	 */
+	public static BufferedImage compressImage(String imgPath, Integer factor) throws IOException {
+
+		BufferedImage img = ImageIO.read(new File(imgPath));
+		//如果用户输入的图片参数合法则按用户定义的复制,负值参数表示执行默认值
+		int newWidth = img.getWidth() * factor;
+		//如果用户输入的图片参数合法则按用户定义的复制,负值参数表示执行默认值
+		int newHeight = img.getHeight() * factor;
+		//如果是自适应大小则进行比例缩放
+		//创建目标图像文件
+		BufferedImage targetImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = targetImage.createGraphics();
+		g.drawImage(img, 0, 0, newWidth, newHeight, null);
+		//如果添加水印或者文字则继续下面操作,不添加的话直接返回目标文件
+		g.dispose();
 		return targetImage;
 	}
 
@@ -416,7 +483,7 @@ public class ImageUtils {
 	/**
 	 * 以JPEG编码保存图片
 	 *
-	 * @param imageToSave   要处理的图像图片
+	 * @param imageToSave     要处理的图像图片
 	 * @param JpegCompression 压缩比
 	 * @param fos             文件输出流
 	 * @throws IOException IO异常：以JPEG编码保存图片异常

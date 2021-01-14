@@ -1,6 +1,6 @@
 package com.wobangkj.api;
 
-import com.wobangkj.bean.Pageable;
+import com.wobangkj.domain.Pageable;
 import com.wobangkj.bean.Pager;
 
 import java.util.List;

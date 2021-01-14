@@ -7,8 +7,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wobangkj.api.IPlusMapper;
 import com.wobangkj.api.IService;
-import com.wobangkj.bean.Pageable;
 import com.wobangkj.bean.Pager;
+import com.wobangkj.domain.*;
+import com.wobangkj.utils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * 默认实现
@@ -16,7 +21,10 @@ import com.wobangkj.bean.Pager;
  * @author cliod
  * @since 11/24/20 1:44 PM
  */
-public class PlusServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> implements IService<T> {
+public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.api.ServiceImpl<T> implements IService<T> {
+
+	protected ServiceImpl<M, T> service;
+
 	/**
 	 * 获取Dao
 	 *
@@ -24,43 +32,7 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
 	 */
 	@Override
 	public IPlusMapper<T> getDao() {
-		return PlusProvider.apply(this.baseMapper);
-	}
-
-	/**
-	 * 通过ID查询单条数据
-	 *
-	 * @param id 主键
-	 * @return 实例对象
-	 */
-	@Override
-	public T queryById(Long id) {
-		return this.getById(id);
-	}
-
-	/**
-	 * 通过参数查询单条数据
-	 *
-	 * @param t 参数
-	 * @return 实例对象
-	 */
-	@Override
-	public T queryOne(T t) {
-		return this.getOne(new QueryWrapper<>(t));
-	}
-
-	/**
-	 * 查询
-	 *
-	 * @param t        条件
-	 * @param pageable 分页
-	 * @return 列表
-	 */
-	@Override
-	public Pager<T> queryAll(T t, Pageable pageable) {
-		Page<T> page = new Page<>(pageable.getMybatisPage(), pageable.getLimit());
-		Page<T> res = this.page(page.addOrder(OrderItem.desc("id")), new QueryWrapper<>(t));
-		return Pager.of(res.getTotal(), pageable, res.getRecords());
+		return PlusProvider.apply(this.service.getBaseMapper());
 	}
 
 	/**
@@ -71,19 +43,7 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
 	 */
 	@Override
 	public T insert(T t) {
-		this.save(t);
-		return t;
-	}
-
-	/**
-	 * 修改数据
-	 *
-	 * @param t 实例对象
-	 * @return 实例对象
-	 */
-	@Override
-	public T update(T t) {
-		this.updateById(t);
+		this.service.save(t);
 		return t;
 	}
 
@@ -95,17 +55,84 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
 	 */
 	@Override
 	public boolean deleteById(Long id) {
-		return this.removeById(id);
+		return this.service.removeById(id);
 	}
 
 	/**
-	 * 查找行数
+	 * 查询
 	 *
-	 * @param t 实例对象
-	 * @return 实例行数
+	 * @param t        条件
+	 * @param pageable 分页
+	 * @return 列表
 	 */
 	@Override
-	public long count(T t) {
-		return this.count(new QueryWrapper<>(t));
+	public Pager<T> queryAll(T t, Pageable pageable) {
+		if (StringUtils.isEmpty(pageable.getKey()) && StringUtils.isEmpty(pageable.getOrder())) {
+			return super.queryAll(t, pageable);
+		}
+		Page<T> page = new Page<>(pageable.getMybatisPage(), pageable.getLimit());
+		if (StringUtils.isNotEmpty(pageable.getOrder())) {
+			String[] orders = pageable.getOrder().split(",");
+			for (String order : orders) {
+				String[] f = order.split(" ");
+				if (f.length == 1) {
+					page.addOrder(OrderItem.asc(f[0]));
+				} else if (f.length > 1) {
+					String ff = f[1].trim();
+					if (ff.toLowerCase(Locale.ROOT).equals("desc")) {
+						page.addOrder(OrderItem.desc(ff));
+					} else {
+						page.addOrder(OrderItem.asc(ff));
+					}
+				}
+			}
+		}
+		QueryWrapper<T> wrapper = new QueryWrapper<>(t);
+		if (StringUtils.isNotEmpty(pageable.getKey())) {
+			Columns columns = fieldCacheMaps.get(t.hashCode());
+			if (Objects.isNull(columns)) {
+				columns = Columns.of(t.getClass());
+				fieldCacheMaps.put(t.hashCode(), columns);
+			}
+			for (String column : columns.getColumns()) {
+				wrapper.like(column, pageable.getKey());
+			}
+		}
+		if (!BeanUtils.isEmpty(pageable.getMatch())) {
+			wrapper.allEq(pageable.getMatch());
+		}
+		if (!BeanUtils.isEmpty(pageable.getAmong())) {
+			for (Among<?> among : pageable.getAmong()) {
+				if (among instanceof DateAmong) {
+					if (Objects.isNull(among.getCeiling())) {
+						wrapper.ge(among.getColumn(), ((DateAmong) among).getDateFloor());
+					} else if (Objects.isNull(among.getFloor())) {
+						wrapper.lt(among.getColumn(), ((DateAmong) among).getDateCeiling());
+					} else {
+						wrapper.between(among.getColumn(), ((DateAmong) among).getDateFloor(), ((DateAmong) among).getDateCeiling());
+					}
+					continue;
+				}
+				if (Objects.isNull(among.getCeiling())) {
+					wrapper.ge(among.getColumn(), among.getFloor());
+				} else if (Objects.isNull(among.getFloor())) {
+					wrapper.lt(among.getColumn(), among.getCeiling());
+				} else {
+					wrapper.between(among.getColumn(), among.getFloor(), among.getCeiling());
+				}
+			}
+		}
+		// 原生条件，会有sql注入的风险
+		if (!BeanUtils.isEmpty(pageable.getQueries())) {
+			for (Query query : pageable.getQueries()) {
+				if (query.getRelated().equals("or")) {
+					wrapper.or().apply(query.getQuery());
+				} else {
+					wrapper.apply(query.getQuery());
+				}
+			}
+		}
+		Page<T> res = this.service.page(page.addOrder(OrderItem.desc("id")), wrapper);
+		return Pager.of(res.getTotal(), pageable, res.getRecords());
 	}
 }

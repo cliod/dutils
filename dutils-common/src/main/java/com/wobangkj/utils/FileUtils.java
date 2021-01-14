@@ -1,5 +1,6 @@
 package com.wobangkj.utils;
 
+import com.wobangkj.thread.WorkThreadFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,9 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 /**
@@ -28,6 +32,22 @@ public class FileUtils {
 	private static final String OS_NAME = System.getProperty("os.name");
 	private static final Pattern WIN_PATH_SRC = Pattern.compile("(^[A-Z]:(([\\\\/])([a-zA-Z0-9\\-_]){1,255}){1,255}|([A-Z]:([\\\\/])))");
 	private static final Pattern LINUX_PATH_SRC = Pattern.compile("(/([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255}/)*([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255})|/)");
+	public static String[] imgType = new String[]{".png", ".jpg", ".jpeg"};
+	/**
+	 * 文件处理线程管理
+	 */
+	public static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), new WorkThreadFactory("文件处理"));
+
+	/**
+	 * 文件上传
+	 *
+	 * @param file     文件
+	 * @return 返回相对路径
+	 * @throws IOException IO异常
+	 */
+	public static @NotNull String upload(@NotNull MultipartFile file) throws IOException {
+		return upload(file, "", "");
+	}
 
 	/**
 	 * 文件上传
@@ -44,12 +64,30 @@ public class FileUtils {
 	/**
 	 * 文件上传
 	 *
-	 * @param file     文件
-	 * @param rootPath 文件存储路径
+	 * @param file       文件
+	 * @param rootPath   文件存储路径
+	 * @param customName 文件自定义名称，不建议
 	 * @return 返回相对路径
 	 * @throws IOException IO异常
 	 */
 	public static @NotNull String upload(@NotNull MultipartFile file, String rootPath, String customName) throws IOException {
+		return upload(file, rootPath, customName, 0, 0, false);
+	}
+
+	/**
+	 * 文件上传
+	 *
+	 * @param file          文件
+	 * @param rootPath      文件存储路径
+	 * @param customName    文件自定义名称，不建议
+	 * @param height        自定义高度，输入负数参数表示用原来图片高
+	 * @param width         自定义宽度，输入负数参数表示用原来图片宽
+	 * @param isImgCompress 是否等比压缩(是否等比缩放)，true表示进行等比缩放 false表示不进行等比缩放
+	 * @return 返回相对路径
+	 * @throws IOException IO异常
+	 */
+	public static @NotNull String upload(@NotNull MultipartFile file, String rootPath, String customName,
+	                                     Integer width, Integer height, boolean isImgCompress) throws IOException {
 		if (StringUtils.isEmpty(rootPath)) {
 			rootPath = System.getProperty("user.home");
 		}
@@ -68,11 +106,28 @@ public class FileUtils {
 		String extendName = originalFilename.substring(originalFilename.lastIndexOf("."));
 
 		//文件新名字
-		String fileName = customName;
-		if (StringUtils.isEmpty(fileName)) {
+		final String fileName;
+		if (StringUtils.isEmpty(customName)) {
 			fileName = KeyUtils.get32uuid() + extendName;
+		} else {
+			fileName = customName;
 		}
 		transferToFile(file, filePath, fileName);
+		if (!Arrays.asList(imgType).contains(extendName)) {
+			// 不是指定图片，不压缩缩放
+			isImgCompress = false;
+		}
+		if (isImgCompress) {
+			executor.execute(()->{
+				String realFile = filePath + File.separator + fileName;
+				try {
+					ImageUtils.compressImage(realFile, width, height);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+
+		}
 		return path + fileName;
 	}
 
