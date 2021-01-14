@@ -7,9 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -33,7 +31,7 @@ public class FileUtils {
 	private static final String OS_NAME = System.getProperty("os.name");
 	private static final Pattern WIN_PATH_SRC = Pattern.compile("(^[A-Z]:(([\\\\/])([a-zA-Z0-9\\-_]){1,255}){1,255}|([A-Z]:([\\\\/])))");
 	private static final Pattern LINUX_PATH_SRC = Pattern.compile("(/([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255}/)*([a-zA-Z0-9][a-zA-Z0-9_\\-]{0,255})|/)");
-	public static String[] imgType = new String[]{"png", "jpg", "jpeg"};
+	public static String[] imgType = new String[]{".png", ".jpg", ".jpeg"};
 
 	/**
 	 * 文件上传
@@ -57,7 +55,7 @@ public class FileUtils {
 	 * @throws IOException IO异常
 	 */
 	public static @NotNull String upload(@NotNull MultipartFile file, String rootPath, String customName) throws IOException {
-		return upload(file, rootPath, customName, -1, -1, true, false);
+		return upload(file, rootPath, customName, 0, 0, false);
 	}
 
 	/**
@@ -68,13 +66,12 @@ public class FileUtils {
 	 * @param customName    文件自定义名称，不建议
 	 * @param height        自定义高度，输入负数参数表示用原来图片高
 	 * @param width         自定义宽度，输入负数参数表示用原来图片宽
-	 * @param isImgCompress 是否等比压缩
-	 * @param autoSize      是否等比缩放 true表示进行等比缩放 false表示不进行等比缩放
+	 * @param isImgCompress 是否等比压缩(是否等比缩放)，true表示进行等比缩放 false表示不进行等比缩放
 	 * @return 返回相对路径
 	 * @throws IOException IO异常
 	 */
 	public static @NotNull String upload(@NotNull MultipartFile file, String rootPath, String customName,
-	                                     Integer width, Integer height, boolean isImgCompress, boolean autoSize) throws IOException {
+	                                     Integer width, Integer height, boolean isImgCompress) throws IOException {
 		if (StringUtils.isEmpty(rootPath)) {
 			rootPath = System.getProperty("user.home");
 		}
@@ -104,8 +101,7 @@ public class FileUtils {
 		}
 		if (isImgCompress) {
 			String realFile = filePath + File.separator + fileName;
-			BufferedImage image = ImageUtils.compressImage(realFile, width, height, autoSize);
-			ImageIO.write(image, extendName, Files.newOutputStream(Paths.get(realFile)));
+			ImageUtils.compressImage(realFile, width, height, true, extendName, Files.newOutputStream(Paths.get(realFile)));
 		}
 		return path + fileName;
 	}
