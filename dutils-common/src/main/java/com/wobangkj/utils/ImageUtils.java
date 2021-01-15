@@ -198,7 +198,7 @@ public class ImageUtils {
 	 * @throws IOException IO异常：压缩图片操作异常
 	 */
 	public static void compressImage(String imgPath, int width, int height) throws IOException {
-		BufferedImage bufferedImage = compressImage(imgPath, width, height, true);
+		BufferedImage bufferedImage = compressImage(imgPath, width, height, false);
 		ImageIO.write(bufferedImage, imageFormat(imgPath), Files.newOutputStream(Paths.get(imgPath)));
 	}
 
