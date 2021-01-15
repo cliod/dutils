@@ -67,6 +67,36 @@ public class PinyinUtils {
 		return getFirstChar(chinese).toLowerCase();
 	}
 
+	/**
+	 * 完整的判断中文汉字和符号
+	 *
+	 * @param strName 是否包含中文
+	 * @return 结果
+	 */
+	public static boolean containsChinese(String strName) {
+		char[] ch = strName.toCharArray();
+		for (char c : ch) {
+			if (isChinese(c)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 根据Unicode编码完美的判断中文汉字和符号
+	 *
+	 * @param c 字符
+	 * @return 是否为中文
+	 */
+	public static boolean isChinese(char c) {
+		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+		return ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
+				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+				|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION;
+	}
+
 	public static @NotNull String[] toPinyinArray(@NotNull String chinese) {
 		return toPinyinArray(chinese, DEFAULT_FORMAT);
 	}
