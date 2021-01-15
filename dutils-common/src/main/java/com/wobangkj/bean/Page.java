@@ -99,7 +99,7 @@ public class Page<T> implements IRes, SessionSerializable {
 	@SafeVarargs
 	@Deprecated
 	public static @NotNull <T> Page<T> of(long length, final T... list) {
-		if (BeanUtils.isNull(list)) {
+		if (Objects.isNull(list)) {
 			return Page.of(length, 1, 0, new ArrayList<>());
 		}
 		return Page.of(length, 1, list.length, Arrays.asList(list));

@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static java.lang.reflect.Modifier.*;
+import static java.util.Objects.isNull;
 
 /**
  * Bean工具类
@@ -20,7 +21,6 @@ import static java.lang.reflect.Modifier.*;
 public class BeanUtils {
 	private BeanUtils() {
 	}
-
 	/**
 	 * 验证对象是否为空
 	 *
@@ -77,6 +77,19 @@ public class BeanUtils {
 	@Deprecated
 	public static <T> boolean isNull(T obj) {
 		return Objects.isNull(obj);
+	}
+
+	/**
+	 * 判断对象是否相等(对象需要重写 equals() 方法)
+	 *
+	 * @param var0 对象1
+	 * @param var1 对象2
+	 * @return 是否相等
+	 * @see Objects#equals(Object, Object)
+	 */
+	@Deprecated
+	public static boolean equals(Object var0, Object var1) {
+		return Objects.equals(var0, var1);
 	}
 
 	/**
@@ -218,19 +231,6 @@ public class BeanUtils {
 	}
 
 	/**
-	 * 判断对象是否相等(对象需要重写 equals() 方法)
-	 *
-	 * @param var0 对象1
-	 * @param var1 对象2
-	 * @return 是否相等
-	 * @see Objects#equals(Object, Object)
-	 */
-	@Deprecated
-	public static boolean equals(Object var0, Object var1) {
-		return Objects.equals(var0, var1);
-	}
-
-	/**
 	 * 获取新实例
 	 *
 	 * @param clazz 类型对象
@@ -281,6 +281,7 @@ public class BeanUtils {
 		RefUtils.setFieldValues(t, map);
 		return t;
 	}
+
 
 	/**
 	 * 获取对象字段值

@@ -484,7 +484,7 @@ public class RefUtils {
 	 * @return 结果对象
 	 */
 	public static @NotNull <T> T newInstance(@NotNull Class<T> clazz) throws ReflectiveOperationException {
-		return clazz.getConstructor().newInstance();
+		return clazz.newInstance();
 	}
 
 	/**

@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>5.3.0</version>
+        <version>5.3.1</version>
     </parent>
 
     <artifactId>dutils-common</artifactId>
@@ -59,6 +59,11 @@
             <artifactId>thumbnailator</artifactId>
             <version>0.4.13</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>reflectasm</artifactId>
+            <version>1.11.9</version>
         </dependency>
     </dependencies>
 
