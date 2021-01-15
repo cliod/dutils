@@ -17,7 +17,7 @@ import java.util.Objects;
  * @since 2021-01-08 10:59:35
  */
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)

@@ -1,5 +1,6 @@
 package com.wobangkj.handler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.wobangkj.api.Response;
 import com.wobangkj.bean.Res;
 import com.wobangkj.exception.AppException;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -24,6 +26,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -53,6 +56,21 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 		Res r = Res.empty();
 		r.setStatus(e.getCode());
 		r.setMsg(e.getMessage());
+		log.warn(e.getMessage());
+		return r;
+	}
+
+	/**
+	 * 时间格式不正确异常
+	 *
+	 * @param e 异常
+	 * @return 结果
+	 */
+	@ExceptionHandler({InvalidFormatException.class, HttpMessageNotReadableException.class})
+	public Object invalidFormatException(InvalidFormatException e) {
+		Res r = Res.empty();
+		r.setStatus(this.getCode());
+		r.setMsg("参数值格式不正确，" + e.getValue());
 		log.warn(e.getMessage());
 		return r;
 	}
@@ -216,6 +234,15 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 	 */
 	@ExceptionHandler(RuntimeException.class)
 	public Object runtimeExceptionHandler(@NotNull RuntimeException e) {
+		Res r = Res.empty();
+		r.setStatus(500);
+		r.setMsg(e.getMessage());
+		log.error(r.getMsg());
+		return r;
+	}
+
+	@ExceptionHandler(IOException.class)
+	public Object ioException(IOException e) {
 		Res r = Res.empty();
 		r.setStatus(500);
 		r.setMsg(e.getMessage());
