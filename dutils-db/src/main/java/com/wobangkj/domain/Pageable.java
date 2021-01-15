@@ -47,7 +47,8 @@ public final class Pageable extends Condition {
 	 * @param queries 原生查询
 	 */
 	@Override
-	public void setQueries(List<Query> queries) {
+	@Deprecated
+	public final void setQueries(List<Query> queries) {
 		super.setQueries(queries);
 	}
 

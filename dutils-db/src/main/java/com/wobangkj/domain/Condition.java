@@ -1,5 +1,6 @@
 package com.wobangkj.domain;
 
+import com.wobangkj.bean.Res;
 import com.wobangkj.utils.BeanUtils;
 import lombok.*;
 
@@ -63,12 +64,47 @@ public class Condition extends com.wobangkj.bean.Pageable {
 		this.queries.add(Query.builder().related(related).query(sql).build());
 	}
 
+	/**
+	 * 添加and查询条件
+	 *
+	 * @param sql 条件
+	 */
 	public void andQuery(String sql) {
 		this.addQuery("and", sql);
 	}
 
+	/**
+	 * 添加or查询条件
+	 *
+	 * @param sql 条件
+	 */
 	public void orQuery(String sql) {
 		this.addQuery("or", sql);
+	}
+
+	/**
+	 * 添加and =查询条件
+	 *
+	 * @param column 字段
+	 * @param value  值
+	 */
+	public void andMatch(String column, Object value) {
+		if (Objects.isNull(match)) {
+			match = Res.empty();
+		}
+		match.put(column, value);
+	}
+
+	/**
+	 * 添加范围查询条件
+	 *
+	 * @param among 范围
+	 */
+	public void andAmong(Among<?> among) {
+		if (Objects.isNull(this.among)) {
+			this.among = new ArrayList<>();
+		}
+		this.among.add(among);
 	}
 
 	@Override
