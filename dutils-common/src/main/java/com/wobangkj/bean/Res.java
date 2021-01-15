@@ -43,7 +43,7 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	 * @param map map
 	 * @return res
 	 */
-	public static @NotNull Res from(Map<String, Object> map) {
+	public static @NotNull Res from(Map<String, ?> map) {
 		return new Res(map);
 	}
 
