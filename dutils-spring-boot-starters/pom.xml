@@ -16,6 +16,7 @@
 
     <modules>
         <module>dutils-sms-starter</module>
+        <module>dutils-spring-boot-starter</module>
     </modules>
 
     <dependencies>
