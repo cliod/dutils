@@ -1,7 +1,7 @@
 package com.wobangkj.impl;
 
-import com.wobangkj.api.IMapper;
 import com.wobangkj.api.IService;
+import com.wobangkj.api.ITkMapper;
 import com.wobangkj.api.ServiceImpl;
 import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.*;
@@ -20,7 +20,7 @@ import java.util.Objects;
  * @author cliod
  * @since 9/4/20 11:07 AM
  */
-public class TkServiceImpl<D extends IMapper<T>, T> extends ServiceImpl<T> implements IService<T> {
+public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> implements IService<T> {
 
 	protected D dao;
 

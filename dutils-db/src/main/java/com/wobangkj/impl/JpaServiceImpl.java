@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -23,12 +24,12 @@ import java.util.Locale;
  * @author cliod
  * @since 9/4/20 11:07 AM
  */
-public class JpaServiceImpl<D extends IRepository<T>, T> extends ServiceImpl<T> implements IService<T> {
+public class JpaServiceImpl<D extends JpaRepository<T, Long>, T> extends ServiceImpl<T> implements IService<T> {
 
-	protected D dao;
+	protected IRepository<T> dao;
 
 	public JpaServiceImpl(D dao) {
-		this.dao = dao;
+		this.dao = JpaProvider.apply(dao);
 	}
 
 	protected JpaServiceImpl() {
@@ -40,13 +41,18 @@ public class JpaServiceImpl<D extends IRepository<T>, T> extends ServiceImpl<T> 
 	 * @return 通用dao
 	 */
 	@Override
-	public D getDao() {
+	public IRepository<T> getDao() {
 		return this.dao;
 	}
 
 	@Resource
-	public void setDao(D dao) {
+	public void setDao(IRepository<T> dao) {
 		this.dao = dao;
+	}
+
+	@Resource
+	public void setDao(JpaRepository<T, Long> repository) {
+		this.dao = JpaProvider.apply(repository);
 	}
 
 	@Override
