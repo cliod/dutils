@@ -1,5 +1,6 @@
 package com.wobangkj.bean;
 
+import com.wobangkj.api.IRes;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @since 4/22/20 11:12 AM
  */
 @Setter
-public abstract class Pageable implements com.wobangkj.api.Pageable, Cloneable {
+public abstract class Pageable implements com.wobangkj.api.Pageable, IRes, Cloneable {
 
 	public static Pageable DEFAULT = new Pageable() {{
 		setPage(1);
@@ -101,6 +102,16 @@ public abstract class Pageable implements com.wobangkj.api.Pageable, Cloneable {
 	 */
 	protected int minPageSize() {
 		return 1;
+	}
+
+	/**
+	 * 转成Res[Map]对象
+	 *
+	 * @return Map
+	 */
+	@Override
+	public Res toRes() {
+		return Res.of("size", this.getSize()).add("page", this.getPage());
 	}
 
 	/**

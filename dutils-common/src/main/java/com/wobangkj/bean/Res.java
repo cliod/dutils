@@ -1,5 +1,6 @@
 package com.wobangkj.bean;
 
+import com.wobangkj.api.IRes;
 import com.wobangkj.api.SessionSerializable;
 import com.wobangkj.utils.JsonUtils;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @author cliod
  * @since 2019/5/20 13:20
  */
-public class Res extends Maps<String, Object> implements SessionSerializable {
+public class Res extends Maps<String, Object> implements IRes, SessionSerializable {
 
 	private static final long serialVersionUID = -1884640212713045469L;
 
@@ -151,6 +152,16 @@ public class Res extends Maps<String, Object> implements SessionSerializable {
 	@Override
 	public Object pop(String id) {
 		return remove(id);
+	}
+
+	/**
+	 * 转成Res[Map]对象
+	 *
+	 * @return Map
+	 */
+	@Override
+	public Res toRes() {
+		return this;
 	}
 
 	/**

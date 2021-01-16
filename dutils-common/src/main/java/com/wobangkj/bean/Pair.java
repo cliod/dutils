@@ -10,11 +10,15 @@ import org.jetbrains.annotations.NotNull;
  * @author cliod
  * @since 7/18/20 11:23 AM
  */
-public class Pair<K, V> extends Var<Object> implements IRes {
+public class Pair<K, V> extends Var<Object> {
 
 	public static final String KEY_NAME = "key";
 	public static final String VALUE_NAME = "value";
 	protected final Maps<String, Object> data;
+
+	public Pair() {
+		this.data = Maps.of(VALUE_NAME, null).add(KEY_NAME,null);
+	}
 
 	public Pair(K k, V v) {
 		data = Maps.of(KEY_NAME, (Object) k).add(VALUE_NAME, v);

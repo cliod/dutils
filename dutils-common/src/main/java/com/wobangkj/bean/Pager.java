@@ -1,5 +1,6 @@
 package com.wobangkj.bean;
 
+import com.wobangkj.api.IRes;
 import com.wobangkj.api.SessionSerializable;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ import java.util.List;
  * @since 19-6-9
  */
 @Data
-public final class Pager<T> implements SessionSerializable {
+public final class Pager<T> implements IRes, SessionSerializable {
 
 	private static final long serialVersionUID = 7562274153136856700L;
 	public static Pager<?> EMPTY = Pager.of(0, 1, 10, Collections.emptyList());
@@ -135,6 +136,17 @@ public final class Pager<T> implements SessionSerializable {
 	}
 
 	/**
+	 * 转成Res[Map]对象
+	 *
+	 * @return Map
+	 */
+	@Override
+	public Res toRes() {
+		return Res.of("data", this.getData())
+				.add("pager", this.getPager());
+	}
+
+	/**
 	 * 转成Map对象
 	 *
 	 * @return java.util.Map
@@ -142,8 +154,7 @@ public final class Pager<T> implements SessionSerializable {
 	 */
 	@Override
 	public @NotNull Res toObject() {
-		return Res.of("data", this.getData())
-				.add("pager", this.getPager());
+		return toRes();
 	}
 
 	@Data

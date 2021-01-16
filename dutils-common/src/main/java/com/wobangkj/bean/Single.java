@@ -15,6 +15,10 @@ public class Single<T> extends Var<T> implements IRes {
 	public static final String VALUE_NAME = "value";
 	protected final Maps<String, T> data;
 
+	public Single() {
+		this.data = Maps.of(VALUE_NAME, null);
+	}
+
 	public Single(T t) {
 		data = Maps.of(VALUE_NAME, t);
 	}
