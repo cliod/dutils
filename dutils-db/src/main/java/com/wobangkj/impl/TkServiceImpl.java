@@ -31,22 +31,44 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 	protected TkServiceImpl() {
 	}
 
+	/**
+	 * 获取Dao
+	 *
+	 * @return 通用dao
+	 */
 	@Override
 	public D getDao() {
 		return this.dao;
 	}
 
+	/**
+	 * 设置Dao
+	 *
+	 * @param dao dao对象
+	 */
 	@Resource
 	public void setDao(D dao) {
 		this.dao = dao;
 	}
 
+	/**
+	 * 新增数据
+	 *
+	 * @param t 实例对象
+	 * @return 实例对象
+	 */
 	@Override
 	public T insert(T t) {
 		this.dao.insertSelective(t);
 		return t;
 	}
 
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 是否成功
+	 */
 	@Override
 	public boolean deleteById(Long id) {
 		return this.dao.deleteById(id) > 0;

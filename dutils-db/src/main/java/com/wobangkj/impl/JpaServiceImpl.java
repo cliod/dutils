@@ -45,22 +45,44 @@ public class JpaServiceImpl<D extends JpaRepository<T, Long>, T> extends Service
 		return this.dao;
 	}
 
+	/**
+	 * 获取Dao
+	 *
+	 * @return 通用dao
+	 */
 	@Resource
 	public void setDao(IRepository<T> dao) {
 		this.dao = dao;
 	}
 
+	/**
+	 * 设置repository
+	 *
+	 * @param repository jpa对象
+	 */
 	@Resource
 	public void setDao(JpaRepository<T, Long> repository) {
 		this.dao = JpaProvider.apply(repository);
 	}
 
+	/**
+	 * 修改数据
+	 *
+	 * @param t 实例对象
+	 * @return 实例对象
+	 */
 	@Override
 	public T insert(T t) {
 		this.dao.insert(t);
 		return t;
 	}
 
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 是否成功
+	 */
 	@Override
 	public boolean deleteById(Long id) {
 		this.dao.deleteById(id);

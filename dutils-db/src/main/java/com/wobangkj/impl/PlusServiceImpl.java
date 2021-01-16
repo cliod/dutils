@@ -44,11 +44,21 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 		return PlusProvider.apply(this.service.getBaseMapper());
 	}
 
+	/**
+	 * 设置service
+	 *
+	 * @param service service对象
+	 */
 	@Resource
 	public void setService(IService<T> service) {
 		this.service = service;
 	}
 
+	/**
+	 * 设置service
+	 *
+	 * @param service service对象
+	 */
 	public void setService(M service) throws ReflectiveOperationException {
 		this.service = new ServiceImpl<>();
 		RefUtils.setFieldValue(this.service, "baseMapper", service);
