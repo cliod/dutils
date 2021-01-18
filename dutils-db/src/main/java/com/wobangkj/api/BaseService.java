@@ -11,4 +11,7 @@ public class BaseService<D extends IRepository<T>, T> extends JpaServiceImpl<D, 
 	public BaseService(D dao) {
 		super(dao);
 	}
+
+	public BaseService() {
+	}
 }
