@@ -1,7 +1,7 @@
 package com.wobangkj.domain;
 
 import com.wobangkj.utils.RefUtils;
-import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.Transient;
 
@@ -12,8 +12,8 @@ import javax.persistence.Transient;
  * @version 1.0
  * @since 2021-01-08 11:35:23
  */
-@Data
 public class Columns {
+	@Getter
 	private String[] columns;
 
 	protected Columns(String[] columns) {
@@ -23,5 +23,9 @@ public class Columns {
 	public static Columns of(Class<?> type) {
 		String[] fields = RefUtils.getFieldNames(type, Transient.class).toArray(new String[0]);
 		return new Columns(fields);
+	}
+
+	protected void setColumns(String[] columns) {
+		this.columns = columns;
 	}
 }

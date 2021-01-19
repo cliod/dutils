@@ -46,16 +46,6 @@ public class JpaServiceImpl<D extends JpaRepository<T, Long>, T> extends Service
 	}
 
 	/**
-	 * 获取Dao
-	 *
-	 * @return 通用dao
-	 */
-	@Resource
-	public void setDao(IRepository<T> dao) {
-		this.dao = dao;
-	}
-
-	/**
 	 * 设置repository
 	 *
 	 * @param repository jpa对象
@@ -63,6 +53,14 @@ public class JpaServiceImpl<D extends JpaRepository<T, Long>, T> extends Service
 	@Resource
 	public void setDao(JpaRepository<T, Long> repository) {
 		this.dao = JpaProvider.apply(repository);
+	}
+
+	/**
+	 * 获取Dao
+	 */
+	@Resource
+	public void setDao(IRepository<T> dao) {
+		this.dao = dao;
 	}
 
 	/**

@@ -1,8 +1,5 @@
 package com.wobangkj.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 /**
  * 一维收缩
  *
@@ -12,10 +9,17 @@ import lombok.NoArgsConstructor;
  */
 public class NumberAmong extends Among<Number> {
 
-	public static NumberAmong of(Number start, Number end) {
-		NumberAmong dateAmong = new NumberAmong();
-		dateAmong.floor = start;
-		dateAmong.ceiling = end;
-		return dateAmong;
+	@Deprecated
+	public static NumberAmong of(Number floor, Number ceiling) {
+		return of("", floor, ceiling);
 	}
+
+	public static NumberAmong of(String column, Number floor, Number ceiling) {
+		NumberAmong numberNumber = new NumberAmong();
+		numberNumber.column = column;
+		numberNumber.floor = floor;
+		numberNumber.ceiling = ceiling;
+		return numberNumber;
+	}
+
 }

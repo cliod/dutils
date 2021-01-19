@@ -264,7 +264,7 @@ public class RefUtils {
 	 */
 	@SafeVarargs
 	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, Class<? extends Annotation>... excludeFieldNames) {
-		return getFieldNames(obj, Collections.emptyList(), Collections.emptyList(), Arrays.asList(excludeFieldNames));
+		return getFieldNames(obj, Arrays.asList(Modifier.STATIC, Modifier.FINAL), Collections.emptyList(), Arrays.asList(excludeFieldNames));
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class RefUtils {
 	 * @return 结果
 	 */
 	public static @NotNull List<String> getFieldNames(@NotNull Class<?> obj, List<String> excludeFieldNames) {
-		return getFieldNames(obj, Collections.emptyList(), excludeFieldNames, Collections.emptyList());
+		return getFieldNames(obj, Arrays.asList(Modifier.STATIC, Modifier.FINAL), excludeFieldNames, Collections.emptyList());
 	}
 
 	/**
