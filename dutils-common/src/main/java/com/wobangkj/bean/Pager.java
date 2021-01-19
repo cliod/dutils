@@ -3,6 +3,7 @@ package com.wobangkj.bean;
 import com.wobangkj.api.IRes;
 import com.wobangkj.api.SessionSerializable;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -16,7 +17,7 @@ import java.util.List;
  * @since 19-6-9
  */
 @Data
-public final class Pager<T> implements IRes, SessionSerializable {
+public final class Pager<T> implements IRes, SessionSerializable, Cloneable {
 
 	private static final long serialVersionUID = 7562274153136856700L;
 	public static Pager<?> EMPTY = Pager.of(0, 1, 10, Collections.emptyList());
@@ -96,9 +97,10 @@ public final class Pager<T> implements IRes, SessionSerializable {
 	 * @param <T> 泛型
 	 * @return 结果
 	 */
+	@SneakyThrows
 	@SuppressWarnings("unchecked")
 	public static <T> @NotNull Pager<T> empty() {
-		return (Pager<T>) EMPTY;
+		return (Pager<T>) EMPTY.clone();
 	}
 
 	public Long getTotalNum() {
@@ -155,6 +157,19 @@ public final class Pager<T> implements IRes, SessionSerializable {
 	@Override
 	public @NotNull Res toObject() {
 		return toRes();
+	}
+
+	/**
+	 * 浅克隆
+	 *
+	 * @return a clone of this instance.
+	 * @throws CloneNotSupportedException 克隆异常
+	 * @see Cloneable
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	protected Pager<T> clone() throws CloneNotSupportedException {
+		return (Pager<T>) super.clone();
 	}
 
 	@Data
