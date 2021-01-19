@@ -116,12 +116,12 @@ public class Res extends Maps<String, Object> implements IRes, SessionSerializab
 	}
 
 	/**
-	 * 空返回
+	 * 通用空返回
 	 *
 	 * @return 空对象
 	 */
 	public static @NotNull Res empty() {
-		return EMPTY;
+		return EMPTY.clone();
 	}
 
 	public Res addAll(Map<String, Object> map) {
