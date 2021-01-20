@@ -53,7 +53,7 @@ public class Columns {
 		String fieldName;
 		for (Field field : fields) {
 			// 不获取静态和最终字段
-			if (field.getModifiers() == Modifier.STATIC || field.getModifiers() == Modifier.FINAL) {
+			if (Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers())) {
 				continue;
 			}
 			fieldName = field.getName();
