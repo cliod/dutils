@@ -1,9 +1,16 @@
 package com.wobangkj.domain;
 
-import com.wobangkj.utils.RefUtils;
+import com.wobangkj.annotation.LikeColumn;
+import com.wobangkj.annotation.LikeExclude;
 import lombok.Getter;
 
 import javax.persistence.Transient;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 数据库字段
@@ -21,8 +28,46 @@ public class Columns {
 	}
 
 	public static Columns of(Class<?> type) {
-		String[] fields = RefUtils.getFieldNames(type, Transient.class).toArray(new String[0]);
+		String[] fields = parseField(type).toArray(new String[0]);
 		return new Columns(fields);
+	}
+
+	/**
+	 * 解析用于like模糊查询的字段
+	 *
+	 * @param type 类型
+	 * @return 字段
+	 */
+	public static List<String> parseField(Class<?> type) {
+		Field[] fields = type.getDeclaredFields();
+		List<String> columns = new ArrayList<>(fields.length);
+		LikeColumn like = type.getAnnotation(LikeColumn.class);
+		List<String> exclude = new ArrayList<>();
+		if (Objects.nonNull(like)) {
+			if (like.includeOnly().length != 0) {
+				columns = Arrays.asList(like.includeOnly());
+				return columns;
+			}
+			exclude.addAll(Arrays.asList(like.exclude()));
+		}
+		String fieldName;
+		for (Field field : fields) {
+			// 不获取静态和最终字段
+			if (field.getModifiers() == Modifier.STATIC || field.getModifiers() == Modifier.FINAL) {
+				continue;
+			}
+			fieldName = field.getName();
+			// 忽略like
+			if (exclude.contains(fieldName)) {
+				continue;
+			}
+			// 忽略like
+			if (field.isAnnotationPresent(LikeExclude.class) || field.isAnnotationPresent(Transient.class)) {
+				continue;
+			}
+			columns.add(fieldName);
+		}
+		return columns;
 	}
 
 	protected void setColumns(String[] columns) {
