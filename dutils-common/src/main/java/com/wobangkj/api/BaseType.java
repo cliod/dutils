@@ -3,6 +3,7 @@ package com.wobangkj.api;
 import com.wobangkj.utils.JsonUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 统一类型接口
@@ -11,7 +12,7 @@ import java.util.HashMap;
  * @since 19-6-22
  */
 @Deprecated
-public interface BaseType extends Session {
+public interface BaseType extends Session, EnumType {
 
 	/**
 	 * 获取code
@@ -78,20 +79,19 @@ public interface BaseType extends Session {
 	 */
 	@Override
 	default Object toObject() {
+		return this.toMap();
+	}
+
+	/**
+	 * 反序列化
+	 *
+	 * @return 结果对象
+	 */
+	@Override
+	default Map<String, Object> toMap() {
 		return new HashMap<String, Object>(4) {{
 			put("code", getCode());
 			put("desc", getDesc());
 		}};
 	}
-
-	/**
-	 * 序列化,转成Json
-	 *
-	 * @return Json
-	 */
-	@Override
-	default String toJson() {
-		return JsonUtils.toJson(this.toObject());
-	}
-
 }

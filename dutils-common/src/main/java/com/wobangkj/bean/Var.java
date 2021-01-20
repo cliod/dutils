@@ -45,6 +45,16 @@ public abstract class Var<T> implements IRes, ValueWrapper<T> {
 	 * @return 结果对象
 	 */
 	@Override
+	public Res toMap() {
+		return this.toRes();
+	}
+
+	/**
+	 * 反序列化
+	 *
+	 * @return 结果对象
+	 */
+	@Override
 	public Object toObject() {
 		return this.toRes();
 	}

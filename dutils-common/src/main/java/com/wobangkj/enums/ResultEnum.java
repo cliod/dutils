@@ -1,7 +1,7 @@
 package com.wobangkj.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wobangkj.api.EnumMsg;
+import com.wobangkj.api.EnumTextMsg;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Deprecated
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum ResultEnum implements EnumMsg {
+public enum ResultEnum implements EnumTextMsg {
 	/**
 	 * HTTP 状态码
 	 * #1000～1999 区间表示参数错误

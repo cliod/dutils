@@ -12,7 +12,7 @@ import java.util.Map;
  * @since 19-7-4
  */
 @Deprecated
-public interface BaseEnum extends Session {
+public interface BaseEnum extends Session, EnumMsg {
 	/**
 	 * 获取所有
 	 *
@@ -51,20 +51,21 @@ public interface BaseEnum extends Session {
 	 * @return map
 	 */
 	@Override
+	@Deprecated
 	default Object toObject() {
+		return this.toMap();
+	}
+
+	/**
+	 * 反序列化
+	 *
+	 * @return 结果对象
+	 */
+	@Override
+	default Map<String, Object> toMap() {
 		Map<String, Object> map = new HashMap<>(4);
 		map.put("code", this.getCode());
 		map.put("msg", this.getMsg());
 		return map;
-	}
-
-	/**
-	 * 序列化,转成Json
-	 *
-	 * @return Json
-	 */
-	@Override
-	default String toJson() {
-		return JsonUtils.toJson(this.toObject());
 	}
 }

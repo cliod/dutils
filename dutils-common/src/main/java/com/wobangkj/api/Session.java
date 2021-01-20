@@ -16,5 +16,4 @@ public interface Session extends SessionSerializable {
 	 */
 	@Override
 	String toString();
-
 }

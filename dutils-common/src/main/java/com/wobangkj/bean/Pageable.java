@@ -115,6 +115,16 @@ public abstract class Pageable implements com.wobangkj.api.Pageable, IRes, Clone
 	}
 
 	/**
+	 * 反序列化
+	 *
+	 * @return 结果对象
+	 */
+	@Override
+	public Res toMap() {
+		return this.toRes();
+	}
+
+	/**
 	 * 克隆
 	 *
 	 * @return 结果
@@ -122,5 +132,15 @@ public abstract class Pageable implements com.wobangkj.api.Pageable, IRes, Clone
 	@Override
 	protected Pageable clone() throws CloneNotSupportedException {
 		return (Pageable) super.clone();
+	}
+
+	/**
+	 * 转成对象
+	 *
+	 * @return obj
+	 */
+	@Override
+	public Object toObject() {
+		return this;
 	}
 }

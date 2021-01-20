@@ -28,6 +28,7 @@ public interface EnumTextMsg extends EnumMsg, Supplier<String> {
 	 * @param args 参数
 	 * @return 消息
 	 */
+	@Deprecated
 	default String getMsg(String msg, Object... args) {
 		return getMsg() + " " + String.format(msg, args);
 	}

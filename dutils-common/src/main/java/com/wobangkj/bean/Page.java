@@ -1,8 +1,6 @@
 package com.wobangkj.bean;
 
 import com.wobangkj.api.IRes;
-import com.wobangkj.api.SessionSerializable;
-import com.wobangkj.utils.BeanUtils;
 import com.wobangkj.utils.JsonUtils;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +15,7 @@ import java.util.*;
  */
 @Data
 @Deprecated
-public class Page<T> implements IRes, SessionSerializable {
+public class Page<T> implements IRes {
 
 	public static Page<?> EMPTY = Page.of(0, 1, 10, Collections.emptyList());
 
@@ -158,15 +156,5 @@ public class Page<T> implements IRes, SessionSerializable {
 	@Override
 	public Res toObject() {
 		return toRes();
-	}
-
-	/**
-	 * 转成Json
-	 *
-	 * @return Json
-	 */
-	@Override
-	public String toJson() {
-		return JsonUtils.toJson(this.toObject());
 	}
 }

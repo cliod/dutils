@@ -33,7 +33,18 @@ public interface EnumMsg extends SessionSerializable {
 	 * @return map
 	 */
 	@Override
+	@Deprecated
 	default Object toObject() {
+		return this.toMap();
+	}
+
+	/**
+	 * 反序列化
+	 *
+	 * @return 结果对象
+	 */
+	@Override
+	default Map<String, Object> toMap() {
 		Map<String, Object> map = new HashMap<>(4);
 		map.put("code", this.getCode());
 		map.put("msg", this.getMsg());
