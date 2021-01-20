@@ -148,7 +148,7 @@ public class RefUtils {
 				exclude = containsAnnotation(field, excludeAnnotations);
 			}
 			if (!mods) {
-				exclude = containsExcludeMods(excludeMods, field.getModifiers());
+				exclude = exclude || containsExcludeMods(excludeMods, field.getModifiers());
 			}
 			if (!names) {
 				exclude = exclude || (excludeFieldNames.contains(field.getName()) || excludeFieldNames.contains(covert.apply(field.getName())));
@@ -306,14 +306,14 @@ public class RefUtils {
 		boolean mods = excludeMods.isEmpty();
 		boolean exclude = false;
 		for (Field field : fields) {
-			if (!names) {
-				exclude = exclude || (excludeFieldNames.contains(field.getName()) || excludeFieldNames.contains(covert.apply(field.getName())));
-			}
 			if (!mods) {
 				exclude = containsExcludeMods(excludeMods, field.getModifiers());
 			}
+			if (!names) {
+				exclude = exclude || (excludeFieldNames.contains(field.getName()) || excludeFieldNames.contains(covert.apply(field.getName())));
+			}
 			if (!ann) {
-				exclude = containsAnnotation(field, excludeAnnotations);
+				exclude = exclude || containsAnnotation(field, excludeAnnotations);
 			}
 			if (!exclude) {
 				result.add(covert.apply(field.getName()));
