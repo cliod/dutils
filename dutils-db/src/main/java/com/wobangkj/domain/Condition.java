@@ -51,6 +51,10 @@ public class Condition extends com.wobangkj.bean.Pageable {
 	 */
 	private List<Query> queries;
 
+	public String getLikeKey() {
+		return "%" + key + "%";
+	}
+
 	/**
 	 * 关联sql查询语句
 	 *

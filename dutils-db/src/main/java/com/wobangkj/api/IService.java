@@ -1,7 +1,8 @@
 package com.wobangkj.api;
 
-import com.wobangkj.domain.Pageable;
 import com.wobangkj.bean.Pager;
+import com.wobangkj.domain.Condition;
+import com.wobangkj.domain.Pageable;
 
 /**
  * 通用Service, 兼容方法
@@ -36,11 +37,23 @@ public interface IService<T> {
 	/**
 	 * 查询
 	 *
+	 * @param t         条件
+	 * @param condition 分页
+	 * @return 列表
+	 */
+	Pager<T> queryAll(T t, Condition condition);
+
+	/**
+	 * 查询
+	 *
 	 * @param t        条件
 	 * @param pageable 分页
 	 * @return 列表
 	 */
-	Pager<T> queryAll(T t, Pageable pageable);
+	@Deprecated
+	default Pager<T> queryAll(T t, Pageable pageable) {
+		return this.queryAll(t, (Condition) pageable);
+	}
 
 	/**
 	 * 查询多条数据

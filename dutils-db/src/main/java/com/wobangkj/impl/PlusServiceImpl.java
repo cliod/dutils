@@ -91,17 +91,17 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 	 * 查询
 	 *
 	 * @param t        条件
-	 * @param pageable 分页
+	 * @param condition 分页
 	 * @return 列表
 	 */
 	@Override
-	public Pager<T> queryAll(T t, Pageable pageable) {
-		if (StringUtils.isEmpty(pageable.getKey()) && StringUtils.isEmpty(pageable.getOrder())) {
-			return super.queryAll(t, pageable);
+	public Pager<T> queryAll(T t, Condition condition) {
+		if (StringUtils.isEmpty(condition.getKey()) && StringUtils.isEmpty(condition.getOrder())) {
+			return super.queryAll(t, condition);
 		}
-		Page<T> page = new Page<>(pageable.getMybatisPage(), pageable.getLimit());
-		if (StringUtils.isNotEmpty(pageable.getOrder())) {
-			String[] orders = pageable.getOrder().split(",");
+		Page<T> page = new Page<>(condition.getMybatisPage(), condition.getLimit());
+		if (StringUtils.isNotEmpty(condition.getOrder())) {
+			String[] orders = condition.getOrder().split(",");
 			for (String order : orders) {
 				String[] f = order.split(" ");
 				if (f.length == 1) {
@@ -117,21 +117,21 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 			}
 		}
 		QueryWrapper<T> wrapper = new QueryWrapper<>(t);
-		if (StringUtils.isNotEmpty(pageable.getKey())) {
+		if (StringUtils.isNotEmpty(condition.getKey())) {
 			Columns columns = fieldCacheMaps.get(t.hashCode());
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
 				fieldCacheMaps.put(t.hashCode(), columns);
 			}
 			for (String column : columns.getColumns()) {
-				wrapper.like(column, pageable.getKey());
+				wrapper.or().like(column, condition.getLikeKey());
 			}
 		}
-		if (!BeanUtils.isEmpty(pageable.getMatch())) {
-			wrapper.allEq(pageable.getMatch());
+		if (!BeanUtils.isEmpty(condition.getMatch())) {
+			wrapper.allEq(condition.getMatch());
 		}
-		if (!BeanUtils.isEmpty(pageable.getAmong())) {
-			for (Among<?> among : pageable.getAmong()) {
+		if (!BeanUtils.isEmpty(condition.getAmong())) {
+			for (Among<?> among : condition.getAmong()) {
 				if (among instanceof DateAmong) {
 					if (Objects.isNull(among.getCeiling())) {
 						wrapper.ge(among.getColumn(), ((DateAmong) among).getDateFloor());
@@ -152,8 +152,8 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 			}
 		}
 		// 原生条件，会有sql注入的风险
-		if (!BeanUtils.isEmpty(pageable.getQueries())) {
-			for (Query query : pageable.getQueries()) {
+		if (!BeanUtils.isEmpty(condition.getQueries())) {
+			for (Query query : condition.getQueries()) {
 				if (query.getRelated().equals("or")) {
 					wrapper.or().apply(query.getQuery());
 				} else {
@@ -162,6 +162,6 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 			}
 		}
 		Page<T> res = this.service.page(page.addOrder(OrderItem.desc("id")), wrapper);
-		return Pager.of(res.getTotal(), pageable, res.getRecords());
+		return Pager.of(res.getTotal(), condition, res.getRecords());
 	}
 }

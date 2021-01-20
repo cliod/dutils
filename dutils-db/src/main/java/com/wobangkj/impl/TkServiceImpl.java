@@ -77,23 +77,23 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 	/**
 	 * 查询
 	 *
-	 * @param t        条件
-	 * @param pageable 分页
+	 * @param t         条件
+	 * @param condition 分页
 	 * @return 列表
 	 */
 	@Override
-	public Pager<T> queryAll(T t, Pageable pageable) {
-		if (StringUtils.isEmpty(pageable.getKey()) && StringUtils.isEmpty(pageable.getOrder())) {
-			return super.queryAll(t, pageable);
+	public Pager<T> queryAll(T t, Condition condition) {
+		if (StringUtils.isEmpty(condition.getKey()) && StringUtils.isEmpty(condition.getOrder())) {
+			return super.queryAll(t, condition);
 		}
 		Example example = Example.builder(t.getClass()).build();
-		if (StringUtils.isNotEmpty(pageable.getOrder())) {
-			example.setOrderByClause(pageable.getOrder());
+		if (StringUtils.isNotEmpty(condition.getOrder())) {
+			example.setOrderByClause(condition.getOrder());
 		} else {
 			example.setOrderByClause("id desc");
 		}
 		Example.Criteria criteria = example.createCriteria();
-		if (StringUtils.isNotEmpty(pageable.getKey())) {
+		if (StringUtils.isNotEmpty(condition.getKey())) {
 			Columns columns = fieldCacheMaps.get(t.hashCode());
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
@@ -103,16 +103,16 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 				if (StringUtils.isEmpty(column)) {
 					continue;
 				}
-				criteria.andLike(column, pageable.getKey());
+				criteria.orLike(column, condition.getLikeKey());
 			}
 		}
-		if (!BeanUtils.isEmpty(pageable.getMatch())) {
-			for (Map.Entry<String, Object> entry : pageable.getMatch().entrySet()) {
+		if (!BeanUtils.isEmpty(condition.getMatch())) {
+			for (Map.Entry<String, Object> entry : condition.getMatch().entrySet()) {
 				criteria.andEqualTo(entry.getKey(), entry.getValue());
 			}
 		}
-		if (!BeanUtils.isEmpty(pageable.getAmong())) {
-			for (Among<?> among : pageable.getAmong()) {
+		if (!BeanUtils.isEmpty(condition.getAmong())) {
+			for (Among<?> among : condition.getAmong()) {
 				if (among instanceof DateAmong) {
 					if (Objects.isNull(among.getCeiling())) {
 						criteria.andGreaterThanOrEqualTo(among.getColumn(), ((DateAmong) among).getDateFloor());
@@ -133,8 +133,8 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 			}
 		}
 		// 原生条件，会有sql注入的风险
-		if (!BeanUtils.isEmpty(pageable.getQueries())) {
-			for (Query query : pageable.getQueries()) {
+		if (!BeanUtils.isEmpty(condition.getQueries())) {
+			for (Query query : condition.getQueries()) {
 				if (query.getRelated().equals("or")) {
 					criteria.orCondition(query.getQuery());
 				} else {
@@ -146,6 +146,6 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		if (count == 0) {
 			return Pager.empty();
 		}
-		return Pager.of(count, pageable, this.dao.selectByExampleAndRowBounds(example, new RowBounds(pageable.getOffset(), pageable.getLimit())));
+		return Pager.of(count, condition, this.dao.selectByExampleAndRowBounds(example, new RowBounds(condition.getOffset(), condition.getLimit())));
 	}
 }

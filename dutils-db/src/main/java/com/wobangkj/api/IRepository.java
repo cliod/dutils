@@ -1,7 +1,8 @@
 package com.wobangkj.api;
 
-import com.wobangkj.domain.Pageable;
 import com.wobangkj.bean.Pager;
+import com.wobangkj.domain.Condition;
+import com.wobangkj.domain.Pageable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,13 +69,13 @@ public interface IRepository<T> extends IDao<T>, JpaRepository<T, Long> {
 	 * 通过实体作为筛选条件查询
 	 *
 	 * @param t        实例对象
-	 * @param pageable 分页
+	 * @param condition 分页
 	 * @return 对象列表
 	 */
 	@Override
-	default Pager<T> queryAllPage(T t, Pageable pageable) {
-		Page<T> page = this.findAll(Example.of(t), PageRequest.of(pageable.getJpaPage(), pageable.getSize()));
-		return Pager.of(page.getTotalElements(), pageable, page.getContent());
+	default Pager<T> queryAllPage(T t, Condition condition) {
+		Page<T> page = this.findAll(Example.of(t), PageRequest.of(condition.getJpaPage(), condition.getSize()));
+		return Pager.of(page.getTotalElements(), condition, page.getContent());
 	}
 
 	/**

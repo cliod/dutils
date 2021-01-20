@@ -1,7 +1,7 @@
 package com.wobangkj.api;
 
-import com.wobangkj.domain.Pageable;
 import com.wobangkj.bean.Pager;
+import com.wobangkj.domain.Condition;
 
 import java.util.List;
 
@@ -67,14 +67,14 @@ public interface IDao<T> {
 	 * 通过实体作为筛选条件查询
 	 *
 	 * @param t        实例对象
-	 * @param pageable 分页
+	 * @param condition 分页
 	 * @return 对象列表
 	 */
-	default Pager<T> queryAllPage(T t, Pageable pageable) {
+	default Pager<T> queryAllPage(T t, Condition condition) {
 		long count = this.count(t);
 		if (count == 0) {
 			return Pager.empty();
 		}
-		return Pager.of(count, pageable, this.queryAllLimit(t, pageable.getMybatisPage(), pageable.getLimit()));
+		return Pager.of(count, condition, this.queryAllLimit(t, condition.getMybatisPage(), condition.getLimit()));
 	}
 }

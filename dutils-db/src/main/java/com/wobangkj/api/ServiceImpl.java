@@ -2,7 +2,7 @@ package com.wobangkj.api;
 
 import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.Columns;
-import com.wobangkj.domain.Pageable;
+import com.wobangkj.domain.Condition;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -63,12 +63,12 @@ public abstract class ServiceImpl<T> implements IService<T> {
 	 * 查询
 	 *
 	 * @param t        条件
-	 * @param pageable 分页
+	 * @param condition 分页
 	 * @return 列表
 	 */
 	@Override
-	public Pager<T> queryAll(T t, Pageable pageable) {
-		return getDao().queryAllPage(t, pageable);
+	public Pager<T> queryAll(T t, Condition condition) {
+		return getDao().queryAllPage(t, condition);
 	}
 
 	/**

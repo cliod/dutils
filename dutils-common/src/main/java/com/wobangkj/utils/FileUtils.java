@@ -87,7 +87,7 @@ public class FileUtils {
 	 * @throws IOException IO异常
 	 */
 	public static @NotNull String upload(@NotNull MultipartFile file, String rootPath, String customName,
-	                                     Integer width, Integer height, boolean isImgCompress) throws IOException {
+	                                     int width, int height, boolean isImgCompress) throws IOException {
 		if (StringUtils.isEmpty(rootPath)) {
 			rootPath = System.getProperty("user.home");
 		}
