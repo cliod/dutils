@@ -7,6 +7,7 @@ package com.wobangkj.domain;
  * @version 1.0
  * @since 2021-01-08 11:35:23
  */
+@Deprecated
 public class Columns<T> extends EntityWrapper<T> {
 
 	public static Columns<?> of(Class<?> type) {

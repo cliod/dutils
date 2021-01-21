@@ -43,9 +43,33 @@ public class EntityWrapper<T> {
 		this.parseField(entityType);
 	}
 
+	/**
+	 * 根据Entity类型进行包装
+	 *
+	 * @param type 类型
+	 * @param <T>  泛型
+	 * @return 结果
+	 */
 	public static <T> EntityWrapper<T> wrapper(Class<T> type) {
 		EntityWrapper<T> wrapper = new EntityWrapper<>();
 		wrapper.parseField(type);
+		return wrapper;
+	}
+
+	/**
+	 * 从包装器转化而来
+	 *
+	 * @param entityWrapper 包装器
+	 * @param <T>           泛型
+	 * @return 结果
+	 */
+	public static <T> EntityWrapper<T> wrapper(EntityWrapper<?> entityWrapper) {
+		EntityWrapper<T> wrapper = new EntityWrapper<>();
+		@SuppressWarnings("unchecked")
+		Class<T> type = (Class<T>) entityWrapper.entityType;
+		wrapper.entityType = type;
+		wrapper.columns = entityWrapper.columns;
+		wrapper.columnsExt = entityWrapper.columnsExt;
 		return wrapper;
 	}
 

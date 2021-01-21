@@ -98,10 +98,10 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		}
 		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			Columns<?> columns = fieldCache.get(t.hashCode());
+			Columns<?> columns = (Columns<?>) fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
-				fieldCache.put(t.hashCode(), columns);
+				fieldCache = EntityWrapper.wrapper(columns);
 			}
 			Example.Criteria criteria = example.createCriteria();
 			for (String column : columns.getColumns()) {
@@ -115,10 +115,10 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
 		if (!BeanUtils.isEmpty(fieldValues)) {
 			Example.Criteria criteria = example.createCriteria();
-			Columns<?> columns = fieldCache.get(t.getClass().hashCode());
+			Columns<?> columns = (Columns<?>) fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
-				fieldCache.put(t.getClass().hashCode(), columns);
+				fieldCache = EntityWrapper.wrapper(columns);
 			}
 			for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
 				if (Arrays.asList(columns.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {
