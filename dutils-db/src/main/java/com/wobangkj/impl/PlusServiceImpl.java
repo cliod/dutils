@@ -11,10 +11,13 @@ import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.*;
 import com.wobangkj.utils.BeanUtils;
 import com.wobangkj.utils.RefUtils;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -95,6 +98,7 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 	 * @return 列表
 	 */
 	@Override
+	@SneakyThrows
 	public Pager<T> queryAll(T t, Condition condition) {
 		Page<T> page = new Page<>(condition.getMybatisPage(), condition.getLimit());
 		// 排序
@@ -129,6 +133,19 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 			}
 		}
 		// 关键词匹配
+		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
+		if (!BeanUtils.isEmpty(fieldValues)) {
+			Columns<?> columns = fieldCache.get(t.getClass().hashCode());
+			if (Objects.isNull(columns)) {
+				columns = Columns.of(t.getClass());
+				fieldCache.put(t.getClass().hashCode(), columns);
+			}
+			for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
+				if (Arrays.asList(columns.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {
+					wrapper.eq(entry.getKey(), entry.getValue());
+				}
+			}
+		}
 		if (!BeanUtils.isEmpty(condition.getMatch())) {
 			wrapper.allEq(condition.getMatch());
 		}

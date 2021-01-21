@@ -6,11 +6,14 @@ import com.wobangkj.api.ServiceImpl;
 import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.*;
 import com.wobangkj.utils.BeanUtils;
+import com.wobangkj.utils.RefUtils;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -82,6 +85,7 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 	 * @return 列表
 	 */
 	@Override
+	@SneakyThrows
 	public Pager<T> queryAll(T t, Condition condition) {
 		// 构建查询条件对象
 		Example example = Example.builder(t.getClass()).build();
@@ -108,6 +112,20 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 			}
 		}
 		// 关键词匹配
+		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
+		if (!BeanUtils.isEmpty(fieldValues)) {
+			Example.Criteria criteria = example.createCriteria();
+			Columns<?> columns = fieldCache.get(t.getClass().hashCode());
+			if (Objects.isNull(columns)) {
+				columns = Columns.of(t.getClass());
+				fieldCache.put(t.getClass().hashCode(), columns);
+			}
+			for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
+				if (Arrays.asList(columns.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {
+					criteria.andEqualTo(entry.getKey(), entry.getValue());
+				}
+			}
+		}
 		if (!BeanUtils.isEmpty(condition.getMatch())) {
 			Example.Criteria criteria = example.createCriteria();
 			for (Map.Entry<String, Object> entry : condition.getMatch().entrySet()) {

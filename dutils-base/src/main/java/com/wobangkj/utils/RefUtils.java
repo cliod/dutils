@@ -157,6 +157,7 @@ public class RefUtils {
 				field.setAccessible(true);
 				map.put(covert.apply(field.getName()), field.get(obj));
 			}
+			exclude = false;
 		}
 		return map;
 	}
@@ -318,6 +319,7 @@ public class RefUtils {
 			if (!exclude) {
 				result.add(covert.apply(field.getName()));
 			}
+			exclude = false;
 		}
 		return result;
 	}
@@ -472,6 +474,7 @@ public class RefUtils {
 			if (!exclude) {
 				map.put(covert.apply(field.getName()), field.getType());
 			}
+			exclude = false;
 		}
 		return map;
 	}

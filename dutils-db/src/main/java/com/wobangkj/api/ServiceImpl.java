@@ -20,7 +20,7 @@ public abstract class ServiceImpl<T> implements IService<T> {
 	/**
 	 * 用户缓存Entity对应的数据库字段
 	 */
-	protected final HashMap<Integer, Columns> fieldCache = new LinkedHashMap<Integer, Columns>() {
+	protected final HashMap<Integer, Columns<?>> fieldCache = new LinkedHashMap<Integer, Columns<?>>() {
 		/**
 		 * 当满足条件删除最末的数据
 		 */
