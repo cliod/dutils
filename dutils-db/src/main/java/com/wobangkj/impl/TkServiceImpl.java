@@ -83,22 +83,23 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 	 */
 	@Override
 	public Pager<T> queryAll(T t, Condition condition) {
-		if (StringUtils.isEmpty(condition.getKey()) && StringUtils.isEmpty(condition.getOrder())) {
-			return super.queryAll(t, condition);
-		}
+		// 构建查询条件对象
 		Example example = Example.builder(t.getClass()).build();
+		// 排序
 		if (StringUtils.isNotEmpty(condition.getOrder())) {
 			example.setOrderByClause(condition.getOrder());
 		} else {
+			// 默认id倒序
 			example.setOrderByClause("id desc");
 		}
-		Example.Criteria criteria = example.createCriteria();
+		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			Columns columns = fieldCacheMaps.get(t.hashCode());
+			Columns<?> columns = fieldCache.get(t.hashCode());
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
-				fieldCacheMaps.put(t.hashCode(), columns);
+				fieldCache.put(t.hashCode(), columns);
 			}
+			Example.Criteria criteria = example.createCriteria();
 			for (String column : columns.getColumns()) {
 				if (StringUtils.isEmpty(column)) {
 					continue;
@@ -106,12 +107,16 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 				criteria.orLike(column, condition.getLikeKey());
 			}
 		}
+		// 关键词匹配
 		if (!BeanUtils.isEmpty(condition.getMatch())) {
+			Example.Criteria criteria = example.createCriteria();
 			for (Map.Entry<String, Object> entry : condition.getMatch().entrySet()) {
 				criteria.andEqualTo(entry.getKey(), entry.getValue());
 			}
 		}
+		// 范围匹配
 		if (!BeanUtils.isEmpty(condition.getAmong())) {
+			Example.Criteria criteria = example.createCriteria();
 			for (Among<?> among : condition.getAmong()) {
 				if (among instanceof DateAmong) {
 					if (Objects.isNull(among.getCeiling())) {
@@ -132,8 +137,9 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 				}
 			}
 		}
-		// 原生条件，会有sql注入的风险
+		// 原生条件查询，会有sql注入的风险
 		if (!BeanUtils.isEmpty(condition.getQueries())) {
+			Example.Criteria criteria = example.createCriteria();
 			for (Query query : condition.getQueries()) {
 				if (query.getRelated().equals("or")) {
 					criteria.orCondition(query.getQuery());

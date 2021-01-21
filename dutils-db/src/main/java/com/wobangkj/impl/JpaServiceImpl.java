@@ -90,16 +90,14 @@ public class JpaServiceImpl<D extends JpaRepository<T, Long>, T> extends Service
 	/**
 	 * 查询
 	 *
-	 * @param t        条件
+	 * @param t         条件
 	 * @param condition 分页
 	 * @return 列表
 	 */
 	@Override
 	public Pager<T> queryAll(T t, Condition condition) {
-		if (StringUtils.isEmpty(condition.getKey()) && StringUtils.isEmpty(condition.getOrder())) {
-			return super.queryAll(t, condition);
-		}
 		List<Order> orders = new ArrayList<>();
+		// 排序
 		if (StringUtils.isNotEmpty(condition.getOrder())) {
 			String[] orderStr = condition.getOrder().split(",");
 			for (String order : orderStr) {
@@ -115,8 +113,9 @@ public class JpaServiceImpl<D extends JpaRepository<T, Long>, T> extends Service
 					}
 				}
 			}
+		} else {
+			orders.add(Order.desc("id"));
 		}
-		orders.add(Order.desc("id"));
 		Sort sort = Sort.by(orders);
 		Example<T> example = Example.of(t);
 		Page<T> page = this.dao.findAll(example, PageRequest.of(condition.getJpaPage(), condition.getSize(), sort));

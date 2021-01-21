@@ -90,16 +90,14 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 	/**
 	 * 查询
 	 *
-	 * @param t        条件
+	 * @param t         条件
 	 * @param condition 分页
 	 * @return 列表
 	 */
 	@Override
 	public Pager<T> queryAll(T t, Condition condition) {
-		if (StringUtils.isEmpty(condition.getKey()) && StringUtils.isEmpty(condition.getOrder())) {
-			return super.queryAll(t, condition);
-		}
 		Page<T> page = new Page<>(condition.getMybatisPage(), condition.getLimit());
+		// 排序
 		if (StringUtils.isNotEmpty(condition.getOrder())) {
 			String[] orders = condition.getOrder().split(",");
 			for (String order : orders) {
@@ -115,21 +113,26 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 					}
 				}
 			}
+		} else {
+			page.addOrder(OrderItem.desc("id"));
 		}
 		QueryWrapper<T> wrapper = new QueryWrapper<>(t);
+		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			Columns columns = fieldCacheMaps.get(t.hashCode());
+			Columns<?> columns = fieldCache.get(t.hashCode());
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
-				fieldCacheMaps.put(t.hashCode(), columns);
+				fieldCache.put(t.hashCode(), columns);
 			}
 			for (String column : columns.getColumns()) {
 				wrapper.or().like(column, condition.getLikeKey());
 			}
 		}
+		// 关键词匹配
 		if (!BeanUtils.isEmpty(condition.getMatch())) {
 			wrapper.allEq(condition.getMatch());
 		}
+		// 范围匹配
 		if (!BeanUtils.isEmpty(condition.getAmong())) {
 			for (Among<?> among : condition.getAmong()) {
 				if (among instanceof DateAmong) {
