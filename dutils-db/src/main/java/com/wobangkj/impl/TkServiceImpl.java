@@ -110,6 +110,9 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 				}
 				criteria.orLike(column, condition.getLikeKey());
 			}
+			if (!example.getOredCriteria().contains(criteria)) {
+				example.and(criteria);
+			}
 		}
 		// 关键词匹配
 		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
@@ -125,11 +128,17 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 					criteria.andEqualTo(entry.getKey(), entry.getValue());
 				}
 			}
+			if (!example.getOredCriteria().contains(criteria)) {
+				example.and(criteria);
+			}
 		}
 		if (!BeanUtils.isEmpty(condition.getMatch())) {
 			Example.Criteria criteria = example.createCriteria();
 			for (Map.Entry<String, Object> entry : condition.getMatch().entrySet()) {
 				criteria.andEqualTo(entry.getKey(), entry.getValue());
+			}
+			if (!example.getOredCriteria().contains(criteria)) {
+				example.and(criteria);
 			}
 		}
 		// 范围匹配
@@ -154,6 +163,9 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 					criteria.andBetween(among.getColumn(), among.getFloor(), among.getCeiling());
 				}
 			}
+			if (!example.getOredCriteria().contains(criteria)) {
+				example.and(criteria);
+			}
 		}
 		// 原生条件查询，会有sql注入的风险
 		if (!BeanUtils.isEmpty(condition.getQueries())) {
@@ -164,6 +176,9 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 				} else {
 					criteria.andCondition(query.getQuery());
 				}
+			}
+			if (!example.getOredCriteria().contains(criteria)) {
+				example.and(criteria);
 			}
 		}
 		long count = this.dao.selectCountByExample(example);

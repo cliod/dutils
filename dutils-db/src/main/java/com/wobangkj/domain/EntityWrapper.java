@@ -51,9 +51,7 @@ public class EntityWrapper<T> {
 	 * @return 结果
 	 */
 	public static <T> EntityWrapper<T> wrapper(Class<T> type) {
-		EntityWrapper<T> wrapper = new EntityWrapper<>();
-		wrapper.parseField(type);
-		return wrapper;
+		return new EntityWrapper<>(type);
 	}
 
 	/**
