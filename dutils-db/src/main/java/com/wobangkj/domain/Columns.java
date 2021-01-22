@@ -10,9 +10,9 @@ package com.wobangkj.domain;
 @Deprecated
 public class Columns<T> extends EntityWrapper<T> {
 
-	public static Columns<?> of(Class<?> type) {
-		Columns<?> columns = new Columns<>();
-		columns.parseField((Class) type);
+	public static <T> Columns<T> of(Class<T> type) {
+		Columns<T> columns = new Columns<>();
+		columns.parseField(type);
 		return columns;
 	}
 

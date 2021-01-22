@@ -123,10 +123,10 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 		QueryWrapper<T> wrapper = new QueryWrapper<>(t);
 		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			Columns<?> columns = (Columns<?>) fieldCache;
+			Columns columns = fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
-				fieldCache = EntityWrapper.wrapper(columns);
+				fieldCache = columns;
 			}
 			for (String column : columns.getColumns()) {
 				wrapper.or().like(column, condition.getLikeKey());
@@ -135,10 +135,10 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 		// 关键词匹配
 		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
 		if (!BeanUtils.isEmpty(fieldValues)) {
-			Columns<?> columns = (Columns<?>) fieldCache;
+			Columns columns = fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
-				fieldCache = EntityWrapper.wrapper(columns);
+				fieldCache = columns;
 			}
 			for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
 				if (Arrays.asList(columns.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {

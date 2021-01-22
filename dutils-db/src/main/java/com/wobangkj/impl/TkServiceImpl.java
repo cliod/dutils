@@ -98,10 +98,10 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		}
 		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			Columns<?> columns = (Columns<?>) fieldCache;
+			Columns columns = fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
-				fieldCache = EntityWrapper.wrapper(columns);
+				fieldCache = columns;
 			}
 			Example.Criteria criteria = example.createCriteria();
 			for (String column : columns.getColumns()) {
@@ -118,10 +118,10 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
 		if (!BeanUtils.isEmpty(fieldValues)) {
 			Example.Criteria criteria = example.createCriteria();
-			Columns<?> columns = (Columns<?>) fieldCache;
+			Columns columns = fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
-				fieldCache = EntityWrapper.wrapper(columns);
+				fieldCache = columns;
 			}
 			for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
 				if (Arrays.asList(columns.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {
@@ -170,15 +170,20 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		// 原生条件查询，会有sql注入的风险
 		if (!BeanUtils.isEmpty(condition.getQueries())) {
 			Example.Criteria criteria = example.createCriteria();
+			String ao = condition.getQueries().get(0).getRelated();
 			for (Query query : condition.getQueries()) {
-				if (query.getRelated().equals("or")) {
+				if (query.getRelated().equalsIgnoreCase("or")) {
 					criteria.orCondition(query.getQuery());
 				} else {
 					criteria.andCondition(query.getQuery());
 				}
 			}
 			if (!example.getOredCriteria().contains(criteria)) {
-				example.and(criteria);
+				if (ao.equalsIgnoreCase("or")) {
+					example.or(criteria);
+				} else {
+					example.and(criteria);
+				}
 			}
 		}
 		long count = this.dao.selectCountByExample(example);
