@@ -1,15 +1,14 @@
 package com.wobangkj.domain;
 
-import com.wobangkj.annotation.ColumnExt;
-import com.wobangkj.annotation.Join;
-import com.wobangkj.annotation.LikeColumn;
-import com.wobangkj.annotation.LikeExclude;
+import com.wobangkj.annotation.Columns;
+import com.wobangkj.annotation.*;
 import lombok.Getter;
 
 import javax.persistence.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 /**
@@ -24,12 +23,17 @@ public class EntityWrapper<T> {
 	 * 实体类型
 	 */
 	@Getter
-	private Class<T> entityType;
+	private Class<? extends T> entityType;
 	/**
 	 * 实体字段
 	 */
 	@Getter
-	private String[] columns;
+	private String[] includeColumns;
+	/**
+	 * 实体字段，当前字段内容 小于等于 {@link #includeColumns}
+	 */
+	@Getter
+	private String[] likeColumns;
 	/**
 	 * 实体额外字段
 	 */
@@ -37,10 +41,13 @@ public class EntityWrapper<T> {
 	private Map<String, Annotation> columnsExt;
 
 	protected EntityWrapper() {
+		this.entityType = this.getType();
+		this.parseField();
 	}
 
-	public EntityWrapper(Class<T> entityType) {
-		this.parseField(entityType);
+	public EntityWrapper(Class<? extends T> entityType) {
+		this.entityType = entityType;
+		this.parseField();
 	}
 
 	/**
@@ -50,7 +57,7 @@ public class EntityWrapper<T> {
 	 * @param <T>  泛型
 	 * @return 结果
 	 */
-	public static <T> EntityWrapper<T> wrapper(Class<T> type) {
+	public static <T> EntityWrapper<? extends T> wrapper(Class<? extends T> type) {
 		return new EntityWrapper<>(type);
 	}
 
@@ -61,50 +68,96 @@ public class EntityWrapper<T> {
 	 * @param <T>           泛型
 	 * @return 结果
 	 */
-	public static <T> EntityWrapper<T> wrapper(EntityWrapper<?> entityWrapper) {
+	public static <T> EntityWrapper<? extends T> wrapper(EntityWrapper<?> entityWrapper) {
 		EntityWrapper<T> wrapper = new EntityWrapper<>();
 		@SuppressWarnings("unchecked")
-		Class<T> type = (Class<T>) entityWrapper.entityType;
+		Class<? extends T> type = (Class<? extends T>) entityWrapper.entityType;
 		wrapper.entityType = type;
-		wrapper.columns = entityWrapper.columns;
+		wrapper.includeColumns = entityWrapper.includeColumns;
 		wrapper.columnsExt = entityWrapper.columnsExt;
 		return wrapper;
 	}
 
 	/**
-	 * 解析用于like模糊查询的字段
+	 * 获取实体字段
+	 */
+	public String[] getColumns() {
+		return includeColumns;
+	}
+
+	/**
+	 * 设置实体字段
 	 *
-	 * @param type 类型
+	 * @param columns 字段数组
+	 */
+	protected void setColumns(String[] columns) {
+		this.includeColumns = columns;
+	}
+
+	public void setEntityType(Class<? extends T> entityType) {
+		this.entityType = entityType;
+		this.parseField();
+	}
+
+	protected void setColumnsExt(Map<String, Annotation> columnsExt) {
+		this.columnsExt = columnsExt;
+	}
+
+	/**
+	 * 获取泛型的类型
+	 *
+	 * @return 类型对象
+	 */
+	@SuppressWarnings("unchecked")
+	public Class<? extends T> getType() {
+		return (Class<? extends T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	}
+
+	/**
+	 * 解析用于查询的字段
+	 *
 	 * @return 字段
 	 */
-	protected void parseField(Class<T> type) {
-		this.entityType = type;
+	protected void parseField() {
+		// 获取实体类型所有的属性
 		Field[] fields = this.entityType.getDeclaredFields();
-		List<String> columns = new ArrayList<>(fields.length);
+		// 是否存在{@link Columns}注解
+		Columns annotation = this.entityType.getAnnotation(Columns.class);
+		// 是否存在{@link LikeColumn}注解
 		LikeColumn like = this.entityType.getAnnotation(LikeColumn.class);
-		List<String> exclude = new ArrayList<>();
+		// 排除不用于查询的字段属性名称
+		List<String> excludeFieldNames = new ArrayList<>();
+		List<String> excludeLikeFieldNames = new ArrayList<>();
+		if (Objects.nonNull(annotation)) {
+			if (annotation.includeOnly().length != 0) {
+				this.likeColumns = annotation.includeOnly();
+			}
+			excludeFieldNames.addAll(Arrays.asList(annotation.exclude()));
+		}
 		if (Objects.nonNull(like)) {
 			if (like.includeOnly().length != 0) {
-				this.columns = like.includeOnly();
-				return;
+				this.likeColumns = like.includeOnly();
 			}
-			exclude.addAll(Arrays.asList(like.exclude()));
+			excludeLikeFieldNames.addAll(Arrays.asList(like.exclude()));
 		}
-		String fieldName;
+		String fieldName; // 临时记录
+		List<String> columnNames = new ArrayList<>(fields.length);
+		List<String> likeNames = new ArrayList<>(fields.length);
 		for (Field field : fields) {
 			// 不获取静态和最终字段
 			if (Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers())) {
 				continue;
 			}
 			fieldName = field.getName();
-			// 忽略like
-			if (exclude.contains(fieldName)) {
+			// 忽略手动忽略的字段属性 -> 同时会忽略like查询
+			if (excludeFieldNames.contains(fieldName)) {
 				continue;
 			}
-			// 忽略like
-			if (field.isAnnotationPresent(LikeExclude.class) || field.isAnnotationPresent(Transient.class)) {
+			// 忽略{@link Transient}注解的字段
+			if (field.isAnnotationPresent(Transient.class)) {
 				continue;
 			}
+			// 是否扩展字段
 			if (field.isAnnotationPresent(ColumnExt.class)) {
 				if (Objects.isNull(this.columnsExt)) {
 					this.columnsExt = new HashMap<>();
@@ -118,20 +171,26 @@ public class EntityWrapper<T> {
 				this.columnsExt.put(fieldName, field.getAnnotation(Join.class));
 				continue;
 			}
-			columns.add(fieldName);
+			columnNames.add(fieldName);
+			// 不被忽略
+			if (!field.isAnnotationPresent(LikeExclude.class) && !excludeLikeFieldNames.contains(fieldName)) {
+				likeNames.add(fieldName);
+			}
 		}
-		this.columns = columns.toArray(new String[0]);
+		this.includeColumns = columnNames.toArray(new String[0]);
+		this.likeColumns = likeNames.toArray(new String[0]);
 	}
 
-	public void setEntityType(Class<T> entityType) {
-		this.parseField(entityType);
+	/**
+	 * 解析用于查询的字段
+	 *
+	 * @param type 类型
+	 * @return 字段
+	 */
+	@Deprecated
+	protected void parseField(Class<? extends T> type) {
+		this.entityType = type;
+		this.parseField();
 	}
 
-	protected void setColumns(String[] columns) {
-		this.columns = columns;
-	}
-
-	protected void setColumnsExt(Map<String, Annotation> columnsExt) {
-		this.columnsExt = columnsExt;
-	}
 }
