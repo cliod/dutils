@@ -25,6 +25,14 @@ public interface Pageable extends Deserializer {
 	 */
 	Integer getSize();
 
+	default Integer getOffset() {
+		return this.getSize() * (this.getPage() - 1);
+	}
+
+	default Integer getLimit() {
+		return this.getSize();
+	}
+
 	/**
 	 * 转为Map(映射)对象
 	 *

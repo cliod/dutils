@@ -60,6 +60,7 @@ public final class Response {
 	 * @param res 原对象
 	 * @return 成功对象
 	 */
+	@Deprecated
 	public static @NotNull Res ok(Maps<String, Object> res) {
 		return Res.from(res).addAll(OK);
 	}
