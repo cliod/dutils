@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.util.NumberUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -84,6 +85,27 @@ public class JpaServiceImpl<D extends JpaRepository<T, Long>, T> extends Service
 	@Override
 	public boolean deleteById(Long id) {
 		this.dao.deleteById(id);
+		return true;
+	}
+
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 是否成功
+	 */
+	@Override
+	public boolean deleteById(Object id) {
+		long key;
+		if (id instanceof Number) {
+			key = ((Number) id).longValue();
+		} else if (id instanceof CharSequence) {
+			String str = id.toString();
+			key = (NumberUtils.parseNumber(str, Number.class)).longValue();
+		} else {
+			throw new IllegalArgumentException("参数类型不匹配");
+		}
+		this.getDao().deleteById(key);
 		return true;
 	}
 

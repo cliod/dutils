@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * plus映射
@@ -23,6 +26,22 @@ public interface IPlusMapper<T> extends IDao<T>, BaseMapper<T> {
 	@Override
 	default T queryById(Long id) {
 		return this.selectById(id);
+	}
+
+	/**
+	 * 通过ID查询单条数据
+	 *
+	 * @param id 主键
+	 * @return 实例对象
+	 */
+	@Override
+	default T queryById(Object id) {
+		if (id instanceof Serializer) {
+			return this.selectById((Serializable) id);
+		}
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+		return this.selectByMap(param).stream().findFirst().orElse(null);
 	}
 
 	/**

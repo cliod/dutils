@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wobangkj.api.IPlusMapper;
+import com.wobangkj.api.Serializer;
 import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.*;
 import com.wobangkj.utils.BeanUtils;
@@ -15,10 +16,8 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * 默认实现
@@ -88,6 +87,22 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 	@Override
 	public boolean deleteById(Long id) {
 		return this.service.removeById(id);
+	}
+
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 是否成功
+	 */
+	@Override
+	public boolean deleteById(Object id) {
+		if (id instanceof Serializer) {
+			return this.service.removeById((Serializable) id);
+		}
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+		return this.service.removeByMap(param);
 	}
 
 	/**

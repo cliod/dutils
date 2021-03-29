@@ -3,7 +3,6 @@ package com.wobangkj.api;
 import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.Columns;
 import com.wobangkj.domain.Condition;
-import com.wobangkj.domain.EntityWrapper;
 
 /**
  * 抽象实现
@@ -34,6 +33,17 @@ public abstract class ServiceImpl<T> implements IService<T> {
 	 */
 	@Override
 	public T queryById(Long id) {
+		return this.getDao().queryById(id);
+	}
+
+	/**
+	 * 通过ID查询单条数据
+	 *
+	 * @param id 主键
+	 * @return 实例对象
+	 */
+	@Override
+	public T queryById(Object id) {
 		return this.getDao().queryById(id);
 	}
 
@@ -91,6 +101,15 @@ public abstract class ServiceImpl<T> implements IService<T> {
 	 */
 	@Override
 	public abstract boolean deleteById(Long id);
+
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 是否成功
+	 */
+	@Override
+	public abstract boolean deleteById(Object id);
 
 	/**
 	 * 查找行数

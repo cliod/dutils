@@ -27,6 +27,14 @@ public interface IService<T> {
 	T queryById(Long id);
 
 	/**
+	 * 通过ID查询单条数据
+	 *
+	 * @param id 主键
+	 * @return 实例对象
+	 */
+	T queryById(Object id);
+
+	/**
 	 * 通过参数查询单条数据
 	 *
 	 * @param t 参数
@@ -90,6 +98,14 @@ public interface IService<T> {
 	 * @return 是否成功
 	 */
 	boolean deleteById(Long id);
+
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 是否成功
+	 */
+	boolean deleteById(Object id);
 
 	/**
 	 * 查找行数

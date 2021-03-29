@@ -25,6 +25,17 @@ public interface ITkMapper<T> extends IDao<T>, Mapper<T> {
 	}
 
 	/**
+	 * 通过ID查询单条数据
+	 *
+	 * @param id 主键
+	 * @return 实例对象
+	 */
+	@Override
+	default T queryById(Object id) {
+		return this.selectByPrimaryKey(id);
+	}
+
+	/**
 	 * 通过实体作为筛选条件查询
 	 *
 	 * @param t 实例对象
@@ -76,7 +87,7 @@ public interface ITkMapper<T> extends IDao<T>, Mapper<T> {
 	 * @param id 主键
 	 * @return 影响行数
 	 */
-	default int deleteById(Long id) {
+	default int deleteById(Object id) {
 		return this.deleteByPrimaryKey(id);
 	}
 

@@ -78,6 +78,17 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 	}
 
 	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 是否成功
+	 */
+	@Override
+	public boolean deleteById(Object id) {
+		return this.dao.deleteById(id) > 0;
+	}
+
+	/**
 	 * 查询
 	 *
 	 * @param t         条件

@@ -3,12 +3,14 @@ package com.wobangkj.api;
 import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.Condition;
 import com.wobangkj.domain.Pageable;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -27,6 +29,28 @@ public interface IRepository<T> extends IDao<T>, JpaRepository<T, Long> {
 	@Override
 	default T queryById(Long id) {
 		return this.findById(id).orElse(null);
+	}
+
+	/**
+	 * 通过ID查询单条数据
+	 *
+	 * @param id 主键
+	 * @return 实例对象
+	 */
+	@Override
+	default T queryById(Object id) {
+		long key;
+		if (id instanceof Number) {
+			key = ((Number) id).longValue();
+		} else if (id instanceof CharSequence) {
+			if (!StringUtils.isNumeric((CharSequence) id)) {
+				throw new IllegalArgumentException("参数类型不匹配");
+			}
+			key = Long.parseLong(id.toString());
+		} else {
+			throw new IllegalArgumentException("参数类型不匹配");
+		}
+		return this.getOne(key);
 	}
 
 	/**
@@ -68,7 +92,7 @@ public interface IRepository<T> extends IDao<T>, JpaRepository<T, Long> {
 	/**
 	 * 通过实体作为筛选条件查询
 	 *
-	 * @param t        实例对象
+	 * @param t         实例对象
 	 * @param condition 分页
 	 * @return 对象列表
 	 */
