@@ -109,7 +109,7 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		}
 		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			Columns columns = fieldCache;
+			EntityWrapper<?> columns = fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
 				fieldCache = columns;
@@ -129,7 +129,7 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
 		if (!BeanUtils.isEmpty(fieldValues)) {
 			Example.Criteria criteria = example.createCriteria();
-			Columns columns = fieldCache;
+			EntityWrapper<?> columns = fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
 				fieldCache = columns;

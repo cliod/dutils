@@ -1,8 +1,8 @@
 package com.wobangkj.api;
 
 import com.wobangkj.bean.Pager;
-import com.wobangkj.domain.Columns;
 import com.wobangkj.domain.Condition;
+import com.wobangkj.domain.EntityWrapper;
 
 /**
  * 抽象实现
@@ -16,7 +16,7 @@ public abstract class ServiceImpl<T> implements IService<T> {
 	/**
 	 * 用户缓存Entity对应的数据库字段
 	 */
-	protected Columns<T> fieldCache;
+	protected EntityWrapper<?> fieldCache;
 
 	/**
 	 * 获取Dao

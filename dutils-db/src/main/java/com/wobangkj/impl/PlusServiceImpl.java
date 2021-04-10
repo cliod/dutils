@@ -138,7 +138,7 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 		QueryWrapper<T> wrapper = new QueryWrapper<>(t);
 		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			Columns columns = fieldCache;
+			EntityWrapper<?> columns = fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
 				fieldCache = columns;
@@ -150,7 +150,7 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 		// 关键词匹配
 		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
 		if (!BeanUtils.isEmpty(fieldValues)) {
-			Columns columns = fieldCache;
+			EntityWrapper<?> columns = fieldCache;
 			if (Objects.isNull(columns)) {
 				columns = Columns.of(t.getClass());
 				fieldCache = columns;

@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -23,7 +24,7 @@ public class EntityWrapper<T> {
 	 * 实体类型
 	 */
 	@Getter
-	private Class<? extends T> entityType;
+	private Class<?> entityType;
 	/**
 	 * 实体字段
 	 */
@@ -108,9 +109,17 @@ public class EntityWrapper<T> {
 	 *
 	 * @return 类型对象
 	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends T> getType() {
-		return (Class<? extends T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	public Class<?> getType() {
+		Class<?> ew = this.getClass();
+		ParameterizedType pt = (ParameterizedType) ew.getGenericSuperclass();
+		Type[] ews = pt.getActualTypeArguments();
+		for (Type type : ews) {
+			if (type instanceof Class) {
+				ew = (Class<?>) type;
+				break;
+			}
+		}
+		return ew;
 	}
 
 	/**
