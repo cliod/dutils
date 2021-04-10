@@ -35,9 +35,9 @@ public abstract class Authenticate {
 	 * @param id   用户唯一id
 	 * @return token令牌
 	 */
-	public static @NotNull String authorize(String ip, Integer role, Long id) {
+	public static @NotNull String authorize(String ip, Object role, Object id) {
 		init();
-		return authorize(Author.builder().ip(ip).role(role).id(id).build());
+		return authorize(Author.builder().key(ip).role(role).id(id).build());
 	}
 
 	/**

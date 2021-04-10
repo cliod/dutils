@@ -3,7 +3,6 @@ package com.wobangkj.api;
 import com.wobangkj.bean.Pager;
 import com.wobangkj.domain.Condition;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**

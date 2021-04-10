@@ -135,4 +135,5 @@ public interface IRepository<T> extends IDao<T>, JpaRepository<T, Long> {
 	default long count(T t) {
 		return this.count(Example.of(t));
 	}
+
 }

@@ -20,17 +20,17 @@ public class Author {
 	/**
 	 * id
 	 */
-	private Long id;
+	private Object id;
 	/**
 	 * 用户ip
 	 */
-	private String ip;
+	private Object key;
 	/**
 	 * 角色，数值越小，权限越大
 	 */
-	private Integer role;
+	private Object role;
 	/**
 	 * json格式自定义数据
 	 */
-	private String data;
+	private Object data;
 }

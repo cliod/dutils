@@ -101,4 +101,19 @@ public interface IPlusMapper<T> extends IDao<T>, BaseMapper<T> {
 	default long count(T t) {
 		return this.selectCount(new QueryWrapper<>(t));
 	}
+
+	/**
+	 * 通过主键删除数据
+	 *
+	 * @param id 主键
+	 * @return 影响行数
+	 */
+	default int deleteById(Object id) {
+		if (id instanceof Serializer) {
+			return this.deleteById((Serializable) id);
+		}
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+		return this.deleteByMap(param);
+	}
 }
