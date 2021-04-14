@@ -3,6 +3,7 @@ package com.wobangkj.api;
 import com.auth0.jwt.interfaces.Claim;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -44,6 +45,17 @@ public interface Signable {
 	 */
 	default String sign(Object obj, long duration, @NotNull TimeUnit unit) {
 		return this.sign(obj, unit.toMillis(duration));
+	}
+
+	/**
+	 * 加密，传入一个对象和有效期时长
+	 *
+	 * @param obj      对象
+	 * @param duration 时长
+	 * @return 签名字符串
+	 */
+	default String sign(Object obj, Duration duration) {
+		return this.sign(obj, duration.toMillis());
 	}
 
 	/**

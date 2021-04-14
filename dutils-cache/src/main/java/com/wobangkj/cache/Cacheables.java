@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
@@ -62,6 +63,17 @@ public interface Cacheables extends Cache {
 	 */
 	default void set(Object key, Object value, long time, TimeUnit unit) {
 		this.set(key, value, Timing.of(time, unit));
+	}
+
+	/**
+	 * put内容
+	 *
+	 * @param key      键
+	 * @param value    值
+	 * @param duration 时长
+	 */
+	default void set(Object key, Object value, Duration duration) {
+		this.set(key, value, Timing.of(duration));
 	}
 
 	/**
@@ -219,6 +231,20 @@ public interface Cacheables extends Cache {
 			timing.setTime(time);
 			timing.setUnit(unit);
 			timing.setDeadline(LocalDateTime.now().plus(time, toChronoUnit(unit)));
+			return timing;
+		}
+
+		/**
+		 * 从时长获取对象
+		 *
+		 * @param duration 时间
+		 * @return 对象
+		 */
+		public static @NotNull Timing of(Duration duration) {
+			Timing timing = new Timing();
+			timing.setTime(duration.toMillis());
+			timing.setUnit(TimeUnit.MILLISECONDS);
+			timing.setDeadline(LocalDateTime.now().plus(duration));
 			return timing;
 		}
 

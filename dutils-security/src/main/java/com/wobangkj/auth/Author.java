@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
+
 /**
  * 授权者
  *
@@ -33,4 +35,8 @@ public class Author {
 	 * json格式自定义数据
 	 */
 	private Object data;
+	/**
+	 * 有效时长
+	 */
+	private Duration duration;
 }
