@@ -43,7 +43,7 @@ Java聚合工具，本工具主要是在开发工程中使用到的或者常用�
 <dependency>
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils-all</artifactId>
-    <version>5.3.13-SNAPSHOT</version>
+    <version>5.3.13</version>
 </dependency>
 ```
 
@@ -54,7 +54,7 @@ Java聚合工具，本工具主要是在开发工程中使用到的或者常用�
 <dependency>
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils-common</artifactId>
-    <version>5.3.13-SNAPSHOT</version>
+    <version>5.3.13</version>
 </dependency>
 ```
 

@@ -46,6 +46,10 @@ public abstract class Jwt implements Signable {
 	 * 秘钥生成器
 	 */
 	protected KeyGenerator keyGenerator;
+	/**
+	 * 是否初始化
+	 */
+	protected boolean isInitialize;
 
 	protected Jwt() throws NoSuchAlgorithmException {
 		if (enableInitialize()) {
@@ -68,6 +72,9 @@ public abstract class Jwt implements Signable {
 	 */
 	@Override
 	public String sign(Object obj, long duration) {
+		if (!isInitialize) {
+			throw new RuntimeException("未初始化");
+		}
 		JwtBuilder.Builder builder = JwtBuilder.init();
 		long now = System.currentTimeMillis();
 		long accumulate = now + duration;
@@ -83,6 +90,9 @@ public abstract class Jwt implements Signable {
 	 */
 	@Override
 	public String sign(Object obj, Date date) {
+		if (!isInitialize) {
+			throw new RuntimeException("未初始化");
+		}
 		JwtBuilder.Builder builder = JwtBuilder.init();
 		long now = System.currentTimeMillis();
 		return build(builder.withExpiresAt(date), obj, now);
@@ -96,6 +106,9 @@ public abstract class Jwt implements Signable {
 	 */
 	@Override
 	public @NotNull Claim unsign(String jwt) {
+		if (!isInitialize) {
+			throw new RuntimeException("未初始化");
+		}
 		final DecodedJWT claims = verifier.verify(jwt);
 		Date date = claims.getExpiresAt();
 		long exp = date.getTime();
@@ -131,6 +144,7 @@ public abstract class Jwt implements Signable {
 		 * 校验器 用于生成 JWTVerifier 校验器
 		 */
 		verifier = JWT.require(algorithm).build();
+		this.isInitialize = true;
 	}
 
 	/**

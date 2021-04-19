@@ -25,10 +25,6 @@ public class FileStorageJwt extends StorageJwt implements Signable {
 	@Setter
 	private String filename;
 
-	private FileStorageJwt() throws NoSuchAlgorithmException {
-		this("jwt.secret.key");
-	}
-
 	protected FileStorageJwt(String filename) throws NoSuchAlgorithmException {
 		super();
 		this.filename = filename;
@@ -39,24 +35,21 @@ public class FileStorageJwt extends StorageJwt implements Signable {
 		this.filename = filename;
 	}
 
-	public static @NotNull FileStorageJwt getInstance() {
-		if (INSTANCE == null) {
-			synchronized(FileStorageJwt.class) {
-				if (INSTANCE == null) {
-					try {
-						INSTANCE = new FileStorageJwt();
-					} catch (NoSuchAlgorithmException e) {
-						throw new SecretException((EnumTextMsg) () -> "初始化失败", e);
-					}
-				}
-			}
-		}
-		if (!INSTANCE.isInitialize) {
-			INSTANCE.initialize();
-		}
-		return INSTANCE;
+	@Deprecated
+	public static @NotNull FileStorageJwt init() {
+		return getInstance();
 	}
 
+	public static @NotNull FileStorageJwt getInstance() {
+		return getInstance("jwt.secret.key");
+	}
+
+	/**
+	 * 指定路径初始化
+	 *
+	 * @param filename 路径建议保持一致（只有一个秘钥）
+	 * @return JWT
+	 */
 	public static @NotNull FileStorageJwt getInstance(String filename) {
 		if (INSTANCE == null) {
 			synchronized(FileStorageJwt.class) {
@@ -73,21 +66,6 @@ public class FileStorageJwt extends StorageJwt implements Signable {
 			INSTANCE.initialize();
 		}
 		return INSTANCE;
-	}
-
-	@Deprecated
-	public static @NotNull FileStorageJwt init() {
-		return getInstance();
-	}
-
-	/**
-	 * 是否允许自动初始化
-	 *
-	 * @return 是否允许自动初始化
-	 */
-	@Override
-	protected boolean enableInitialize() {
-		return false;
 	}
 
 	@Override

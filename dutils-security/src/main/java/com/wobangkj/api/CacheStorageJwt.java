@@ -32,16 +32,6 @@ public class CacheStorageJwt extends StorageJwt implements Signable {
 		this.cache = cache;
 	}
 
-	/**
-	 * 是否允许自动初始化
-	 *
-	 * @return 是否允许自动初始化
-	 */
-	@Override
-	protected boolean enableInitialize() {
-		return true;
-	}
-
 	@Override
 	protected byte[] getSecret() throws SecretException {
 		Cache.@NotNull ValueWrapper secret = this.cache.get("jwt.secret.key");

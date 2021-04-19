@@ -47,6 +47,16 @@ public abstract class StorageJwt extends Jwt implements Signable {
 	}
 
 	/**
+	 * 是否允许自动初始化
+	 *
+	 * @return 是否允许自动初始化
+	 */
+	@Override
+	protected boolean enableInitialize() {
+		return false;
+	}
+
+	/**
 	 * 获取存储的密匙
 	 *
 	 * @return 密匙
