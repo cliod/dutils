@@ -19,15 +19,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class FileStorageJwt extends StorageJwt implements Signable {
 
-	private static final FileStorageJwt INSTANCE;
-
-	static {
-		try {
-			INSTANCE = new FileStorageJwt();
-		} catch (NoSuchAlgorithmException e) {
-			throw new SecretException((EnumTextMsg) () -> "初始化失败", e);
-		}
-	}
+	private static FileStorageJwt INSTANCE;
 
 	@Getter
 	@Setter
@@ -48,20 +40,54 @@ public class FileStorageJwt extends StorageJwt implements Signable {
 	}
 
 	public static @NotNull FileStorageJwt getInstance() {
+		if (INSTANCE == null) {
+			synchronized(FileStorageJwt.class) {
+				if (INSTANCE == null) {
+					try {
+						INSTANCE = new FileStorageJwt();
+					} catch (NoSuchAlgorithmException e) {
+						throw new SecretException((EnumTextMsg) () -> "初始化失败", e);
+					}
+				}
+			}
+		}
+		if (!INSTANCE.isInitialize) {
+			INSTANCE.initialize();
+		}
 		return INSTANCE;
 	}
 
-	@Deprecated
 	public static @NotNull FileStorageJwt getInstance(String filename) {
-		FileStorageJwt jwt = INSTANCE;
-		jwt.setFilename(filename);
-		jwt.initialize();
-		return jwt;
+		if (INSTANCE == null) {
+			synchronized(FileStorageJwt.class) {
+				if (INSTANCE == null) {
+					try {
+						INSTANCE = new FileStorageJwt(filename);
+					} catch (NoSuchAlgorithmException e) {
+						throw new SecretException((EnumTextMsg) () -> "初始化失败", e);
+					}
+				}
+			}
+		}
+		if (!INSTANCE.isInitialize) {
+			INSTANCE.initialize();
+		}
+		return INSTANCE;
 	}
 
 	@Deprecated
 	public static @NotNull FileStorageJwt init() {
-		return INSTANCE;
+		return getInstance();
+	}
+
+	/**
+	 * 是否允许自动初始化
+	 *
+	 * @return 是否允许自动初始化
+	 */
+	@Override
+	protected boolean enableInitialize() {
+		return false;
 	}
 
 	@Override

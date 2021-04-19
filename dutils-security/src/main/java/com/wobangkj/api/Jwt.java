@@ -48,11 +48,15 @@ public abstract class Jwt implements Signable {
 	protected KeyGenerator keyGenerator;
 
 	protected Jwt() throws NoSuchAlgorithmException {
-		this.initialize();
+		if (enableInitialize()) {
+			this.initialize();
+		}
 	}
 
 	public Jwt(KeyGenerator keyGenerator) throws NoSuchAlgorithmException {
-		this.initialize(keyGenerator);
+		if (enableInitialize()) {
+			this.initialize(keyGenerator);
+		}
 	}
 
 	/**
@@ -135,4 +139,11 @@ public abstract class Jwt implements Signable {
 	protected void initialize() throws NoSuchAlgorithmException {
 		initialize(KeyGenerator.getInstance(MAC_NAME));
 	}
+
+	/**
+	 * 是否允许自动初始化
+	 *
+	 * @return 是否允许自动初始化
+	 */
+	protected abstract boolean enableInitialize();
 }

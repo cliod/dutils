@@ -16,6 +16,10 @@ import java.util.Objects;
  * @since 2019/11/9
  */
 public abstract class StorageJwt extends Jwt implements Signable {
+	/**
+	 * 是否初始化
+	 */
+	protected boolean isInitialize;
 
 	protected StorageJwt() throws NoSuchAlgorithmException {
 		super();
@@ -39,6 +43,7 @@ public abstract class StorageJwt extends Jwt implements Signable {
 		 * 校验器 用于生成 JWTVerifier 校验器
 		 */
 		verifier = JWT.require(algorithm).build();
+		this.isInitialize = true;
 	}
 
 	/**

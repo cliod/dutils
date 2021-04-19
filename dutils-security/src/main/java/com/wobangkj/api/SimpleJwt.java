@@ -100,4 +100,14 @@ public class SimpleJwt extends Jwt implements Signable {
 		this.isInitialize = true;
 		super.initialize();
 	}
+
+	/**
+	 * 是否允许自动初始化
+	 *
+	 * @return 是否允许自动初始化
+	 */
+	@Override
+	protected boolean enableInitialize() {
+		return true;
+	}
 }
