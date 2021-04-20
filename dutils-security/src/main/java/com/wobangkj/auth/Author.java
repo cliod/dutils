@@ -1,5 +1,6 @@
 package com.wobangkj.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,5 +39,18 @@ public class Author {
 	/**
 	 * 有效时长
 	 */
-	private Duration duration;
+	private Long time;
+
+	@JsonIgnore
+	public Duration getDuration() {
+		if (this.time == null) {
+			this.time = 0L;
+		}
+		return Duration.ofMinutes(this.time);
+	}
+
+	@JsonIgnore
+	public void setDuration(Duration duration) {
+		this.time = duration.toMillis();
+	}
 }
