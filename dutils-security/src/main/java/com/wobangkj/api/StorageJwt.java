@@ -16,10 +16,6 @@ import java.util.Objects;
  * @since 2019/11/9
  */
 public abstract class StorageJwt extends Jwt implements Signable {
-	/**
-	 * 是否初始化
-	 */
-	protected boolean isInitialize;
 
 	protected StorageJwt() throws NoSuchAlgorithmException {
 		super();
@@ -29,15 +25,36 @@ public abstract class StorageJwt extends Jwt implements Signable {
 		super(generator);
 	}
 
+	/**
+	 * 初始化
+	 *
+	 * @param generator 秘钥生成器
+	 * @throws NoSuchAlgorithmException 没有这样的算法异常
+	 */
 	@Override
-	public void initialize() {
+	protected void initialize(KeyGenerator generator) throws NoSuchAlgorithmException {
+		if (Objects.nonNull(generator)) {
+			this.keyGenerator = generator;
+		}
+		if (Objects.isNull(this.keyGenerator)) {
+			this.keyGenerator = KeyGenerator.getInstance(MAC_NAME);
+		}
+		SecretKey secretKey = keyGenerator.generateKey();
+		this.setSecret(secretKey.getEncoded());
+		this.initialize(secretKey.getEncoded());
+	}
+
+	@Override
+	protected void initialize() throws NoSuchAlgorithmException {
 		byte[] body = this.getSecret();
 		if (Objects.isNull(body) || body.length == 0) {
-			SecretKey secretKey = keyGenerator.generateKey();
-			body = secretKey.getEncoded();
-			// 存储
-			this.setSecret(body);
+			this.initialize(this.keyGenerator);
+			return;
 		}
+		this.initialize(body);
+	}
+
+	private void initialize(byte[] body) {
 		algorithm = Algorithm.HMAC256(body);
 		/*
 		 * 校验器 用于生成 JWTVerifier 校验器

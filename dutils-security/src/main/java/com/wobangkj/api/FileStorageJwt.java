@@ -3,6 +3,7 @@ package com.wobangkj.api;
 import com.wobangkj.exception.SecretException;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.KeyGenerator;
@@ -50,6 +51,7 @@ public class FileStorageJwt extends StorageJwt implements Signable {
 	 * @param filename 路径建议保持一致（只有一个秘钥）
 	 * @return JWT
 	 */
+	@SneakyThrows
 	public static @NotNull FileStorageJwt getInstance(String filename) {
 		if (INSTANCE == null) {
 			synchronized(FileStorageJwt.class) {
