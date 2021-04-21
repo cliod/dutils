@@ -9,12 +9,12 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils-spring-boot-starters</artifactId>
-        <version>5.3.15</version>
+        <version>5.3.16</version>
     </parent>
 
     <artifactId>dutils-sms-starter</artifactId>
     <name>dutils-sms-starter</name>
-    <url>http://www.wobangkj.com</url>
+    <url>https://www.wobangkj.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

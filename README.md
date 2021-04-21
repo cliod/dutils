@@ -29,8 +29,8 @@ Java聚合工具，本工具主要是在开发工程中使用到的或者常用�
 | [security](./dutils-security/pom.xml) | 安全模块，加密工具，jwt工具 |
 | [sms](./dutils-sms/pom.xml) | 短信模块，阿里腾讯短信SDK封装 |
 | [storage](./dutils-storage/pom.xml) | 存储模块，阿里腾讯对象云存储SDK封装 |
-| [spring-boot-starters](./spring-boot-starters/pom.xml) | spring-boot-starter 封装总和 |
-| [starter-sms](./spring-boot-starters/starter-dutils-sms/pom.xml)| 短信Restful API |
+| [spring-boot-starters](./dutils-spring-boot-starters/pom.xml) | spring-boot-starter 封装总和 |
+| [starter-sms](./dutils-spring-boot-starters/dutils-sms-starter/pom.xml)| 短信Restful API |
 
 ## 三、快速上手
 
@@ -43,7 +43,7 @@ Java聚合工具，本工具主要是在开发工程中使用到的或者常用�
 <dependency>
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils-all</artifactId>
-    <version>5.3.15</version>
+    <version>5.3.16</version>
 </dependency>
 ```
 
@@ -54,7 +54,7 @@ Java聚合工具，本工具主要是在开发工程中使用到的或者常用�
 <dependency>
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils-common</artifactId>
-    <version>5.3.15</version>
+    <version>5.3.16</version>
 </dependency>
 ```
 

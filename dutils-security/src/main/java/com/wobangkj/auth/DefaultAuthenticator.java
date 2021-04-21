@@ -1,6 +1,7 @@
 package com.wobangkj.auth;
 
-import com.wobangkj.api.Jwt;
+import com.wobangkj.api.Serializer;
+import com.wobangkj.api.Signable;
 import com.wobangkj.cache.Cacheables;
 import com.wobangkj.utils.KeyUtils;
 import org.jetbrains.annotations.NotNull;
@@ -14,18 +15,18 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DefaultAuthenticator extends Authenticator {
 
-	public DefaultAuthenticator(@NotNull Cacheables cache, @NotNull Jwt jwt) {
-		super(cache, jwt);
+	public DefaultAuthenticator(@NotNull Cacheables cache, @NotNull Signable signable) {
+		super(cache, signable);
 	}
 
 	/**
 	 * 生成令牌
 	 *
-	 * @param author 授权者
+	 * @param serializer 授权对象
 	 * @return token令牌
 	 */
 	@Override
-	protected String createToken(Author author) {
-		return KeyUtils.md5Hex(String.format("%d;%d", System.currentTimeMillis(), author.hashCode()));
+	protected String createToken(Serializer serializer) {
+		return KeyUtils.md5Hex(String.format("%d;%d;%s", System.currentTimeMillis(), serializer.hashCode(), serializer.toJson()));
 	}
 }
