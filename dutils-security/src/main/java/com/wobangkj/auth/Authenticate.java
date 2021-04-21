@@ -28,6 +28,10 @@ public abstract class Authenticate {
 		return Authenticate.authenticator;
 	}
 
+	public static void setAuthenticator(Signable signer) {
+		Authenticate.setAuthenticator(new LruMemCacheImpl(), signer);
+	}
+
 	public static void setAuthenticator(Cacheables cacheables) {
 		Authenticate.setAuthenticator(cacheables, SimpleJwt.getInstance());
 	}
@@ -36,8 +40,8 @@ public abstract class Authenticate {
 		Authenticate.authenticator = authenticator;
 	}
 
-	public static void setAuthenticator(Cacheables cacheables, Signable jwt) {
-		Authenticate.setAuthenticator(new DefaultAuthenticator(cacheables, jwt));
+	public static void setAuthenticator(Cacheables cacheables, Signable signer) {
+		Authenticate.setAuthenticator(new DefaultAuthenticator(cacheables, signer));
 	}
 
 	/**
@@ -111,7 +115,7 @@ public abstract class Authenticate {
 	 */
 	protected static void init() {
 		if (Objects.isNull(Authenticate.authenticator)) {
-			Authenticate.setAuthenticator(new LruMemCacheImpl());
+			Authenticate.setAuthenticator(DefaultAuthenticator.INSTANCE);
 		}
 	}
 }

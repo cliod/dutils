@@ -4,7 +4,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.wobangkj.api.EnumTextMsg;
 import com.wobangkj.api.Serializer;
 import com.wobangkj.api.Signable;
-import com.wobangkj.cache.Cacheables;
+import com.wobangkj.cache.Cacheable;
 import com.wobangkj.exception.SecretException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +31,9 @@ import java.util.concurrent.TimeUnit;
 public abstract class Authenticator {
 
 	protected Signable signer;
-	protected Cacheables cache;
+	protected Cacheable cache;
 
-	public Authenticator(@NotNull Cacheables cache, @NotNull Signable signer) {
+	public Authenticator(@NotNull Cacheable cache, @NotNull Signable signer) {
 		this.cache = cache;
 		this.signer = signer;
 	}
@@ -107,7 +107,7 @@ public abstract class Authenticator {
 	 * @return 签名对象
 	 */
 	public @Nullable <T extends Serializer> T authenticate(@NotNull String token, Class<T> type) {
-		String sign = (String) this.cache.obtain(token);
+		String sign = (String) this.cache.get(token);
 		if (StringUtils.isEmpty(sign)) {
 			return null;
 		}

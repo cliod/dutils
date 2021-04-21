@@ -100,7 +100,7 @@ public class Author extends Authorized {
 		this.put("time", time);
 	}
 
-	protected static class Builder {
+	public static class Builder {
 		private final Map<String, Object> data;
 
 		public Builder() {
