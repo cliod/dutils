@@ -1,6 +1,7 @@
 package com.wobangkj.auth;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.wobangkj.api.EnumTextMsg;
 import com.wobangkj.api.Serializer;
 import com.wobangkj.api.Signable;
@@ -13,12 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 权限认证
@@ -53,10 +52,7 @@ public abstract class Authenticator {
 		if (Objects.isNull(author.getExpireAt())) {
 			author.setExpireAt(Instant.now().plus(24, ChronoUnit.HOURS));
 		}
-		String sign = this.signer.sign(author, author.getExpireAt());
-		String token = createToken(author);
-		this.cache.set(token, sign, author.getExpireAt());
-		return token;
+		return this.authorize(author, author.getExpireAt());
 	}
 
 	/**
@@ -67,10 +63,13 @@ public abstract class Authenticator {
 	 * @return token令牌
 	 */
 	public @NotNull String authorize(@NotNull Serializer serializer, Date expireAt) {
-		String sign = this.signer.sign(serializer, expireAt);
-		String token = createToken(serializer);
-		this.cache.set(token, sign, expireAt);
-		return token;
+		Instant instant;
+		if (expireAt == null) {
+			instant = Instant.now().plus(24, ChronoUnit.HOURS);
+		} else {
+			instant = expireAt.toInstant();
+		}
+		return this.authorize(serializer, instant);
 	}
 
 	/**
@@ -81,10 +80,12 @@ public abstract class Authenticator {
 	 * @return token令牌
 	 */
 	public @NotNull String authorize(@NotNull Serializer serializer, TemporalAccessor expireAt) {
-		long milli = expireAt.getLong(ChronoField.MILLI_OF_SECOND);
-		String sign = this.signer.sign(serializer, milli);
+		if (Objects.isNull(expireAt)) {
+			expireAt = Instant.now().plus(24, ChronoUnit.HOURS);
+		}
+		String sign = this.signer.sign(serializer, expireAt);
 		String token = createToken(serializer);
-		this.cache.set(token, sign, milli, TimeUnit.MILLISECONDS);
+		this.cache.set(token, sign, expireAt);
 		return token;
 	}
 
@@ -107,16 +108,18 @@ public abstract class Authenticator {
 	 * @return 签名对象
 	 */
 	public @Nullable <T extends Serializer> T authenticate(@NotNull String token, Class<T> type) {
-		String sign = (String) this.cache.get(token);
+		String sign = (String) this.cache.take(token);
 		if (StringUtils.isEmpty(sign)) {
 			return null;
 		}
 		try {
 			return this.signer.unsign(sign, type);
 		} catch (JWTDecodeException e) {
-			throw new SecretException((EnumTextMsg) () -> "由于秘钥失效或丢失，token已经失效，请重新登录", e);
+			throw new SecretException((EnumTextMsg) () -> "The secret key cannot be decrypted", e);
+		} catch (TokenExpiredException e) {
+			throw new SecretException((EnumTextMsg) e::getMessage, e);
 		} catch (Exception e) {
-			throw new SecretException((EnumTextMsg) () -> "未知异常", e);
+			throw new SecretException((EnumTextMsg) () -> "Unknown exception", e);
 		}
 	}
 

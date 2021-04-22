@@ -1,9 +1,11 @@
 package com.wobangkj.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +52,7 @@ public class Author extends Authorized {
 	}
 
 	@JsonIgnore
-	public void setDuration(Duration duration) {
+	public void setDuration(@NotNull Duration duration) {
 		this.setTime(duration.toMillis());
 		this.setExpireAt(Instant.now().plus(duration));
 	}
@@ -124,6 +126,18 @@ public class Author extends Authorized {
 
 		public Builder id(Object id) {
 			this.data.put("id", id);
+			return this;
+		}
+
+		public Builder expireAt(@NotNull Date date) {
+			this.data.put("expireAt", date);
+			this.data.put("time", date.getTime() - System.currentTimeMillis());
+			return this;
+		}
+
+		public Builder time(long time) {
+			this.data.put("expireAt", new Date(System.currentTimeMillis() + time));
+			this.data.put("time", time);
 			return this;
 		}
 

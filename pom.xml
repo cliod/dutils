@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>5.3.19</version>
+    <version>5.3.21</version>
 
     <packaging>pom</packaging>
 
@@ -59,6 +59,7 @@
         <jetbrains.version>[20.0.0,)</jetbrains.version>
         <lombok.version>[1.18.12,)</lombok.version>
         <servlet.version>[4.0.1,)</servlet.version>
+        <hutool.version>5.6.3</hutool.version>
     </properties>
 
     <dependencies>
@@ -183,6 +184,14 @@
                 <groupId>com.wobangkj</groupId>
                 <artifactId>dutils-storage</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-parent</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>

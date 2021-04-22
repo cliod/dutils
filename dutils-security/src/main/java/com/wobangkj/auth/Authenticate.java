@@ -28,19 +28,19 @@ public abstract class Authenticate {
 		return Authenticate.authenticator;
 	}
 
-	public static void setAuthenticator(Signable signer) {
+	public static void setAuthenticator(@NotNull Signable signer) {
 		Authenticate.setAuthenticator(new LruMemCacheImpl(), signer);
 	}
 
-	public static void setAuthenticator(Cacheables cacheables) {
+	public static void setAuthenticator(@NotNull Cacheables cacheables) {
 		Authenticate.setAuthenticator(cacheables, SimpleJwt.getInstance());
 	}
 
-	public static void setAuthenticator(Authenticator authenticator) {
+	public static void setAuthenticator(@NotNull Authenticator authenticator) {
 		Authenticate.authenticator = authenticator;
 	}
 
-	public static void setAuthenticator(Cacheables cacheables, Signable signer) {
+	public static void setAuthenticator(@NotNull Cacheables cacheables, @NotNull Signable signer) {
 		Authenticate.setAuthenticator(new DefaultAuthenticator(cacheables, signer));
 	}
 
@@ -72,10 +72,24 @@ public abstract class Authenticate {
 	/**
 	 * 授权
 	 *
+	 * @param ip       用户ip
+	 * @param role     授权角色
+	 * @param id       用户唯一id
+	 * @param data     额外存储的数据
+	 * @param expireAt 过期时间
+	 * @return token令牌
+	 */
+	public static @NotNull String authorize(String ip, Object role, Object id, Object data, Date expireAt) {
+		return authorize(Author.builder().key(ip).role(role).id(id).data(data).expireAt(expireAt).build());
+	}
+
+	/**
+	 * 授权
+	 *
 	 * @param author 授权者
 	 * @return token令牌
 	 */
-	public static @NotNull String authorize(Author author) {
+	public static @NotNull String authorize(@NotNull Author author) {
 		return authorize(author, author.getExpireAt());
 	}
 
@@ -86,7 +100,7 @@ public abstract class Authenticate {
 	 * @param expireAt   过期时间
 	 * @return token令牌
 	 */
-	public static @NotNull String authorize(Serializer serializer, Date expireAt) {
+	public static @NotNull String authorize(@NotNull Serializer serializer, Date expireAt) {
 		return getAuthenticator().authorize(serializer, expireAt);
 	}
 
@@ -96,7 +110,7 @@ public abstract class Authenticate {
 	 * @param token 令牌
 	 * @return 签名对象
 	 */
-	public static @Nullable Author authenticate(String token) {
+	public static @Nullable Author authenticate(@NotNull String token) {
 		return authenticate(token, Author.class);
 	}
 
@@ -106,7 +120,7 @@ public abstract class Authenticate {
 	 * @param token 令牌
 	 * @return 签名对象
 	 */
-	public static @Nullable <T extends Serializer> T authenticate(String token, Class<T> type) {
+	public static @Nullable <T extends Serializer> T authenticate(@NotNull String token, Class<T> type) {
 		return getAuthenticator().authenticate(token, type);
 	}
 

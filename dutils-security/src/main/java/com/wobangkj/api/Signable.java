@@ -1,9 +1,11 @@
 package com.wobangkj.api;
 
+import cn.hutool.core.date.DateUtil;
 import com.auth0.jwt.interfaces.Claim;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -20,20 +22,33 @@ public interface Signable {
 	/**
 	 * 加密，传入一个对象和有效期/毫秒
 	 *
-	 * @param obj      对象
-	 * @param duration 时长/秒
-	 * @return 签名字符串
-	 */
-	String sign(Object obj, long duration);
-
-	/**
-	 * 加密，传入一个对象和有效期/毫秒
-	 *
 	 * @param obj  对象
 	 * @param date 时间/秒
 	 * @return 签名字符串
 	 */
 	String sign(Object obj, Date date);
+
+	/**
+	 * 加密，传入一个对象和有效期/毫秒
+	 *
+	 * @param obj      对象
+	 * @param duration 时长/秒
+	 * @return 签名字符串
+	 */
+	default String sign(Object obj, long duration) {
+		return this.sign(obj, new Date(System.currentTimeMillis() + duration));
+	}
+
+	/**
+	 * 加密，传入一个对象和有效期/毫秒
+	 *
+	 * @param obj      对象
+	 * @param temporal 时间
+	 * @return 签名字符串
+	 */
+	default String sign(Object obj, TemporalAccessor temporal) {
+		return this.sign(obj, DateUtil.date(temporal));
+	}
 
 	/**
 	 * 加密，传入一个对象和有效期/指定单位

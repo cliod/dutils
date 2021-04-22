@@ -66,24 +66,6 @@ public abstract class Jwt implements Signable {
 	/**
 	 * 加密，传入一个对象和有效期/毫秒
 	 *
-	 * @param obj      对象
-	 * @param duration 时长/秒
-	 * @return 签名字符串
-	 */
-	@Override
-	public String sign(Object obj, long duration) {
-		if (!isInitialize) {
-			throw new RuntimeException("未初始化");
-		}
-		JwtBuilder.Builder builder = JwtBuilder.init();
-		long now = System.currentTimeMillis();
-		long accumulate = now + duration;
-		return build(builder.withExpiresAt(new Date(accumulate)), obj, now);
-	}
-
-	/**
-	 * 加密，传入一个对象和有效期/毫秒
-	 *
 	 * @param obj  对象
 	 * @param date 时间/秒
 	 * @return 签名字符串

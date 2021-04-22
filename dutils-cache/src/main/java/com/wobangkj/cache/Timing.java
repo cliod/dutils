@@ -1,5 +1,6 @@
 package com.wobangkj.cache;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -99,6 +100,7 @@ public class Timing {
 		timing.setTime(time);
 		timing.setUnit(unit);
 		timing.setDeadline(LocalDateTime.now().plus(time, toChronoUnit(unit)));
+		timing.setExpireAt(new Date(unit.toMillis(time)));
 		return timing;
 	}
 
@@ -110,15 +112,22 @@ public class Timing {
 	 */
 	public static @NotNull Timing of(Duration duration) {
 		Timing timing = new Timing();
-		timing.setTime(duration.toMillis());
+		long millis = duration.toMillis();
+		timing.setTime(millis);
 		timing.setUnit(TimeUnit.MILLISECONDS);
 		timing.setDeadline(LocalDateTime.now().plus(duration));
+		timing.setExpireAt(new Date(millis));
 		return timing;
 	}
 
 	public static @NotNull Timing of(Date date) {
-		Date now = new Date();
-		return of(date.getTime() - now.getTime(), TimeUnit.MILLISECONDS);
+		Timing timing = new Timing();
+		long millis = date.getTime();
+		timing.setTime(millis);
+		timing.setUnit(TimeUnit.MILLISECONDS);
+		timing.setDeadline(LocalDateTime.now().plus(millis, ChronoUnit.MILLIS));
+		timing.setExpireAt(date);
+		return timing;
 	}
 
 	public static ChronoUnit toChronoUnit(@NotNull TimeUnit timeUnit) {
@@ -142,8 +151,25 @@ public class Timing {
 		}
 	}
 
-	protected void setDeadline(LocalDateTime deadline) {
-		this.expireAt = Date.from(deadline.atZone(ZoneId.systemDefault()).toInstant());
-		this.deadline = deadline;
+	public LocalDateTime getDeadline() {
+		if (deadline != null) {
+			return deadline;
+		} else {
+			if (expireAt != null) {
+				return LocalDateTime.from(expireAt.toInstant().atZone(ZoneId.systemDefault()));
+			}
+		}
+		return null;
+	}
+
+	public Date getExpireAt() {
+		if (expireAt != null) {
+			return expireAt;
+		} else {
+			if (deadline != null) {
+				return DateUtil.date(deadline);
+			}
+		}
+		return null;
 	}
 }

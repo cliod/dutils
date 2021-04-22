@@ -1,6 +1,9 @@
 package com.wobangkj.cache;
 
+import cn.hutool.core.date.DateUtil;
+
 import java.time.Duration;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -71,6 +74,17 @@ public interface Cacheable extends Storable {
 	 */
 	default void set(Object key, Object value, Date expireAt) {
 		this.set(key, value, Timing.of(expireAt));
+	}
+
+	/**
+	 * put内容
+	 *
+	 * @param key      键
+	 * @param value    值
+	 * @param expireAt 过期时间
+	 */
+	default void set(Object key, Object value, TemporalAccessor expireAt) {
+		this.set(key, value, DateUtil.date(expireAt));
 	}
 
 	/**

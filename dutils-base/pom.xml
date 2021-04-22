@@ -9,7 +9,7 @@
     <parent>
         <artifactId>dutils</artifactId>
         <groupId>com.wobangkj</groupId>
-        <version>5.3.19</version>
+        <version>5.3.21</version>
     </parent>
 
     <artifactId>dutils-base</artifactId>
@@ -29,7 +29,11 @@
             <artifactId>dutils-json</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

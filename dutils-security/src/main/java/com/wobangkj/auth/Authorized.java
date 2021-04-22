@@ -1,10 +1,10 @@
 package com.wobangkj.auth;
 
+import cn.hutool.core.date.DateUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wobangkj.api.SessionSerializable;
 
 import java.time.Instant;
-import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public abstract class Authorized extends HashMap<String, Object> implements Sess
 
 	@JsonIgnore
 	public void setExpireAt(TemporalAccessor expireAt) {
-		this.setExpireAt(new Date(expireAt.getLong(ChronoField.MILLI_OF_SECOND)));
+		this.setExpireAt(DateUtil.date(expireAt));
 	}
 
 	@JsonIgnore
