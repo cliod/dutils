@@ -150,16 +150,10 @@ public interface AcsSmsSign extends SmsSign {
 
 	/**
 	 * 签名证明
+	 *
+	 * @see com.wobangkj.ali.bean.SignFile 新签名文件
 	 */
-	@Data
-	class SignFile {
-		/**
-		 * 文件Base64编码
-		 */
-		private String fileContents;
-		/**
-		 * 文件后缀名
-		 */
-		private String fileSuffix;
+	@Deprecated
+	class SignFile extends com.wobangkj.ali.bean.SignFile {
 	}
 }

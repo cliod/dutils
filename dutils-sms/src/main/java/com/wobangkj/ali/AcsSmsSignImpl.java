@@ -11,8 +11,8 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 短信签名操作
@@ -53,14 +53,7 @@ public class AcsSmsSignImpl implements AcsSmsSign {
 		request.setSignSource(signSource);
 		request.setRemark(remark);
 		request.setSysRegionId(this.regionId);
-		List<AddSmsSignRequest.SignFileList> signFileLists = new ArrayList<>();
-		for (SignFile signFile : signFiles) {
-			signFileLists.add(new AddSmsSignRequest.SignFileList() {{
-				setFileContents(signFile.getFileContents());
-				setFileSuffix(signFile.getFileSuffix());
-			}});
-		}
-		request.setSignFileLists(signFileLists);
+		request.setSignFileLists(signFiles.stream().map(SignFile::toAddSignFile).collect(Collectors.toList()));
 		return this.client.getAcsResponse(request);
 	}
 
@@ -75,18 +68,11 @@ public class AcsSmsSignImpl implements AcsSmsSign {
 	@Override
 	public AcsResponse modify(String signName, Integer signSource, String remark, List<SignFile> signFiles) throws ClientException {
 		ModifySmsSignRequest request = new ModifySmsSignRequest();
+		request.setSysRegionId(this.regionId);
 		request.setSignName(signName);
 		request.setSignSource(signSource);
 		request.setRemark(remark);
-		request.setSysRegionId(this.regionId);
-		List<ModifySmsSignRequest.SignFileList> signFileLists = new ArrayList<>();
-		for (SignFile signFile : signFiles) {
-			signFileLists.add(new ModifySmsSignRequest.SignFileList() {{
-				setFileContents(signFile.getFileContents());
-				setFileSuffix(signFile.getFileSuffix());
-			}});
-		}
-		request.setSignFileLists(signFileLists);
+		request.setSignFileLists(signFiles.stream().map(SignFile::toModifySignFile).collect(Collectors.toList()));
 		return this.client.getAcsResponse(request);
 	}
 
