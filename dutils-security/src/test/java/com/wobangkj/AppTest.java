@@ -3,10 +3,9 @@ package com.wobangkj;
 import com.wobangkj.api.Serializer;
 import com.wobangkj.auth.Authenticate;
 import com.wobangkj.auth.Author;
-import lombok.Data;
 import org.junit.Test;
 
-import java.util.Date;
+import java.util.Map;
 
 /**
  * Unit test for simple App.
@@ -26,32 +25,22 @@ public class AppTest {
 		assert serializer != null;
 		System.out.println(serializer.toJson());
 
-		@Data
-		class User implements Serializer {
-			private String name;
-			private Long id;
-
-			/**
-			 * 序列化
-			 *
-			 * @return json字符串
-			 */
-			@Override
-			public String toJson() {
-				return name + "," + id;
-			}
+		class User extends TestBean {
 		}
 
-		token = Authenticate.authorize(new User() {{
+		token = Authenticate.authorize(Author.builder().data(new User() {{
 			setId(10L);
 			setName("ces");
-		}}, new Date(System.currentTimeMillis() + 100000000));
+		}}).build());
 		System.out.println(token);
 		serializer = Authenticate.authenticate(token);
 		assert serializer != null;
 		System.out.println(serializer.toJson());
 		author = Authenticate.authenticate(token);
 		System.out.println(author);
-
+		System.out.println(author.getData());
+		System.out.println((TestBean) author.getData());
+		System.out.println(author.getData(TestBean.class));
+		System.out.println(author.getData(Map.class));
 	}
 }
