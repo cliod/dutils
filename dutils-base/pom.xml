@@ -9,7 +9,7 @@
     <parent>
         <artifactId>dutils</artifactId>
         <groupId>com.wobangkj</groupId>
-        <version>5.3.21</version>
+        <version>5.3.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>dutils-base</artifactId>

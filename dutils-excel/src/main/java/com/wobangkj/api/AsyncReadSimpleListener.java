@@ -29,7 +29,7 @@ public abstract class AsyncReadSimpleListener<T> extends AsyncReadListener<T> {
 	/**
 	 * 在添加之前进行筛选
 	 *
-	 * @param data 数据
+	 * @param data 是否满足添加，不满足去除
 	 */
 	protected boolean filter(T data) {
 		return true;
@@ -52,5 +52,6 @@ public abstract class AsyncReadSimpleListener<T> extends AsyncReadListener<T> {
 	 * 完成
 	 */
 	protected void finish() {
+		this.doProcess();
 	}
 }

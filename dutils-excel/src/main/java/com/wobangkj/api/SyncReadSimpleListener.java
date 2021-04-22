@@ -15,7 +15,7 @@ public abstract class SyncReadSimpleListener<T> extends SyncReadListener<T> {
 	protected static transient int maxSize = 500;
 
 	public SyncReadSimpleListener() {
-		super(maxSize);
+		this(maxSize);
 	}
 
 	public SyncReadSimpleListener(int initCapacity) {
@@ -33,9 +33,27 @@ public abstract class SyncReadSimpleListener<T> extends SyncReadListener<T> {
 			this.process();
 		}
 		// 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
-		if (this.cache.size() >= getMax()) {
+		if (this.cache.size() >= this.getMax()) {
 			this.process();
 		}
+	}
+
+	@Override
+	public final void doAfterAllAnalysed(AnalysisContext context) {
+		try {
+			this.process();
+		} finally {
+			this.finish();
+		}
+	}
+
+	/**
+	 * 在添加之前进行筛选
+	 *
+	 * @param data 是否满足添加，不满足去除
+	 */
+	protected boolean filter(T data) {
+		return true;
 	}
 
 	/**
@@ -43,22 +61,8 @@ public abstract class SyncReadSimpleListener<T> extends SyncReadListener<T> {
 	 *
 	 * @return 是否满足
 	 */
-	private boolean condition() {
+	protected boolean condition() {
 		return false;
-	}
-
-	@Override
-	public final void doAfterAllAnalysed(AnalysisContext context) {
-		this.process();
-	}
-
-	/**
-	 * 在添加之前进行筛选
-	 *
-	 * @param data 数据
-	 */
-	protected boolean filter(T data) {
-		return true;
 	}
 
 	/**
@@ -98,5 +102,8 @@ public abstract class SyncReadSimpleListener<T> extends SyncReadListener<T> {
 	 */
 	protected void after() {
 		this.cache.clear();
+	}
+
+	protected void finish() {
 	}
 }

@@ -15,7 +15,7 @@ public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 	protected static transient int maxSize = 500;
 
 	public SyncReadProcessListener() {
-		super(maxSize);
+		this(maxSize);
 	}
 
 	public SyncReadProcessListener(int initCapacity) {
@@ -33,24 +33,18 @@ public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 			this.process(context);
 		}
 		// 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
-		if (this.cache.size() >= getMax()) {
+		if (this.cache.size() >= this.getMax()) {
 			this.process(context);
 		}
 	}
 
-	/**
-	 * 满足的条件
-	 *
-	 * @param context 上下文内容
-	 * @return 是否满足
-	 */
-	protected boolean condition(AnalysisContext context) {
-		return false;
-	}
-
 	@Override
 	public final void doAfterAllAnalysed(AnalysisContext context) {
-		this.process(context);
+		try {
+			this.process(context);
+		} finally {
+			this.finish(context);
+		}
 	}
 
 	/**
@@ -61,6 +55,16 @@ public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 	 */
 	protected boolean filter(T data, AnalysisContext context) {
 		return true;
+	}
+
+	/**
+	 * 满足的条件
+	 *
+	 * @param context 上下文内容
+	 * @return 是否满足添加，不满足去除
+	 */
+	protected boolean condition(AnalysisContext context) {
+		return false;
 	}
 
 	/**
@@ -106,5 +110,9 @@ public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 	 */
 	protected void after(AnalysisContext context) {
 		this.cache.clear();
+	}
+
+	protected void finish(AnalysisContext context) {
+
 	}
 }
