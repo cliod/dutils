@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.wobangkj</groupId>
         <artifactId>dutils</artifactId>
-        <version>5.3.22</version>
+        <version>5.3.23</version>
     </parent>
 
     <artifactId>dutils-qrcode</artifactId>

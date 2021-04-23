@@ -2,6 +2,7 @@ package com.wobangkj.api;
 
 import org.junit.Test;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
@@ -13,7 +14,7 @@ import static org.junit.Assert.*;
 public class JwtTest {
 
 	@Test
-	public void sign() {
+	public void sign() throws NoSuchAlgorithmException {
 		Jwt jwt = SimpleJwt.getInstance();
 		String a = jwt.sign("1", 10000);
 		System.out.println(a);
@@ -26,5 +27,10 @@ public class JwtTest {
 		String d = jwt.sign(new HashMap<String, Object>(4) {{put("value", 1);}}, 10000);
 		System.out.println(d);
 		System.out.println(jwt.unsignToMap(d));
+
+		jwt = new DBStorageJwt().instance("wobangkj2019");
+		a = jwt.sign("1", 10000);
+		System.out.println(a);
+		System.out.println(jwt.unsign(a).asString());
 	}
 }
