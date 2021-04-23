@@ -27,6 +27,10 @@ public class DefaultAuthenticator extends Authenticator {
 		this(new LruMemCacheImpl(), SimpleJwt.getInstance());
 	}
 
+	public static DefaultAuthenticator getInstance() {
+		return INSTANCE;
+	}
+
 	/**
 	 * 生成令牌
 	 *

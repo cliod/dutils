@@ -1,6 +1,7 @@
 package com.wobangkj.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wobangkj.utils.JsonUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -91,6 +92,37 @@ public class Author extends Authorized {
 	public void setData(Object data) {
 		this.data = data;
 		this.put("data", data);
+		this.put("data_str", JsonUtils.toJson(data));
+	}
+
+	/**
+	 * 对象转成json
+	 *
+	 * @return json
+	 */
+	@Override
+	public String toJson() {
+		Map<String, Object> data = new HashMap<>(this);
+		data.remove("data_str");
+		return JsonUtils.toJson(data);
+	}
+
+	/**
+	 * 获取授权数据
+	 *
+	 * @param type 指定类型
+	 * @return 结果数据
+	 */
+	@Override
+	public <T> T getData(@NotNull Class<T> type) {
+		Object json = this.get("data_str");
+		if (json == null) {
+			json = JsonUtils.toJson(this.getData());
+		}
+		if (json instanceof String) {
+			return JsonUtils.fromJson((String) json, type);
+		}
+		return super.getData(type);
 	}
 
 	public Long getTime() {
@@ -121,6 +153,7 @@ public class Author extends Authorized {
 
 		public Builder data(Object data) {
 			this.data.put("data", data);
+			this.data.put("data_str", JsonUtils.toJson(data));
 			return this;
 		}
 

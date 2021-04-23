@@ -38,8 +38,8 @@ public class AppTest {
 		System.out.println(serializer.toJson());
 		author = Authenticate.authenticate(token);
 		System.out.println(author);
+		assert author != null;
 		System.out.println(author.getData());
-		System.out.println((TestBean) author.getData());
 		System.out.println(author.getData(TestBean.class));
 		System.out.println(author.getData(Map.class));
 	}
