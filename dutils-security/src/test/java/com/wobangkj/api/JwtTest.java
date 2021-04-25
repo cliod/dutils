@@ -5,8 +5,6 @@ import org.junit.Test;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
-
 /**
  * @author cliod
  * @since 1/5/21 11:51 AM
@@ -28,7 +26,8 @@ public class JwtTest {
 		System.out.println(d);
 		System.out.println(jwt.unsignToMap(d));
 
-		jwt = new DBStorageJwt().instance("wobangkj2019");
+//		jwt = new DBStorageJwt().instance("wobangkj2019");
+		jwt = new DBStorageJwt().instance("root", "wobangkj2019", "127.0.0.1", "3306");
 		a = jwt.sign("1", 10000);
 		System.out.println(a);
 		System.out.println(jwt.unsign(a).asString());

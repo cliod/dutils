@@ -3,7 +3,7 @@ package com.wobangkj.auth;
 import com.wobangkj.api.Serializer;
 import com.wobangkj.api.Signable;
 import com.wobangkj.api.SimpleJwt;
-import com.wobangkj.cache.Cacheables;
+import com.wobangkj.cache.Cacheable;
 import com.wobangkj.cache.LruMemCacheImpl;
 import com.wobangkj.utils.KeyUtils;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ public class DefaultAuthenticator extends Authenticator {
 
 	protected static final DefaultAuthenticator INSTANCE = new DefaultAuthenticator();
 
-	public DefaultAuthenticator(@NotNull Cacheables cache, @NotNull Signable signable) {
+	public DefaultAuthenticator(@NotNull Cacheable cache, @NotNull Signable signable) {
 		super(cache, signable);
 	}
 

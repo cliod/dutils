@@ -2,6 +2,8 @@ package com.wobangkj.api;
 
 import com.wobangkj.exception.SecretException;
 import com.wobangkj.utils.HexUtils;
+import com.wobangkj.utils.RefUtils;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -25,6 +27,7 @@ public class DBStorageJwt extends StorageJwt implements Signable {
 	protected String host = "localhost";
 	protected int port = 3306;
 	protected String tableName = "secret";
+	protected String columnName = "secret_key";
 
 	protected Connection conn;
 
@@ -35,6 +38,12 @@ public class DBStorageJwt extends StorageJwt implements Signable {
 		super(generator);
 	}
 
+	/**
+	 * 初始化
+	 *
+	 * @param password 密码，非空
+	 * @return DB_JWT实例
+	 */
 	public DBStorageJwt instance(String password) {
 		try {
 			this.password = password;
@@ -45,24 +54,21 @@ public class DBStorageJwt extends StorageJwt implements Signable {
 		return this;
 	}
 
-	public DBStorageJwt instance(String username, String password, String... param) {
+	/**
+	 * 初始化
+	 *
+	 * @param username   用户名
+	 * @param password   密码，非空
+	 * @param properties 其他参数，顺序为："host", "port", "dbName", "tableName", "columnName"
+	 * @return DB_JWT实例
+	 */
+	public DBStorageJwt instance(String username, String password, String... properties) {
 		try {
 			if (StringUtils.isNotEmpty(username)) {
 				this.username = username;
 			}
 			this.password = password;
-			if (param != null && param.length > 0) {
-				this.host = param[0];
-				if (param.length > 1) {
-					this.port = Integer.parseInt(param[1]);
-					if (param.length > 2) {
-						this.dbName = param[2];
-						if (param.length > 3) {
-							this.tableName = param[3];
-						}
-					}
-				}
-			}
+			this.setParam(new String[]{"host", "port", "dbName", "tableName", "columnName"}, properties);
 			this.initialize();
 		} catch (NoSuchAlgorithmException e) {
 			throw new SecretException((EnumTextMsg) e::getMessage, e);
@@ -70,31 +76,29 @@ public class DBStorageJwt extends StorageJwt implements Signable {
 		return this;
 	}
 
+	/**
+	 * 初始化
+	 *
+	 * @param properties 参数，可以为："username", "password", "host", "port", "dbName", "tableName", "columnName"
+	 * @return DB_JWT实例
+	 */
 	public DBStorageJwt instance(Map<String, String> properties) {
 		try {
-			if (StringUtils.isNotEmpty(properties.get("username"))) {
-				this.username = properties.get("username");
-			}
-			if (StringUtils.isNotEmpty(properties.get("password"))) {
-				this.password = properties.get("password");
-			}
-			if (StringUtils.isNotEmpty(properties.get("dbName"))) {
-				this.dbName = properties.get("dbName");
-			}
-			if (StringUtils.isNotEmpty(properties.get("tableName"))) {
-				this.tableName = properties.get("tableName");
-			}
-			if (StringUtils.isNotEmpty(properties.get("host"))) {
-				this.host = properties.get("host");
-			}
-			if (NumberUtils.isDigits(properties.get("port"))) {
-				this.port = Integer.parseInt(properties.get("port"));
-			}
+			this.setParam(new String[]{"username", "password", "host", "port", "dbName", "tableName", "columnName"}, properties);
 			this.initialize();
 		} catch (NoSuchAlgorithmException e) {
 			throw new SecretException((EnumTextMsg) e::getMessage, e);
 		}
 		return this;
+	}
+
+	/**
+	 * 是否允许（密码为空）初始化
+	 *
+	 * @return 默认不允许
+	 */
+	protected boolean isEnable() {
+		return false;
 	}
 
 	/**
@@ -104,7 +108,7 @@ public class DBStorageJwt extends StorageJwt implements Signable {
 	 */
 	@Override
 	protected boolean enableInitialize() {
-		return StringUtils.isNotEmpty(this.password);
+		return StringUtils.isNotEmpty(this.password) || this.isEnable();
 	}
 
 	@Override
@@ -128,7 +132,7 @@ public class DBStorageJwt extends StorageJwt implements Signable {
 			if (res == null || "".equals(res)) {
 				sql = "INSERT INTO " + tableName + " VALUES ('" + HexUtils.bytes2Hex(data) + "')";
 			} else {
-				sql = "UPDATE " + tableName + " set secret_key = '" + HexUtils.bytes2Hex(data) + "' WHERE 1=1";
+				sql = "UPDATE " + tableName + " set " + columnName + " = '" + HexUtils.bytes2Hex(data) + "' WHERE 1=1";
 			}
 			Statement stmt = conn.createStatement();
 			stmt.execute(sql);
@@ -178,7 +182,7 @@ public class DBStorageJwt extends StorageJwt implements Signable {
 
 			connSql = String.format("jdbc:mysql://%s:%d/%s?%s", host, port, dbName, paramStr);
 			conn = DriverManager.getConnection(connSql, username, password);
-			ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `" + tableName + "`( secret_key varchar(64) DEFAULT '' COMMENT '秘钥' ) COMMENT 'jwt秘钥'");
+			ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `" + tableName + "`( " + columnName + " varchar(64) DEFAULT '' COMMENT '秘钥' ) COMMENT 'jwt秘钥'");
 			ps.execute();
 			return conn;
 		} catch (ClassNotFoundException | SQLException e) {
@@ -197,13 +201,49 @@ public class DBStorageJwt extends StorageJwt implements Signable {
 		return sb.toString();
 	}
 
-	private String query() throws SQLException {
+	protected String query() throws SQLException {
 		Statement stmt = conn.createStatement();
 		String sql = "SELECT * FROM " + tableName + " LIMIT 1";
 		ResultSet rs = stmt.executeQuery(sql);
-		if (!rs.next()) {
-			return "";
+		return rs.next() ? rs.getString(columnName) : "";
+	}
+
+	@SneakyThrows
+	protected void setParam(String[] fieldNames, String... properties) {
+		for (int i = 0; i < fieldNames.length; i++) {
+			if (properties.length > i + 1) {
+				if (StringUtils.isEmpty(properties[i])) {
+					continue;
+				}
+				String fieldName = fieldNames[i];
+				if ("port".equals(fieldName)) {
+					// 特殊处理
+					if (NumberUtils.isDigits(properties[i])) {
+						RefUtils.setFieldValue(this, fieldName, Integer.parseInt(properties[i]));
+					}
+				} else {
+					RefUtils.setFieldValue(this, fieldName, properties[i]);
+				}
+			}
 		}
-		return rs.getString("secret_key");
+	}
+
+	@SneakyThrows
+	protected void setParam(String[] fieldNames, Map<String, String> properties) {
+		for (String fieldName : fieldNames) {
+			if (StringUtils.isNotEmpty(properties.get(fieldName))) {
+				if (StringUtils.isEmpty(properties.get(fieldName))) {
+					continue;
+				}
+				if ("port".equals(fieldName)) {
+					// 特殊处理
+					if (NumberUtils.isDigits(properties.get(fieldName))) {
+						RefUtils.setFieldValue(this, fieldName, Integer.parseInt(properties.get(fieldName)));
+					}
+				} else {
+					RefUtils.setFieldValue(this, fieldName, properties.get(fieldName));
+				}
+			}
+		}
 	}
 }
