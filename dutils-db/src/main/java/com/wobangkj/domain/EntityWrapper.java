@@ -131,39 +131,64 @@ public class EntityWrapper<T> {
 		// 获取实体类型所有的属性
 		Field[] fields = this.entityType.getDeclaredFields();
 		// 是否存在{@link Columns}注解
-		Columns annotation = this.entityType.getAnnotation(Columns.class);
+		Columns columns = this.entityType.getAnnotation(Columns.class);
 		// 是否存在{@link LikeColumn}注解
 		LikeColumn like = this.entityType.getAnnotation(LikeColumn.class);
-		// 排除不用于查询的字段属性名称
-		List<String> excludeFieldNames = new ArrayList<>();
-		List<String> excludeLikeFieldNames = new ArrayList<>();
-		if (Objects.nonNull(annotation)) {
-			if (annotation.includeOnly().length != 0) {
-				this.likeColumns = annotation.includeOnly();
+		if (Objects.nonNull(columns)) {
+			if (columns.includeOnly().length > 0) {
+				this.likeColumns = columns.includeOnly();
+			} else {
+				// 排除不用于查询的字段属性名称
+				List<String> excludeFieldNames = new ArrayList<>();
+				if (columns.exclude().length > 0) {
+					excludeFieldNames.addAll(Arrays.asList(columns.exclude()));
+				}
+				List<String> columnNames = this.parseFieldsToColumn(fields, excludeFieldNames);
+				this.includeColumns = columnNames.toArray(new String[0]);
 			}
-			excludeFieldNames.addAll(Arrays.asList(annotation.exclude()));
 		}
 		if (Objects.nonNull(like)) {
-			if (like.includeOnly().length != 0) {
+			if (like.includeOnly().length > 0) {
 				this.likeColumns = like.includeOnly();
+			} else {
+				// 排除不用于查询的字段属性名称
+				List<String> excludeLikeFieldNames = new ArrayList<>();
+				if (like.exclude().length > 0) {
+					excludeLikeFieldNames.addAll(Arrays.asList(like.exclude()));
+				}
+				List<String> likeNames = this.parseFieldsToLikeColumn(fields, excludeLikeFieldNames);
+				this.likeColumns = likeNames.toArray(new String[0]);
 			}
-			excludeLikeFieldNames.addAll(Arrays.asList(like.exclude()));
 		}
-		String fieldName; // 临时记录
+	}
+
+	/**
+	 * 解析用于查询的字段
+	 *
+	 * @param type 类型
+	 * @return 字段
+	 */
+	@Deprecated
+	protected void parseField(Class<? extends T> type) {
+		this.entityType = type;
+		this.parseField();
+	}
+
+	protected List<String> parseFieldsToColumn(Field[] fields, List<String> excludeFieldNames) {
+		String fieldName;
 		List<String> columnNames = new ArrayList<>(fields.length);
-		List<String> likeNames = new ArrayList<>(fields.length);
 		for (Field field : fields) {
 			// 不获取静态和最终字段
 			if (Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers())) {
 				continue;
 			}
+			// 忽略{@link Transient}注解的字段
+			if (field.isAnnotationPresent(Transient.class)) {
+				continue;
+			}
 			fieldName = field.getName();
 			// 忽略手动忽略的字段属性 -> 同时会忽略like查询
 			if (excludeFieldNames.contains(fieldName)) {
-				continue;
-			}
-			// 忽略{@link Transient}注解的字段
-			if (field.isAnnotationPresent(Transient.class)) {
 				continue;
 			}
 			// 是否扩展字段
@@ -181,25 +206,33 @@ public class EntityWrapper<T> {
 				continue;
 			}
 			columnNames.add(fieldName);
-			// 不被忽略
-			if (!field.isAnnotationPresent(LikeExclude.class) && !excludeLikeFieldNames.contains(fieldName)) {
-				likeNames.add(fieldName);
-			}
 		}
-		this.includeColumns = columnNames.toArray(new String[0]);
-		this.likeColumns = likeNames.toArray(new String[0]);
+		return columnNames;
 	}
 
-	/**
-	 * 解析用于查询的字段
-	 *
-	 * @param type 类型
-	 * @return 字段
-	 */
-	@Deprecated
-	protected void parseField(Class<? extends T> type) {
-		this.entityType = type;
-		this.parseField();
+	protected List<String> parseFieldsToLikeColumn(Field[] fields, List<String> excludeFieldNames) {
+		String fieldName;
+		List<String> columnNames = new ArrayList<>(fields.length);
+		for (Field field : fields) {
+			// 不获取静态和最终字段
+			if (Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers())) {
+				continue;
+			}
+			// 忽略{@link Transient}注解的字段
+			if (field.isAnnotationPresent(Transient.class)) {
+				continue;
+			}
+			// 不被忽略
+			if (field.isAnnotationPresent(LikeExclude.class)) {
+				continue;
+			}
+			fieldName = field.getName();
+			// 忽略手动忽略的字段属性 -> 同时会忽略like查询
+			if (excludeFieldNames.contains(fieldName)) {
+				continue;
+			}
+			columnNames.add(fieldName);
+		}
+		return columnNames;
 	}
-
 }
