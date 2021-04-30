@@ -91,7 +91,7 @@ public class EntityWrapper<T> {
 	 *
 	 * @param columns 字段数组
 	 */
-	protected void setColumns(String[] columns) {
+	protected final void setColumns(String[] columns) {
 		this.includeColumns = columns;
 	}
 
@@ -100,7 +100,7 @@ public class EntityWrapper<T> {
 		this.parseField();
 	}
 
-	protected void setColumnsExt(Map<String, Annotation> columnsExt) {
+	protected final void setColumnsExt(Map<String, Annotation> columnsExt) {
 		this.columnsExt = columnsExt;
 	}
 
@@ -130,36 +130,8 @@ public class EntityWrapper<T> {
 	protected void parseField() {
 		// 获取实体类型所有的属性
 		Field[] fields = this.entityType.getDeclaredFields();
-		// 是否存在{@link Columns}注解
-		Columns columns = this.entityType.getAnnotation(Columns.class);
-		// 是否存在{@link LikeColumn}注解
-		LikeColumn like = this.entityType.getAnnotation(LikeColumn.class);
-		if (Objects.nonNull(columns)) {
-			if (columns.includeOnly().length > 0) {
-				this.likeColumns = columns.includeOnly();
-			} else {
-				// 排除不用于查询的字段属性名称
-				List<String> excludeFieldNames = new ArrayList<>();
-				if (columns.exclude().length > 0) {
-					excludeFieldNames.addAll(Arrays.asList(columns.exclude()));
-				}
-				List<String> columnNames = this.parseFieldsToColumn(fields, excludeFieldNames);
-				this.includeColumns = columnNames.toArray(new String[0]);
-			}
-		}
-		if (Objects.nonNull(like)) {
-			if (like.includeOnly().length > 0) {
-				this.likeColumns = like.includeOnly();
-			} else {
-				// 排除不用于查询的字段属性名称
-				List<String> excludeLikeFieldNames = new ArrayList<>();
-				if (like.exclude().length > 0) {
-					excludeLikeFieldNames.addAll(Arrays.asList(like.exclude()));
-				}
-				List<String> likeNames = this.parseFieldsToLikeColumn(fields, excludeLikeFieldNames);
-				this.likeColumns = likeNames.toArray(new String[0]);
-			}
-		}
+		this.parseColumn(fields);
+		this.parseLikeColumn(fields);
 	}
 
 	/**
@@ -172,6 +144,42 @@ public class EntityWrapper<T> {
 	protected void parseField(Class<? extends T> type) {
 		this.entityType = type;
 		this.parseField();
+	}
+
+	protected void parseColumn(Field[] fields) {
+		// 是否存在{@link Columns}注解
+		Columns columns = this.entityType.getAnnotation(Columns.class);
+		// 排除不用于查询的字段属性名称
+		List<String> excludeFieldNames = new ArrayList<>();
+		if (Objects.nonNull(columns)) {
+			if (columns.includeOnly().length > 0) {
+				this.includeColumns = columns.includeOnly();
+				return;
+			}
+			if (columns.exclude().length > 0) {
+				excludeFieldNames.addAll(Arrays.asList(columns.exclude()));
+			}
+		}
+		List<String> columnNames = this.parseFieldsToColumn(fields, excludeFieldNames);
+		this.includeColumns = columnNames.toArray(new String[0]);
+	}
+
+	protected void parseLikeColumn(Field[] fields) {
+		// 是否存在{@link LikeColumn}注解
+		LikeColumn like = this.entityType.getAnnotation(LikeColumn.class);
+		// 排除不用于查询的字段属性名称
+		List<String> excludeLikeFieldNames = new ArrayList<>();
+		if (Objects.nonNull(like)) {
+			if (like.includeOnly().length > 0) {
+				this.likeColumns = like.includeOnly();
+				return;
+			}
+			if (like.exclude().length > 0) {
+				excludeLikeFieldNames.addAll(Arrays.asList(like.exclude()));
+			}
+		}
+		List<String> likeNames = this.parseFieldsToLikeColumn(fields, excludeLikeFieldNames);
+		this.likeColumns = likeNames.toArray(new String[0]);
 	}
 
 	protected List<String> parseFieldsToColumn(Field[] fields, List<String> excludeFieldNames) {

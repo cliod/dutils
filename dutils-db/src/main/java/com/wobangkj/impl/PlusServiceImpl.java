@@ -138,25 +138,21 @@ public class PlusServiceImpl<M extends BaseMapper<T>, T> extends com.wobangkj.ap
 		QueryWrapper<T> wrapper = new QueryWrapper<>(t);
 		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			EntityWrapper<?> columns = fieldCache;
-			if (Objects.isNull(columns)) {
-				columns = Columns.of(t.getClass());
-				fieldCache = columns;
+			if (Objects.isNull(this.fieldCache)) {
+				this.fieldCache = Columns.of(t.getClass());
 			}
-			for (String column : columns.getColumns()) {
+			for (String column : this.fieldCache.getColumns()) {
 				wrapper.or().like(column, condition.getLikeKey());
 			}
 		}
 		// 关键词匹配
 		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
 		if (!BeanUtils.isEmpty(fieldValues)) {
-			EntityWrapper<?> columns = fieldCache;
-			if (Objects.isNull(columns)) {
-				columns = Columns.of(t.getClass());
-				fieldCache = columns;
+			if (Objects.isNull(this.fieldCache)) {
+				this.fieldCache = Columns.of(t.getClass());
 			}
 			for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
-				if (Arrays.asList(columns.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {
+				if (Arrays.asList(this.fieldCache.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {
 					wrapper.eq(entry.getKey(), entry.getValue());
 				}
 			}

@@ -10,13 +10,10 @@ package com.wobangkj.domain;
 @Deprecated
 public class Columns<T> extends EntityWrapper<T> {
 
+	@Deprecated
 	public static <T> Columns<T> of(Class<T> type) {
 		Columns<T> columns = new Columns<>();
 		columns.parseField(type);
 		return columns;
-	}
-
-	protected void setColumns(String[] columns) {
-		super.setColumns(columns);
 	}
 }

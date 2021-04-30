@@ -109,13 +109,11 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		}
 		// 模糊匹配
 		if (StringUtils.isNotEmpty(condition.getKey())) {
-			EntityWrapper<?> columns = fieldCache;
-			if (Objects.isNull(columns)) {
-				columns = Columns.of(t.getClass());
-				fieldCache = columns;
+			if (Objects.isNull(this.fieldCache)) {
+				this.fieldCache = Columns.of(t.getClass());
 			}
 			Example.Criteria criteria = example.createCriteria();
-			for (String column : columns.getColumns()) {
+			for (String column : this.fieldCache.getLikeColumns()) {
 				if (StringUtils.isEmpty(column)) {
 					continue;
 				}
@@ -129,13 +127,11 @@ public class TkServiceImpl<D extends ITkMapper<T>, T> extends ServiceImpl<T> imp
 		Map<String, Object> fieldValues = RefUtils.getFieldValues(t);
 		if (!BeanUtils.isEmpty(fieldValues)) {
 			Example.Criteria criteria = example.createCriteria();
-			EntityWrapper<?> columns = fieldCache;
-			if (Objects.isNull(columns)) {
-				columns = Columns.of(t.getClass());
-				fieldCache = columns;
+			if (Objects.isNull(this.fieldCache)) {
+				this.fieldCache = Columns.of(t.getClass());
 			}
 			for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
-				if (Arrays.asList(columns.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {
+				if (Arrays.asList(this.fieldCache.getColumns()).contains(entry.getKey()) && Objects.nonNull(entry.getValue())) {
 					criteria.andEqualTo(entry.getKey(), entry.getValue());
 				}
 			}
