@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 
 	protected static transient int maxSize = 500;
+	private boolean isInitialize;
 
 	public SyncReadProcessListener() {
 		this(maxSize);
@@ -24,6 +25,10 @@ public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 
 	@Override
 	public final void invoke(T data, AnalysisContext context) {
+		if (this.isInitialize) {
+			this.initialize(context);
+			this.isInitialize = false;
+		}
 		if (!this.filter(data, context)) {
 			return;
 		}
@@ -45,6 +50,14 @@ public abstract class SyncReadProcessListener<T> extends SyncReadListener<T> {
 		} finally {
 			this.finish(context);
 		}
+	}
+
+	/**
+	 * 初始化
+	 *
+	 * @param context
+	 */
+	protected void initialize(AnalysisContext context) {
 	}
 
 	/**

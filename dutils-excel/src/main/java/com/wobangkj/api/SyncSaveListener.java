@@ -1,6 +1,5 @@
 package com.wobangkj.api;
 
-import com.alibaba.excel.context.AnalysisContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -12,40 +11,42 @@ import java.util.function.Consumer;
  * @author cliod
  * @since 7/9/20 5:03 PM
  */
-public class SyncSaveListener<T> extends SyncReadProcessListener<T> {
+public class SyncSaveListener<T> extends SyncReadSimpleListener<T> {
 
-	static final int COUNT = 1000;
+	static {
+		maxSize = 1000;
+	}
+
 	/**
 	 * 处理
 	 */
 	private final Consumer<List<T>> processor;
 
 	protected SyncSaveListener(Consumer<List<T>> processor) {
-		super(COUNT);
 		this.processor = processor;
 	}
 
+	@Deprecated
 	public static <T> @NotNull SyncSaveListener<T> of(Consumer<List<T>> processor) {
+		return process(processor);
+	}
+
+	/**
+	 * 处理
+	 *
+	 * @param processor 处理器
+	 * @param <T>       类型
+	 * @return 结果
+	 */
+	public static <T> @NotNull SyncSaveListener<T> process(Consumer<List<T>> processor) {
 		return new SyncSaveListener<>(processor);
 	}
 
 	/**
-	 * 最大存储数量
-	 *
-	 * @return 数量
-	 */
-	@Override
-	protected int getMax() {
-		return COUNT;
-	}
-
-	/**
 	 * 真正处理
-	 *
-	 * @param context 参数
 	 */
 	@Override
-	protected void doProcess(AnalysisContext context) {
+	protected void doProcess() {
 		this.processor.accept(this.cache);
 	}
 }
