@@ -7,6 +7,7 @@ import com.wobangkj.api.PoolQrCode;
 import com.wobangkj.api.QrCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -109,10 +110,10 @@ public class QrCodeUtils {
 	 * @param logoPath     logo地址
 	 * @param needCompress 是否压缩logo
 	 * @return 图片
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull BufferedImage createImage(String content, String logoPath, boolean needCompress) throws Exception {
+	public static @NotNull BufferedImage createImage(String content, String logoPath, boolean needCompress) throws IOException, WriterException {
 		insertImage(null, logoPath, needCompress);
 		return createImage(content);
 	}
@@ -124,10 +125,10 @@ public class QrCodeUtils {
 	 * @param logoFile     logo文件
 	 * @param needCompress 是否压缩logo
 	 * @return 图片
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull BufferedImage createImage(String content, File logoFile, boolean needCompress) throws Exception {
+	public static @NotNull BufferedImage createImage(String content, File logoFile, boolean needCompress) throws IOException, WriterException {
 		insertImage(null, logoFile, needCompress);
 		return createImage(content);
 	}
@@ -139,10 +140,10 @@ public class QrCodeUtils {
 	 * @param inputStream  logo流
 	 * @param needCompress 是否压缩logo
 	 * @return 图片
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull BufferedImage createImage(String content, InputStream inputStream, boolean needCompress) throws Exception {
+	public static @NotNull BufferedImage createImage(String content, InputStream inputStream, boolean needCompress) throws IOException, WriterException {
 		insertImage(null, inputStream, needCompress);
 		return createImage(content);
 	}
@@ -226,10 +227,10 @@ public class QrCodeUtils {
 	 * @param logoPath     LOGO地址
 	 * @param destPath     存放目录
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull File encode(@NotNull String content, String logoPath, String destPath, boolean needCompress) throws Exception {
+	public static @NotNull File encode(@NotNull String content, String logoPath, String destPath, boolean needCompress) throws IOException, WriterException {
 		return encode(content, logoPath, destPath, "", needCompress);
 	}
 
@@ -240,10 +241,10 @@ public class QrCodeUtils {
 	 * @param in           LOGO流
 	 * @param destPath     存放目录
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull File encode(@NotNull String content, InputStream in, String destPath, boolean needCompress) throws Exception {
+	public static @NotNull File encode(@NotNull String content, InputStream in, String destPath, boolean needCompress) throws IOException, WriterException {
 		return encode(content, in, destPath, "", needCompress);
 	}
 
@@ -253,10 +254,10 @@ public class QrCodeUtils {
 	 * @param content  内容
 	 * @param logoPath LOGO地址
 	 * @param destPath 存储地址
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull File encode(@NotNull String content, String logoPath, String destPath) throws Exception {
+	public static @NotNull File encode(@NotNull String content, String logoPath, String destPath) throws IOException, WriterException {
 		return encode(content, logoPath, destPath, DEFAULT_COMPRESS);
 	}
 
@@ -266,10 +267,10 @@ public class QrCodeUtils {
 	 * @param content      内容
 	 * @param logoPath     logo地址
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull File encode(@NotNull String content, String logoPath, boolean needCompress) throws Exception {
+	public static @NotNull File encode(@NotNull String content, String logoPath, boolean needCompress) throws IOException, WriterException {
 		return encode(content, logoPath, "", needCompress);
 	}
 
@@ -280,10 +281,10 @@ public class QrCodeUtils {
 	 * @param logo         LOGO地址
 	 * @param file         存放文件
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static void encode(@NotNull String content, String logo, File file, boolean needCompress) throws Exception {
+	public static void encode(@NotNull String content, String logo, File file, boolean needCompress) throws IOException, WriterException {
 		caches.get(content).setLogo(logo, needCompress);
 		caches.get(content).createImage(content, file);
 	}
@@ -295,9 +296,9 @@ public class QrCodeUtils {
 	 * @param logo         LOGO文件
 	 * @param file         存放文件
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @Nullable File logo, @NotNull File file, boolean needCompress) throws Exception {
+	public static void encode(@NotNull String content, @Nullable File logo, @NotNull File file, boolean needCompress) throws IOException, WriterException {
 		caches.get(content).setLogo(logo, needCompress);
 		caches.get(content).createImage(content, file);
 	}
@@ -309,9 +310,9 @@ public class QrCodeUtils {
 	 * @param logo         LOGO输入流
 	 * @param file         存放文件
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @Nullable InputStream logo, @NotNull File file, boolean needCompress) throws Exception {
+	public static void encode(@NotNull String content, @Nullable InputStream logo, @NotNull File file, boolean needCompress) throws IOException, WriterException {
 		caches.get(content).setLogo(logo, needCompress);
 		caches.get(content).createImage(content, file);
 	}
@@ -322,9 +323,9 @@ public class QrCodeUtils {
 	 * @param content  内容
 	 * @param logoFile LOGO文件
 	 * @param file     存储地文件
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, File logoFile, @NotNull File file) throws Exception {
+	public static void encode(@NotNull String content, File logoFile, @NotNull File file) throws IOException, WriterException {
 		encode(content, logoFile, file, DEFAULT_COMPRESS);
 	}
 
@@ -334,9 +335,9 @@ public class QrCodeUtils {
 	 * @param content 内容
 	 * @param in      LOGO输入流
 	 * @param file    存储地文件
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, InputStream in, @NotNull File file) throws Exception {
+	public static void encode(@NotNull String content, InputStream in, @NotNull File file) throws IOException, WriterException {
 		encode(content, in, file, DEFAULT_COMPRESS);
 	}
 
@@ -346,10 +347,10 @@ public class QrCodeUtils {
 	 * @param content      内容
 	 * @param in           logo输入流
 	 * @param needCompress 是否需要压缩
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull File encode(@NotNull String content, @Nullable InputStream in, boolean needCompress) throws Exception {
+	public static @NotNull File encode(@NotNull String content, @Nullable InputStream in, boolean needCompress) throws IOException, WriterException {
 		File file = new File("tmp." + FORMAT);
 		encode(content, in, file, needCompress);
 		return file;
@@ -359,9 +360,9 @@ public class QrCodeUtils {
 	 * 生成二维码
 	 *
 	 * @param content 内容
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static @NotNull File encode(@NotNull String content, @Nullable InputStream in) throws Exception {
+	public static @NotNull File encode(@NotNull String content, @Nullable InputStream in) throws IOException, WriterException {
 		return encode(content, in, DEFAULT_COMPRESS);
 	}
 
@@ -371,9 +372,9 @@ public class QrCodeUtils {
 	 * @param content      内容
 	 * @param file         存储文件
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @NotNull File file, boolean needCompress) throws Exception {
+	public static void encode(@NotNull String content, @NotNull File file, boolean needCompress) throws IOException, WriterException {
 		encode(content, (InputStream) null, file, needCompress);
 	}
 
@@ -382,9 +383,9 @@ public class QrCodeUtils {
 	 *
 	 * @param content 内容
 	 * @param file    存储文件
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @NotNull File file) throws Exception {
+	public static void encode(@NotNull String content, @NotNull File file) throws IOException, WriterException {
 		encode(content, file, DEFAULT_COMPRESS);
 	}
 
@@ -392,10 +393,10 @@ public class QrCodeUtils {
 	 * 生成二维码
 	 *
 	 * @param content 内容
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static @NotNull File encode(@NotNull String content) throws Exception {
+	public static @NotNull File encode(@NotNull String content) throws IOException, WriterException {
 		File file = new File("tmp." + FORMAT);
 		encode(content, file);
 		return file;
@@ -408,10 +409,10 @@ public class QrCodeUtils {
 	 * @param logo         LOGO地址
 	 * @param output       输出流
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static void encode(@NotNull String content, @Nullable String logo, @NotNull OutputStream output, boolean needCompress) throws Exception {
+	public static void encode(@NotNull String content, @Nullable String logo, @NotNull OutputStream output, boolean needCompress) throws IOException, WriterException {
 		caches.get(content).setLogo(logo, needCompress);
 		caches.get(content).createImage(content, output);
 	}
@@ -423,9 +424,9 @@ public class QrCodeUtils {
 	 * @param logo         LOGO文件
 	 * @param output       输出流
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @Nullable File logo, @NotNull OutputStream output, boolean needCompress) throws Exception {
+	public static void encode(@NotNull String content, @Nullable File logo, @NotNull OutputStream output, boolean needCompress) throws IOException, WriterException {
 		caches.get(content).setLogo(logo, needCompress);
 		caches.get(content).createImage(content, output);
 	}
@@ -437,9 +438,9 @@ public class QrCodeUtils {
 	 * @param logo         LOGO输入流
 	 * @param output       输出流
 	 * @param needCompress 是否压缩LOGO
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @Nullable InputStream logo, @NotNull OutputStream output, boolean needCompress) throws Exception {
+	public static void encode(@NotNull String content, @Nullable InputStream logo, @NotNull OutputStream output, boolean needCompress) throws IOException, WriterException {
 		caches.get(content).setLogo(logo, needCompress);
 		caches.get(content).createImage(content, output);
 	}
@@ -450,9 +451,9 @@ public class QrCodeUtils {
 	 * @param content 内容
 	 * @param logo    LOGO文件
 	 * @param output  输出流
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @Nullable File logo, @NotNull OutputStream output) throws Exception {
+	public static void encode(@NotNull String content, @Nullable File logo, @NotNull OutputStream output) throws IOException, WriterException {
 		encode(content, logo, output, DEFAULT_COMPRESS);
 	}
 
@@ -462,9 +463,9 @@ public class QrCodeUtils {
 	 * @param content 内容
 	 * @param logo    LOGO输入流
 	 * @param output  输出流
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @Nullable InputStream logo, @NotNull OutputStream output) throws Exception {
+	public static void encode(@NotNull String content, @Nullable InputStream logo, @NotNull OutputStream output) throws IOException, WriterException {
 		encode(content, logo, output, DEFAULT_COMPRESS);
 	}
 
@@ -473,9 +474,9 @@ public class QrCodeUtils {
 	 *
 	 * @param content 内容
 	 * @param output  输出流
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @NotNull OutputStream output) throws Exception {
+	public static void encode(@NotNull String content, @NotNull OutputStream output) throws IOException, WriterException {
 		encode(content, (InputStream) null, output);
 	}
 
@@ -484,9 +485,9 @@ public class QrCodeUtils {
 	 *
 	 * @param content  内容
 	 * @param response 输出响应
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, @NotNull HttpServletResponse response) throws Exception {
+	public static void encode(@NotNull String content, @NotNull HttpServletResponse response) throws IOException, WriterException {
 		encode(content, (InputStream) null, response.getOutputStream());
 	}
 
@@ -496,9 +497,9 @@ public class QrCodeUtils {
 	 * @param content  内容
 	 * @param logo     logo文件
 	 * @param response 输出响应
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, File logo, @NotNull HttpServletResponse response) throws Exception {
+	public static void encode(@NotNull String content, File logo, @NotNull HttpServletResponse response) throws IOException, WriterException {
 		encode(content, logo, response.getOutputStream());
 	}
 
@@ -507,9 +508,9 @@ public class QrCodeUtils {
 	 *
 	 * @param content  内容
 	 * @param response 输出响应
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
-	public static void encode(@NotNull String content, InputStream logo, @NotNull HttpServletResponse response) throws Exception {
+	public static void encode(@NotNull String content, InputStream logo, @NotNull HttpServletResponse response) throws IOException, WriterException {
 		encode(content, logo, response.getOutputStream());
 	}
 
@@ -519,10 +520,10 @@ public class QrCodeUtils {
 	 * @param content  内容
 	 * @param logo     请求
 	 * @param response 输出响应
-	 * @throws Exception 异常
+	 * @throws IOException, WriterException 异常
 	 */
 	@Deprecated
-	public static void encode(@NotNull String content, @NotNull MultipartFile logo, @NotNull HttpServletResponse response) throws Exception {
+	public static void encode(@NotNull String content, @NotNull MultipartFile logo, @NotNull HttpServletResponse response) throws IOException, WriterException {
 		encode(content, logo.getInputStream(), response);
 	}
 
@@ -531,10 +532,10 @@ public class QrCodeUtils {
 	 *
 	 * @param path 二维码文件路径
 	 * @return 二维码内容
-	 * @throws Exception 异常
+	 * @throws IOException, ReaderException 异常
 	 */
 	@Deprecated
-	public static String decode(String path) throws Exception {
+	public static String decode(String path) throws IOException, ReaderException {
 		if (StringUtils.isEmpty(path)) {
 			return null;
 		}
@@ -550,9 +551,9 @@ public class QrCodeUtils {
 	 *
 	 * @param file 二维码文件
 	 * @return 二维码内容
-	 * @throws Exception 异常
+	 * @throws IOException, ReaderException 异常
 	 */
-	public static String decode(File file) throws Exception {
+	public static String decode(File file) throws IOException, ReaderException {
 		BufferedImage image;
 		image = ImageIO.read(file);
 		if (image == null) {
@@ -566,9 +567,9 @@ public class QrCodeUtils {
 	 *
 	 * @param is 二维码流
 	 * @return 二维码内容
-	 * @throws Exception 异常
+	 * @throws IOException, ReaderException 异常
 	 */
-	public static String decode(InputStream is) throws Exception {
+	public static String decode(InputStream is) throws IOException, ReaderException {
 		BufferedImage image = ImageIO.read(is);
 		if (image == null) {
 			return null;
@@ -581,9 +582,9 @@ public class QrCodeUtils {
 	 *
 	 * @param url 二维码网络地址
 	 * @return 二维码内容
-	 * @throws Exception 异常
+	 * @throws IOException, ReaderException 异常
 	 */
-	public static String decode(URL url) throws Exception {
+	public static String decode(URL url) throws IOException, ReaderException {
 		BufferedImage image = ImageIO.read(url);
 		if (image == null) {
 			return null;
@@ -637,11 +638,11 @@ public class QrCodeUtils {
 	}
 
 	public static @NotNull File createFile(String destPath, String fileName) {
-		if (!StringUtils.isEmpty(destPath)) {
+		if (!ObjectUtils.isEmpty(destPath)) {
 			mkdirs(destPath, 0);
 		}
-		if (StringUtils.isEmpty(fileName)) {
-			fileName = UUID.randomUUID().toString() + "." + FORMAT.toLowerCase();
+		if (ObjectUtils.isEmpty(fileName)) {
+			fileName = UUID.randomUUID() + "." + FORMAT.toLowerCase();
 		}
 		fileName = fileName.substring(0, fileName.indexOf(".") > 0 ? fileName.indexOf(".") : fileName.length()) + "." + FORMAT.toLowerCase();
 		return new File(destPath + "/" + fileName);

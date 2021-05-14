@@ -15,7 +15,9 @@ public class QrCodeUtilsTest {
 	@Test
 	public void encode() throws IOException, WriterException {
 
-		File file = QrCodeUtils.encode("123", "1.jpg", "/home/cliod/Documents/work-spaces/self-projects/dutils-util/", "tmp.JPG", true);
+		File file = new File("/home/cliod/Documents/work-spaces/self-projects/dutils-util/tmp.JPG");
+		File logo = new File("1.jpg");
+		QrCodeUtils.encode("123", logo, file);
 		System.out.println(file.getName());
 	}
 }
