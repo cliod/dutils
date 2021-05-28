@@ -77,7 +77,7 @@ public class Author extends Authorized {
 	}
 
 	public Object getRole() {
-		return Optional.ofNullable(role).orElse(this.get("tole"));
+		return Optional.ofNullable(role).orElse(this.get("role"));
 	}
 
 	public void setRole(Object role) {
