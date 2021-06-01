@@ -10,7 +10,6 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static java.lang.reflect.Modifier.*;
-import static java.util.Objects.isNull;
 
 /**
  * Bean工具类
@@ -21,6 +20,7 @@ import static java.util.Objects.isNull;
 public class BeanUtils {
 	private BeanUtils() {
 	}
+
 	/**
 	 * 验证对象是否为空
 	 *

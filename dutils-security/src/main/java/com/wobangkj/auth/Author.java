@@ -24,15 +24,15 @@ public class Author extends Authorized {
 	 */
 	private Object id;
 	/**
-	 * 用户ip
+	 * 用户ip或者其他访问源
 	 */
 	private Object key;
 	/**
-	 * 角色，数值越小，权限越大
+	 * 角色
 	 */
 	private Object role;
 	/**
-	 * json格式自定义数据
+	 * 自定义数据
 	 */
 	private Object data;
 	/**
@@ -102,7 +102,8 @@ public class Author extends Authorized {
 	 */
 	@Override
 	public String toJson() {
-		Map<String, Object> data = new HashMap<>(this);
+		Map<String, Object> data = new HashMap<>(this.size() * 2);
+		data.putAll(this);
 		data.remove("data_str");
 		return JsonUtils.toJson(data);
 	}
@@ -114,10 +115,18 @@ public class Author extends Authorized {
 	 * @return 结果数据
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getData(@NotNull Class<T> type) {
+		Object data = this.getData();
+		if (data == null) {
+			return null;
+		}
+		if (this.isBaseType(type) || type.equals(data.getClass())) {
+			return (T) data;
+		}
 		Object json = this.get("data_str");
 		if (json == null) {
-			json = JsonUtils.toJson(this.getData());
+			json = JsonUtils.toJson(data);
 		}
 		if (json instanceof String) {
 			return JsonUtils.fromJson((String) json, type);

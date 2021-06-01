@@ -13,10 +13,6 @@ import java.util.function.Consumer;
  */
 public class SyncSaveListener<T> extends SyncReadSimpleListener<T> {
 
-	static {
-		maxSize = 1000;
-	}
-
 	/**
 	 * 处理
 	 */

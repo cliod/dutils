@@ -59,11 +59,22 @@ public abstract class Authorized extends HashMap<String, Object> implements Sess
 	@SuppressWarnings("unchecked")
 	public <T> T getData(@NotNull Class<T> type) {
 		Object data = this.getData();
-		if (data != null) {
-			if (type.equals(data.getClass()) || type.equals(Map.class)) {
-				return (T) data;
-			}
+		if (data == null) {
+			return null;
+		}
+		if (this.isBaseType(type)) {
+			return (T) data;
+		}
+		if (type.equals(data.getClass()) || type.equals(Map.class)) {
+			return (T) data;
 		}
 		return JsonUtils.fromJson(JsonUtils.toJson(data), type);
+	}
+
+	boolean isBaseType(Class<?> type) {
+		return Integer.class.equals(type) || Byte.class.equals(type)
+				|| Long.class.equals(type) || Double.class.equals(type)
+				|| Float.class.equals(type) || Character.class.equals(type)
+				|| Short.class.equals(type) || Boolean.class.equals(type);
 	}
 }
