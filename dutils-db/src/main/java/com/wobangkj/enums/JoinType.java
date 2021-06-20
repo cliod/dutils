@@ -54,6 +54,6 @@ public enum JoinType implements EnumType {
 				return value;
 			}
 		}
-		return null;
+		return this;
 	}
 }

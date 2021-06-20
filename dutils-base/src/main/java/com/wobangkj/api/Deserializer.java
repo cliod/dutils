@@ -17,14 +17,4 @@ public interface Deserializer extends Mappable<String, Object> {
 	default Object toObject() {
 		return this.toMap();
 	}
-
-	/**
-	 * 反序列化
-	 *
-	 * @param json json字符串
-	 * @return 对象
-	 */
-	default Object toObject(CharSequence json) {
-		return this;
-	}
 }

@@ -200,13 +200,7 @@ public class EntityWrapper<T> {
 				continue;
 			}
 			// 是否扩展字段
-			if (field.isAnnotationPresent(ColumnExt.class)) {
-				if (Objects.isNull(this.columnsExt)) {
-					this.columnsExt = new HashMap<>();
-				}
-				this.columnsExt.put(fieldName, field.getAnnotation(ColumnExt.class));
-				continue;
-			} else if (field.isAnnotationPresent(Join.class)) {
+			if (field.isAnnotationPresent(Join.class)) {
 				if (Objects.isNull(this.columnsExt)) {
 					this.columnsExt = new HashMap<>();
 				}

@@ -10,6 +10,7 @@ import lombok.Getter;
  * @author cliod
  * @since 2019/11/15
  */
+@Deprecated
 public enum Format implements EnumValue<String>, DateFormat {
 
 	/**

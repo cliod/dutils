@@ -1,6 +1,6 @@
 package com.wobangkj.bean;
 
-import com.wobangkj.api.asserts.Assert;
+import cn.hutool.core.lang.Assert;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;

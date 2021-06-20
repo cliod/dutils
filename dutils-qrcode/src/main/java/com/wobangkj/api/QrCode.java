@@ -167,7 +167,6 @@ public interface QrCode {
 		if (Objects.equals(getLogo(), logo)) {
 			return;
 		}
-		this.setLogoObj(logo);
 		this.setLogo(ImageIO.read(new File(logo)));
 	}
 
@@ -183,7 +182,6 @@ public interface QrCode {
 		if (Objects.equals(getLogo(), logo)) {
 			return;
 		}
-		this.setLogoObj(logo);
 		this.setLogo(ImageIO.read(logo));
 	}
 
@@ -199,7 +197,6 @@ public interface QrCode {
 		if (Objects.equals(getLogo(), logo)) {
 			return;
 		}
-		this.setLogoObj(logo);
 		this.setLogo(ImageIO.read(logo));
 	}
 
@@ -215,7 +212,6 @@ public interface QrCode {
 		if (Objects.equals(getLogo(), logo)) {
 			return;
 		}
-		this.setLogoObj(logo);
 		this.setLogo(ImageIO.read(logo));
 	}
 
@@ -224,8 +220,18 @@ public interface QrCode {
 	 *
 	 * @param logo LOGO image object.
 	 */
-	default void setLogoObj(Object logo) {
-
+	default void setLogo(Object logo) throws IOException {
+		if (logo instanceof BufferedImage) {
+			this.setLogo((BufferedImage) logo);
+		} else if (logo instanceof InputStream) {
+			this.setLogo((InputStream) logo);
+		} else if (logo instanceof File) {
+			this.setLogo((File) logo);
+		} else if (logo instanceof URL) {
+			this.setLogo((URL) logo);
+		} else {
+			this.setLogo((BufferedImage) null);
+		}
 	}
 
 	/**
@@ -241,7 +247,7 @@ public interface QrCode {
 		if (Objects.equals(getLogo(), logo)) {
 			return;
 		}
-		this.setLogoObj(logo);
+
 		this.setLogo(ImageIO.read(new File(logo)));
 		this.setNeedCompress(needCompress);
 	}
@@ -258,7 +264,6 @@ public interface QrCode {
 		if (Objects.equals(getLogo(), logo)) {
 			return;
 		}
-		this.setLogoObj(logo);
 		this.setLogo(ImageIO.read(logo));
 		this.setNeedCompress(needCompress);
 	}
@@ -275,7 +280,6 @@ public interface QrCode {
 		if (Objects.equals(getLogo(), logo)) {
 			return;
 		}
-		this.setLogoObj(logo);
 		this.setLogo(ImageIO.read(logo));
 		this.setNeedCompress(needCompress);
 	}
@@ -292,7 +296,6 @@ public interface QrCode {
 		if (Objects.equals(getLogo(), logo)) {
 			return;
 		}
-		this.setLogoObj(logo);
 		this.setLogo(ImageIO.read(logo));
 		this.setNeedCompress(needCompress);
 	}

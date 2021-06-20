@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.wobangkj.api.Response;
 import com.wobangkj.bean.Res;
 import com.wobangkj.exception.AppException;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -42,8 +41,9 @@ import java.util.stream.Collectors;
 @ResponseBody
 public abstract class AbstractExceptionHandler implements com.wobangkj.handler.ExceptionHandler {
 
-	@Getter
-	protected int code = 217;
+	public int getCode() {
+		return 400;
+	}
 
 	/**
 	 * 自定义访问异常
@@ -220,7 +220,7 @@ public abstract class AbstractExceptionHandler implements com.wobangkj.handler.E
 	@ExceptionHandler(NullPointerException.class)
 	public Object nullPointerException(NullPointerException e) {
 		Res r = Res.empty();
-		r.setStatus(this.getCode());
+		r.setStatus(500);
 		r.setMsg("空指针异常");
 		log.error(e.getMessage(), e);
 		return r;

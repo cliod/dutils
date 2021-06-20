@@ -11,10 +11,8 @@ import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
-import com.wobangkj.api.Name;
+import com.wobangkj.api.ExcelName;
 import com.wobangkj.api.SyncSaveListener;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
@@ -389,7 +387,7 @@ public class ExcelUtils {
 		if (Objects.isNull(head)) {
 			return defaultFileName;
 		}
-		Name name = head.getDeclaredAnnotation(Name.class);
+		ExcelName name = head.getDeclaredAnnotation(ExcelName.class);
 		if (Objects.isNull(name)) {
 			return defaultFileName;
 		}

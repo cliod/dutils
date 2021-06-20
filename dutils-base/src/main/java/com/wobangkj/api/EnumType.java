@@ -34,17 +34,6 @@ public interface EnumType extends SessionSerializable {
 	EnumType get(Integer code);
 
 	/**
-	 * 转化为对象(默认Map)
-	 *
-	 * @return map
-	 */
-	@Override
-	@Deprecated
-	default Object toObject() {
-		return this.toMap();
-	}
-
-	/**
 	 * 反序列化
 	 *
 	 * @return 结果对象

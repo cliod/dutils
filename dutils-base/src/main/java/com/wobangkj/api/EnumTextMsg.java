@@ -8,6 +8,7 @@ import java.util.function.Supplier;
  * @author cliod
  * @since 2019/12/27
  */
+@Deprecated
 @FunctionalInterface
 public interface EnumTextMsg extends EnumMsg, Supplier<String> {
 

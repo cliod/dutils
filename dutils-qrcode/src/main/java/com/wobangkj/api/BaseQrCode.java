@@ -11,10 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -115,11 +112,6 @@ public abstract class BaseQrCode implements QrCode {
 	 */
 	protected transient BufferedImage logo;
 	/**
-	 * LOGO image object.
-	 */
-	@Setter
-	private transient Object logoObj;
-	/**
 	 * Default color.
 	 */
 	private transient int[] colors = null;
@@ -178,8 +170,7 @@ public abstract class BaseQrCode implements QrCode {
 	 * @throws IOException IO异常
 	 */
 	public static BaseQrCode of(@NotNull Object content, Object logo, Boolean needCompress, Boolean needLogo) throws IOException {
-		BaseQrCode qrCode = new BaseQrCode() {
-		};
+		BaseQrCode qrCode = new DefQrCode();
 		qrCode.setContent(content);
 		if (Objects.nonNull(needCompress)) {
 			qrCode.setNeedCompress(needCompress);
@@ -188,17 +179,7 @@ public abstract class BaseQrCode implements QrCode {
 			qrCode.setNeedLogo(needLogo);
 		}
 		if (Objects.nonNull(logo)) {
-			if (logo instanceof BufferedImage) {
-				qrCode.setLogo((BufferedImage) logo);
-			} else if (logo instanceof InputStream) {
-				qrCode.setLogo((InputStream) logo);
-			} else if (logo instanceof File) {
-				qrCode.setLogo((File) logo);
-			} else if (logo instanceof URL) {
-				qrCode.setLogo((URL) logo);
-			} else {
-				qrCode.setLogo((BufferedImage) null);
-			}
+			qrCode.setLogo(logo);
 		} else {
 			qrCode.setNeedLogo(false);
 		}
@@ -245,7 +226,7 @@ public abstract class BaseQrCode implements QrCode {
 
 	@Override
 	public Object getLogo() {
-		return logoObj;
+		return logo;
 	}
 
 	/**
@@ -255,10 +236,7 @@ public abstract class BaseQrCode implements QrCode {
 	 */
 	@Override
 	public void setLogo(BufferedImage logo) {
-		if (Objects.isNull(logo)) {
-			return;
-		}
-		if (Objects.equals(logo, this.logo)) {
+		if (Objects.isNull(logo) || Objects.equals(logo, this.logo)) {
 			return;
 		}
 		this.logo = logo;
@@ -303,5 +281,8 @@ public abstract class BaseQrCode implements QrCode {
 		graph.setStroke(stroke);
 		graph.draw(shape);
 		graph.dispose();
+	}
+
+	private static class DefQrCode extends BaseQrCode {
 	}
 }

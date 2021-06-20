@@ -45,14 +45,4 @@ public interface Pageable extends Deserializer {
 		map.put("size", getSize());
 		return map;
 	}
-
-	/**
-	 * 转成对象
-	 *
-	 * @return obj
-	 */
-	@Override
-	default Object toObject() {
-		return this.toMap();
-	}
 }

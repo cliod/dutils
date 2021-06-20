@@ -21,17 +21,6 @@ public interface EnumValue<T> extends ValueWrapper<T>, SessionSerializable {
 	T value();
 
 	/**
-	 * 转成对象
-	 *
-	 * @return obj
-	 */
-	@Override
-	@Deprecated
-	default Object toObject() {
-		return this.toMap();
-	}
-
-	/**
 	 * 反序列化
 	 *
 	 * @return 结果对象

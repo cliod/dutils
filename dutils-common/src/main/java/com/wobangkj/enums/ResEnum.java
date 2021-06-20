@@ -1,7 +1,7 @@
 package com.wobangkj.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wobangkj.api.EnumTextMsg;
+import com.wobangkj.api.EnumText;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,8 +11,9 @@ import org.jetbrains.annotations.NotNull;
  * @author cliod
  * @since 19-6-9
  */
+@Deprecated
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum ResEnum implements EnumTextMsg {
+public enum ResEnum implements EnumText {
 	/**
 	 * 返回给用户的提示
 	 */

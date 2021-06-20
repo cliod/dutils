@@ -27,7 +27,6 @@ public class BeanUtils {
 	 * @param obj 对象
 	 * @param e   为空时抛出的异常
 	 * @param <T> 对象类型
-	 * @see com.wobangkj.api.asserts.Assert#isNull(Object, String)
 	 */
 	@Deprecated
 	public static <T> void verifyNonNull(T obj, @NotNull Supplier<String> e) {

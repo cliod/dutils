@@ -3,11 +3,18 @@ package com.wobangkj.api;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.Reader;
 import com.google.zxing.Writer;
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * qrCode
@@ -17,7 +24,7 @@ import java.util.Map;
  */
 public class DefaultQrCode extends BaseQrCode {
 
-	public DefaultQrCode() {
+	protected DefaultQrCode() {
 	}
 
 	public DefaultQrCode(int x, int y, Shape shape, Map<EncodeHintType, Object> hints, Stroke stroke, Writer writer, Reader reader) {

@@ -5,7 +5,7 @@
 
     <groupId>com.wobangkj</groupId>
     <artifactId>dutils</artifactId>
-    <version>5.3.28</version>
+    <version>6.0.0-beta</version>
 
     <packaging>pom</packaging>
 
@@ -25,7 +25,6 @@
         <module>dutils-security</module>
         <module>dutils-sms</module>
         <module>dutils-storage</module>
-        <module>dutils-spring-boot-starters</module>
     </modules>
 
     <name>dutils</name>
@@ -59,7 +58,7 @@
         <jetbrains.version>[20.0.0,)</jetbrains.version>
         <lombok.version>[1.18.12,)</lombok.version>
         <servlet.version>[4.0.1,)</servlet.version>
-        <hutool.version>5.6.3</hutool.version>
+        <hutool.version>5.6.7</hutool.version>
     </properties>
 
     <dependencies>

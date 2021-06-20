@@ -51,9 +51,7 @@ public class CovUtils {
 			K key;
 			for (V obj : list) {
 				key = (K) RefUtils.getFieldValue(obj, keyName);
-				if (Objects.nonNull(key)) {
-					put(key, obj);
-				}
+				put(key, obj);
 			}
 		}};
 	}
@@ -74,7 +72,7 @@ public class CovUtils {
 			K obj;
 			for (Object t : list) {
 				obj = (K) RefUtils.getFieldValue(t, keyName);
-				if (Objects.nonNull(obj)) {put(obj, (V) RefUtils.getFieldValue(t, valueName));}
+				put(obj, (V) RefUtils.getFieldValue(t, valueName));
 			}
 		}};
 	}
@@ -95,9 +93,6 @@ public class CovUtils {
 			Long temp;
 			for (Object t : list) {
 				obj = (K) RefUtils.getFieldValue(t, keyName);
-				if (Objects.isNull(obj)) {
-					continue;
-				}
 				temp = get(obj);
 				if (Objects.isNull(temp)) {
 					put(obj, 1L);

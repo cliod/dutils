@@ -10,6 +10,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * Mybatis 自定义枚举类型转换
@@ -31,12 +32,7 @@ public abstract class BaseEnumTypeHandler<E extends EnumType> extends BaseTypeHa
 	 */
 	@Override
 	public final void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
-		int code;
-		if (parameter != null) {
-			code = parameter.getCode();
-		} else {
-			code = 0;
-		}
+		int code = Optional.ofNullable(parameter).map(EnumType::getCode).orElse(0);
 		if (jdbcType == null) {
 			ps.setInt(i, code);
 		} else {
